@@ -12,8 +12,9 @@ PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) 
 
 ## Repositorios y colaboración
 
-- [Repositorio base del docente](https://github.com/andres-karoll/personapp-hexa-spring-boot).
-- [Fork del equipo](https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2). Clona este repositorio para trabajar en el laboratorio.
+El [repositorio del docente](https://github.com/andres-karoll/personapp-hexa-spring-boot) se usó únicamente como plantilla inicial. El equipo no sincronizará su repositorio con la plantilla ni enviará commits, abrirá pull requests o solicitará cambios en el repositorio del docente.
+
+Todo el trabajo del laboratorio, incluidas las ramas, issues y revisiones, se realiza exclusivamente en el [repositorio del equipo](https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2). Clona ese repositorio para contribuir.
 
 Crea tu rama desde `main` con el formato `<tipo>/HU-###-descripcion` y abre el PR hacia `main` del fork. Incluye la evidencia de verificación y solicita la revisión de otro integrante. Sigue la [política de integración](CONTRIBUTING.md#pull-requests-y-releases).
 
@@ -43,7 +44,6 @@ Los comandos exactos de arranque y la reproducción desde un clon limpio están 
 
 - [Informe académico](docs/informe/main.tex) y [lista de entrega](docs/wiki/05-proceso/entrega.md).
 - [CLAUDE.md](CLAUDE.md) para instrucciones de trabajo con asistentes.
-
 
 ## Referencias
 
