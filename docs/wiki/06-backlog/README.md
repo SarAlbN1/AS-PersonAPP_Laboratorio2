@@ -253,9 +253,9 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 **Estado:** Parcial. **Dependencias:** HU-005, HU-026, HU-028. **Trazabilidad:** RE-01. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
 
-- [ ] README incluye requisitos/versiones efectivas, DDL/DML, configuración, compilación y arranque REST/CLI.
-- [ ] Incluye acceso a Swagger y pruebas reproducibles.
-- [ ] Un integrante distinto sigue los pasos desde clon limpio; se registra resultado.
+- [ ] El README documenta los requisitos y las versiones verificadas, la configuración del ambiente, la ejecución de los scripts DDL/DML y los pasos de compilación, despliegue y arranque de REST y CLI.
+- [ ] El README indica cómo acceder a Swagger y cómo reproducir las comprobaciones de ambas entradas.
+- [ ] Desde un clon limpio, otro integrante sigue el README para preparar el ambiente, compilar, desplegar y arrancar REST y CLI. Registra los comandos y el resultado de cada paso.
 
 #### HU-030 · Consolidar informe académico y evidencias del procedimiento
 
