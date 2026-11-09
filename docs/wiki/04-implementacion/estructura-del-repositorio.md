@@ -1,6 +1,6 @@
 # Estructura e inventario real del repositorio
 
-Inspección estática: 2026-11-08. Referencia Git: `b9bc9c824b8005f504163ca4cb67801c7b026df8`; la documentación añadida estaba sin seguimiento. No acredita compilación ni ejecución.
+Inspección estática: 2026-11-08. Referencia Git: `9d440668133747cf840fea70854725b2a3bdebff`. El código Java, los `pom.xml` y los scripts no cambian desde `b9bc9c824b8005f504163ca4cb67801c7b026df8`. No acredita compilación ni ejecución.
 
 ## Estructura conservada
 
@@ -100,6 +100,35 @@ docs/
 - [MenuPrincipal](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/menu/MenuPrincipal.java): `co/edu/javeriana/as/personapp/terminal/menu/MenuPrincipal.java`.
 - [PersonaMenu](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/menu/PersonaMenu.java): `co/edu/javeriana/as/personapp/terminal/menu/PersonaMenu.java`.
 - [PersonaModelCli](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/model/PersonaModelCli.java): `co/edu/javeriana/as/personapp/terminal/model/PersonaModelCli.java`.
+
+## Operaciones declaradas, implementadas y expuestas
+
+**Declarada** significa que la operación figura en un puerto de entrada. **Implementada** significa que el caso de uso y los adaptadores de salida tienen código que la resuelve. **Expuesta** significa que una ruta REST o una opción de menú CLI la invoca. Ninguna columna acredita ejecución; eso corresponde a HU-005.
+
+### Persona
+
+| Operación | Declarada en `PersonInputPort` | Implementada | REST | CLI |
+|---|---|---|---|---|
+| Crear | [`create`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/in/PersonInputPort.java#L17) | [`PersonUseCase.create`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/usecase/PersonUseCase.java#L33) → `save` en [MariaDB](../../../maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/adapter/PersonOutputAdapterMaria.java#L31) y [MongoDB](../../../mongo-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mongo/adapter/PersonOutputAdapterMongo.java#L29) | [`POST /api/v1/persona`](../../../rest-input-adapter/src/main/java/co/edu/javeriana/as/personapp/controller/PersonaControllerV1.java#L37), incompleta: [`PersonaMapperRest.fromAdapterToDomain`](../../../rest-input-adapter/src/main/java/co/edu/javeriana/as/personapp/mapper/PersonaMapperRest.java#L29) devuelve un `Person` vacío y la respuesta [usa siempre el mapeo de MariaDB](../../../rest-input-adapter/src/main/java/co/edu/javeriana/as/personapp/adapter/PersonaInputAdapterRest.java#L73) | No |
+| Listar todos | [`findAll`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/in/PersonInputPort.java#L23) | [`PersonUseCase.findAll`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/usecase/PersonUseCase.java#L57) → `find` en [MariaDB](../../../maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/adapter/PersonOutputAdapterMaria.java#L45) y [MongoDB](../../../mongo-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mongo/adapter/PersonOutputAdapterMongo.java#L48) | [`GET /api/v1/persona/{database}`](../../../rest-input-adapter/src/main/java/co/edu/javeriana/as/personapp/controller/PersonaControllerV1.java#L30) | [`PersonaMenu`](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/menu/PersonaMenu.java#L58), opción 1 tras elegir motor |
+| Listar parcial | No | No | No | No |
+| Editar | [`edit`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/in/PersonInputPort.java#L19) | [`PersonUseCase.edit`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/usecase/PersonUseCase.java#L39): `findById` y `save` | No | No |
+| Eliminar | [`drop`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/in/PersonInputPort.java#L21) | [`PersonUseCase.drop`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/usecase/PersonUseCase.java#L48) → `delete` en [MariaDB](../../../maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/adapter/PersonOutputAdapterMaria.java#L38) y [MongoDB](../../../mongo-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mongo/adapter/PersonOutputAdapterMongo.java#L41) | No | No |
+| Contar | [`count`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/in/PersonInputPort.java#L27) | [`PersonUseCase.count`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/usecase/PersonUseCase.java#L71) devuelve `findAll().size()`; no hay conteo en el puerto de salida | No | No |
+
+`PersonInputPort` también declara `findOne`, `getPhones` y `getStudies`, que tienen implementación en el caso de uso y no tienen ruta ni opción de menú. El puerto de salida [`PersonOutputPort`](../../../application/src/main/java/co/edu/javeriana/as/personapp/application/port/out/PersonOutputPort.java) declara `save`, `delete`, `find` y `findById`.
+
+**Selección de motor.** REST elige el motor en cada petición, pero lo guarda en un [campo del adaptador](../../../rest-input-adapter/src/main/java/co/edu/javeriana/as/personapp/adapter/PersonaInputAdapterRest.java#L38) compartido entre peticiones. CLI lo elige en [`PersonaMenu`](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/menu/PersonaMenu.java#L31) antes del menú de operaciones.
+
+### Profesión, Teléfono y Estudios
+
+| Recurso | Declarada | Implementada | REST | CLI |
+|---|---|---|---|---|
+| Profesión | No | Solo modelo de dominio, entidad o documento y mapper en cada motor | No | Opción 2 del [menú principal](../../../cli-input-adapter/src/main/java/co/edu/javeriana/as/personapp/terminal/menu/MenuPrincipal.java#L50), que solo registra `Implementar Menu` |
+| Teléfono | No | Igual que Profesión | No | Opción 3, que solo registra `Implementar Menu` |
+| Estudios | No | Igual que Profesión, con [`EstudiosEntityPK`](../../../maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/entity/EstudiosEntityPK.java) como clave compuesta en MariaDB | No | Opción 4, que solo registra `Implementar Menu` |
+
+Estos tres recursos no tienen puertos, casos de uso, repositorios ni adaptadores de salida.
 
 ## Dependencias internas declaradas
 
