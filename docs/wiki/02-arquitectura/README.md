@@ -16,4 +16,4 @@ Esta carpeta fija el diseño arquitectónico de referencia del laboratorio, sepa
 
 **Fuentes de verdad:** enunciado y aclaraciones docentes → SRS (qué) → SAD y ADR aprobados (cómo se estructura) → contratos (cómo interactúa) → SDD (cómo se codifica). El código y las pruebas aportan la **evidencia de ejecución**; las HU delimitan el trabajo planificado.
 
-**Orden técnico exigido:** baseline original (HU-001 a HU-006), actualización compatible (HU-007 a HU-010), CRUD completo (HU-011 a HU-024), verificación transversal (HU-025 a HU-028), entrega (HU-029 a HU-032).
+**Orden técnico exigido:** baseline original (HU-001 a HU-006), CRUD completo (HU-011 a HU-024), verificación transversal (HU-025 a HU-028), entrega (HU-029 a HU-032).

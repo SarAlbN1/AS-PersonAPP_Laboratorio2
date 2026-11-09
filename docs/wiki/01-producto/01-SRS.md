@@ -48,7 +48,6 @@ Los siete módulos de la plantilla son `common`, `domain`, `application`, `rest-
 | ID | Requisito | Evidencia de aceptación |
 |---|---|---|
 | RT-01 | Usar Java, Spring Boot y Maven multimódulo, partiendo de la plantilla original. | Compilación y arranque de ambas interfaces sobre los módulos originales. |
-| RT-02 | Modernización posterior, diferida de la entrega en JDK 11. | Aplicable si el equipo retoma HU-007 a HU-010 después de la entrega. |
 | RT-03 | Documentar la API real mediante Swagger/OpenAPI. | Swagger accesible y actualizado con operaciones, parámetros y respuestas implementadas. |
 
 **Stack escrito.** JDK 11, Spring Boot, MariaDB, MongoDB, REST, CLI y Swagger 3. La plantilla declara Spring Boot 2.7.11.

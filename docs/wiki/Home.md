@@ -5,7 +5,7 @@
 | [01 · Producto](01-producto/README.md) | SRS, visión, criterios, trazabilidad |
 | [02 · Arquitectura](02-arquitectura/README.md) | Hexagonal, SAD, puertos, adaptadores, ADR, diagramas, puntos abiertos |
 | [03 · Contratos](03-contratos/README.md) | REST y CLI, persistencia de MariaDB/MongoDB, validaciones |
-| [04 · Implementación](04-implementacion/README.md) | SDD, módulos Maven, migración, pruebas, ejecución, demo |
+| [04 · Implementación](04-implementacion/README.md) | SDD, módulos Maven, versiones, pruebas, ejecución, demo |
 | [05 · Proceso](05-proceso/README.md) | Git, PR, DoR/DoD, colaboración, entrega |
 | [06 · Backlog](06-backlog/README.md) | Épicas, HU propuestas y dependencias |
 

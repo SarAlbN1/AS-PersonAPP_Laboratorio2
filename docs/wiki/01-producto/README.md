@@ -18,7 +18,7 @@ Aquí se documenta **qué** debe entregar PersonAPP y cómo se comprueba. El dis
 1. Las obligaciones académicas derivan del enunciado y de la explicación docente recogidos en `docs/informe/`.
 2. Este SRS formaliza esos requisitos; las decisiones de arquitectura se desarrollan en [SAD](../02-arquitectura/02-SAD-HLD.md).
 3. Los contratos precisos deben coincidir con el código validado, no inventar rutas ni nombres.
-4. [Backlog](../06-backlog/README.md) mantiene las **32 historias propuestas, agrupadas en 5 épicas y 3 sprints**. GitHub Projects gestiona el estado real; esta wiki no lo duplica.
+4. [Backlog](../06-backlog/README.md) mantiene las historias de entrega, sus épicas y milestones. GitHub Projects gestiona el estado real; esta wiki no lo duplica.
 5. Los criterios se marcan logrados solo con pruebas y evidencia rastreables.
 
 **Importante:** `HU-###` son IDs internos de planificación; no son números de issue creados en GitHub. `EP-##` son épicas documentales. La asignación de responsables está pendiente.

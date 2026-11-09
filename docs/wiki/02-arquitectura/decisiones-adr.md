@@ -11,7 +11,7 @@
 |---|---|---|---|
 | BASE-01 | Arquitectura hexagonal, Service/Repository, REST/CLI y MariaDB/MongoDB | Base del enunciado | [SAD](02-SAD-HLD.md), RA-01/02 |
 | BASE-02 | Elección de motor en ejecución sin reiniciar | Base del enunciado | RF-05 y HU-025 |
-| ADR-001 | Actualización gradual de Java, Spring Boot y dependencias | Diferido para después de la entrega en JDK 11 | [ADR-001](adr/ADR-001-estrategia-migracion.md) |
+| ADR-001 | Conservar JDK 11 y Spring Boot de la plantilla | Decidido para el laboratorio | [ADR-001](adr/ADR-001-estrategia-migracion.md) |
 | ADR-002 | Selección de adaptador por operación sin estado mutable global | Propuesto | [ADR-002](adr/ADR-002-seleccion-dinamica.md) |
 | ADR-003 | Política de identidad y asociaciones MariaDB/MongoDB | Pendiente de definir | [ADR-003](adr/ADR-003-modelo-persistencia.md) |
 

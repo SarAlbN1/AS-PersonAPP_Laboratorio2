@@ -6,9 +6,8 @@
 
 | Estado | ID | Criterio verificable | Historias asociadas | Requisitos |
 |---|---|---|---|---|
-| ☐ | CE-01 | Ejecutar la plantilla original con REST y CLI, antes de migrar | HU-001–HU-005 | RT-01 |
+| ☐ | CE-01 | Ejecutar la plantilla original con REST y CLI en JDK 11 | HU-001–HU-005 | RT-01 |
 | ☐ | CE-02 | Reproducir y corregir el Mapper con prueba de regresión | HU-006 | RF-08 |
-| Diferido | CE-03 | Modernización posterior a la entrega en JDK 11 | HU-007–HU-010 | RT-02 |
 | ☐ | CE-04 | CRUD de Persona con REST/CLI en MariaDB/MongoDB | HU-012–HU-015; HU-026 | RF-01 a RF-04 |
 | ☐ | CE-05 | CRUD de Profesión con REST/CLI en MariaDB/MongoDB | HU-016–HU-018; HU-026 | RF-01 a RF-04 |
 | ☐ | CE-06 | CRUD de Teléfono y vínculo a persona con ambos clientes/motores | HU-019–HU-021; HU-026 | RF-01, RF-04, RF-06 |
@@ -16,7 +15,7 @@
 | ☐ | CE-08 | Alternar MariaDB/MongoDB en la misma ejecución en REST y CLI | HU-025, HU-026 | RF-05 |
 | ☐ | CE-09 | Verificar validaciones, errores, mappers y restricciones hexagonales | HU-011, HU-026, HU-027 | RF-06 a RF-08, RA-01/02 |
 | ☐ | CE-10 | Swagger/OpenAPI cubre la API implementada sin operaciones ficticias | HU-028 | RT-03 |
-| ☐ | CE-11 | Preparación de ambos motores y scripts DDL/DML reproducibles | HU-004, HU-009, HU-029 | RF-04, RE-02 |
+| ☐ | CE-11 | Preparación de ambos motores y scripts DDL/DML reproducibles | HU-004, HU-029 | RF-04, RE-02 |
 | ☐ | CE-12 | README permite ejecutar el proyecto desde clon limpio | HU-029 | RE-01 |
 | ☐ | CE-13 | Informe y evidencias corresponden a ejecuciones reales | HU-030 | RE-03 |
 | ☐ | CE-14 | Demostración recorre REST, CLI, ambos motores y operaciones positivas/negativas | HU-026, HU-031 | RF-01 a RF-08 |

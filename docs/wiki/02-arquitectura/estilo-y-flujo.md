@@ -33,7 +33,7 @@ sequenceDiagram
     In-->>Cliente: Respuesta HTTP
 ```
 
-`PersonaControllerV1`, `PersonaInputAdapterRest`, `PersonUseCase` y `PersonOutputPort` son identificadores reportados para el **repositorio original**, no afirmaciones sobre nombres posteriores a migración. El paso real de selección de motor debe observarse en código (HU-002/HU-025).
+`PersonaControllerV1`, `PersonaInputAdapterRest`, `PersonUseCase` y `PersonOutputPort` son identificadores reportados para el **repositorio original**. El paso real de selección de motor debe observarse en código (HU-002/HU-025).
 
 ## Flujo CLI
 

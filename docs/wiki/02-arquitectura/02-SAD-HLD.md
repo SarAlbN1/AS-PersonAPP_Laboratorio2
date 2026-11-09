@@ -9,7 +9,7 @@
 
 Diseñar la solución del Laboratorio 2 para gestionar **Persona, Profesión, Teléfono y Estudios** mediante **REST y CLI**, con persistencia alternativa en **MariaDB y MongoDB**. Es una **aplicación Java/Spring Boot Maven multimódulo**, no siete microservicios. El objetivo principal es demostrar arquitectura hexagonal (puertos y adaptadores), Repository y Service/casos de uso, así como **selección del motor durante la ejecución, sin reinicio**. [SRS](../01-producto/01-SRS.md).
 
-La plantilla original reporta Java 11 y Spring Boot 2.7.11. La entrega se ejecuta y diagnostica con JDK 11. Java 21 y Spring Boot 4 fueron mencionados por el profesor como objetivo de actualización: compatibilidad, versiones exactas y resultado quedan pendientes de prueba (HU-007 a HU-010).
+La plantilla original reporta Java 11 y Spring Boot 2.7.11. La entrega se ejecuta y diagnostica con JDK 11.
 
 ## 2. Drivers arquitectónicos
 
@@ -21,8 +21,7 @@ La plantilla original reporta Java 11 y Spring Boot 2.7.11. La entrega se ejecut
 | RF-04 dos motores | Adaptadores Maria/JPA y Mongo/documentos bajo contratos de salida | HU-013, HU-017, HU-020, HU-023 |
 | RF-05 cambio de motor | Resolución del puerto de salida por petición/acción, sin reiniciar | HU-025 |
 | RF-06/08 integridad y mapeos | DTO, mappers, validaciones comunes y pruebas negativas | HU-006, HU-011, HU-026/027 |
-| RT-02 evolución de stack | Migración incremental controlada tras baseline reproducible | HU-005 a HU-010 |
-| RT-03 API documentada | OpenAPI/Swagger contrastado contra endpoints implementados | HU-010, HU-028 |
+| RT-03 API documentada | OpenAPI/Swagger contrastado contra endpoints implementados | HU-028 |
 
 ## 3. Vista de contexto
 
@@ -99,7 +98,6 @@ Se describen dos **puntos de arranque** REST y CLI del proyecto original. Aún d
 | Etapa | HU | Artefacto o evidencia |
 |---|---|---|
 | Baseline | HU-001 a HU-006 | Inventario de módulos, arranque y diagnóstico Mapper |
-| Migración | HU-007 a HU-010 | Matriz de versiones, POM, drivers, CLI/REST/Swagger |
 | Funcionalidad | HU-011 a HU-024 | Puertos, casos de uso, repositorios, entradas CRUD |
 | Verificación | HU-025 a HU-028 | Cambio en caliente, E2E, auditoría, OpenAPI |
 | Entrega | HU-029 a HU-032 | README, informe, demo y tag |

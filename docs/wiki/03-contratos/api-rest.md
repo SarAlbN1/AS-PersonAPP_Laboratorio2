@@ -93,7 +93,7 @@ Esta política debe aprobarse por equipo en HU-011 e implementarse de forma unif
 
 ## 7. Swagger / OpenAPI
 
-- La documentación la genera o publica el módulo REST con herramientas compatibles con la versión final de Spring Boot (HU-010 y HU-028).
+- La documentación la genera o publica el módulo REST con herramientas compatibles con la versión de Spring Boot de la entrega (HU-028).
 - Swagger debe mostrar únicamente endpoints reales; los ejemplos deben concordar con DTO y reglas implementados.
 - En la revisión final comparar método, ruta, query/path, objeto requerido, respuestas y códigos con peticiones ejecutadas.
 - Registrar versión exacta de OpenAPI y dependencia en [`versiones.md`](../04-implementacion/versiones.md), cuando esté resuelta.

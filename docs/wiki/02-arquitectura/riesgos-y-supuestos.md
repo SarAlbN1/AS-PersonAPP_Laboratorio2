@@ -10,8 +10,7 @@
 | ID | Riesgo | Impacto | Mitigación / indicador | HU |
 |---|---|---|---|---|
 | R-01 | Actualizar JDK/Boot sin baseline reproducible | Alto | Compilar/arrancar plantilla primero y guardar errores originales | HU-003/005 |
-| R-02 | Incompatibilidades Boot 2.7 → 4.x (Jakarta, springdoc, JPA, drivers) | Alto | Matriz de compatibilidad, migración por etapas, tests REST/CLI | HU-007 a HU-010 |
-| R-03 | Defecto Mapper heredado confunde el diagnóstico de migración | Alto | Reproducir, localizar y crear prueba de regresión antes de cambios mayores | HU-006 |
+| R-03 | Un defecto de mapeo de la plantilla afecta las operaciones | Alto | Reproducir, localizar y crear prueba de regresión antes de cambios mayores | HU-006 |
 | R-04 | Scripts Mongo iniciales apuntan a `prueba_db` mientras Spring usa `persona_db` | Alto | Unificar configuración de referencia y comprobar colección real | HU-004 |
 | R-05 | Selección de base usa estado global mutable | Alto | Diseño por petición, alternancia y prueba de intercalación | HU-025 |
 | R-06 | Documentos Mongo no preservan identidad/relaciones del modelo SQL | Alto | Contrato explícito y pruebas por entidad | HU-011/017/020/023/026 |

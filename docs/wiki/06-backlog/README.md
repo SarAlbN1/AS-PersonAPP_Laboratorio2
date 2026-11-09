@@ -20,7 +20,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 | M2 · Operaciones de los cuatro recursos | EP-03 | M1 | Seis operaciones por recurso en REST y CLI, con persistencia en ambos motores. |
 | M3 · Verificación y entrega | EP-04 y EP-05 | M2 | Evidencias, Swagger 3, README reproducible, informe y URL del tag. |
 
-**Prioridad.** P0 identifica el camino de entrega. P1 identifica apoyo interno o trabajo diferido. El informe y la auditoría pueden avanzar en paralelo con la implementación. Su cierre depende de la evidencia de las historias previas. El equipo asignará responsables antes de iniciar cada HU.
+**Prioridad.** P0 identifica el camino de entrega. P1 identifica apoyo interno. El informe y la auditoría pueden avanzar en paralelo con la implementación. Su cierre depende de la evidencia de las historias previas. El equipo asignará responsables antes de iniciar cada HU.
 
 ## M1 · Línea base reproducible
 
@@ -264,7 +264,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 - [ ] Informe incluye portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.
 - [ ] Evidencias distinguen línea base JDK 11 y CRUD final.
 - [ ] Se comprueba coherencia entre SRS, SAD, SDD, código y resultados.
-- [ ] El informe identifica JDK 11 como entorno de entrega, separa la modernización diferida y enumera las seis operaciones acordadas.
+- [ ] El informe identifica JDK 11 como entorno de entrega y enumera las seis operaciones acordadas.
 - [ ] Se actualizan rutas, opciones CLI, resultados y referencias al commit según lo efectivamente entregado.
 
 #### HU-031 · Preparar demostración de REST/CLI y dos motores
@@ -282,41 +282,3 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 - [ ] El fork contiene scripts, código, README e informe requeridos.
 - [ ] El tag apunta al commit integrado verificado y su URL funciona.
 - [ ] Se registra URL del tag y checklist final; no se etiqueta una entrega sin pruebas.
-
-## Trabajo diferido · Fuera de los hitos de entrega
-
-### EP-02 · Modernización tecnológica
-
-HU-007 a HU-010 conservan el trabajo de modernización para después de la entrega con JDK 11.
-
-#### HU-007 · Definir matriz de versiones objetivo y estrategia de migración
-
-**Estado:** Diferida. **Dependencias:** HU-005. **Trazabilidad:** RT-02. **Milestone:** Diferido. **Épica:** EP-02. **Prioridad:** P1.
-
-- [ ] Se registra tabla inicial/objetivo con justificación y compatibilidades revisadas.
-- [ ] Se acuerda Java objetivo con el equipo; referencia docente Java 21/Spring Boot 4, no se presume versión migrada.
-- [ ] Se identifican cambios de javax→jakarta u otros solo cuando afecten el código.
-
-#### HU-008 · Actualizar JDK, Spring Boot y POM padre/módulos
-
-**Estado:** Diferida. **Dependencias:** HU-006, HU-007. **Trazabilidad:** RT-02. **Milestone:** Diferido. **Épica:** EP-02. **Prioridad:** P1.
-
-- [ ] Los POM registran versiones acordadas.
-- [ ] Compilan los siete módulos sin dependencias incompatibles.
-- [ ] Se registran cambios aplicados y errores solucionados con evidencia.
-
-#### HU-009 · Adaptar persistencia MariaDB y MongoDB a las versiones migradas
-
-**Estado:** Diferida. **Dependencias:** HU-008. **Trazabilidad:** RF-04. **Milestone:** Diferido. **Épica:** EP-02. **Prioridad:** P1.
-
-- [ ] Operaciones iniciales de persona persisten/leen en MariaDB real.
-- [ ] Operaciones iniciales de persona persisten/leen en MongoDB real.
-- [ ] Drivers, anotaciones JPA/Mongo y mappers quedan compatibles, sin acoplar domain al motor.
-
-#### HU-010 · Restaurar REST, CLI y Swagger con el stack actualizado
-
-**Estado:** Diferida. **Dependencias:** HU-008, HU-009. **Trazabilidad:** RF-02. **Milestone:** Diferido. **Épica:** EP-02. **Prioridad:** P1.
-
-- [ ] REST y CLI inician con la versión actualizada.
-- [ ] Swagger UI describe los endpoints realmente disponibles.
-- [ ] Se documentan rutas, configuración y comandos verificados tras la migración.

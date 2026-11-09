@@ -11,7 +11,7 @@
 | Status | Single select | Backlog, In Progress, In Review, Blocked, Done |
 | Priority | Single select | P0, P1 |
 | Epic | Single select | EP-01 a EP-05 |
-| Milestone | Campo nativo de issue | M1, M2, M3. EP-02 queda sin milestone de entrega. |
+| Milestone | Campo nativo de issue | M1, M2, M3. |
 | Story Points | Number | estimaciones iniciales |
 | Assignee | Campo nativo de issue | cuentas reales por confirmar |
 | Dependencies | Texto o relaciones entre issues | IDs HU hasta crear issues reales |

@@ -9,7 +9,7 @@ Un punto abierto no es una decisión aprobada. El cierre exige **decisión, just
 
 | ID | Pregunta / incertidumbre | Acción de cierre | HU |
 |---|---|---|---|
-| A-01 | ¿Qué versiones finales de JDK, Boot, springdoc, drivers y Maven son compatibles? | Matriz y compilaciones reales; ADR-001 | HU-007/008/009/010 |
+| A-01 | ¿Qué versiones se usaron al ejecutar la entrega con JDK 11? | Registrar versiones, compilación y arranques | HU-003 y HU-005 |
 | A-02 | ¿Qué Mapper falla en la plantilla y por qué? | Reproducir error, traza, corrección y regresión | HU-006 |
 | A-03 | ¿Se usa `persona_db` o `prueba_db` en Mongo? | Contrastar scripts y propiedades, unificar, probar | HU-004 |
 | A-04 | ¿Cuáles son rutas REST, DTO, códigos y errores definitivos? | Contrato acorde al código y Swagger | HU-014/018/021/024/028 |

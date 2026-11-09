@@ -8,9 +8,9 @@ Esta carpeta define **qué intercambian y qué garantizan** las interfaces y la 
 
 | Documento | Contenido y fuente de evidencia | Historias relacionadas |
 |---|---|---|
-| [API REST](api-rest.md) | Endpoints confirmados de la base, propuesta de recursos, DTO, respuestas, OpenAPI y registro de cambios | HU-005, HU-010, HU-014, HU-018, HU-021, HU-024, HU-028 |
-| [CLI](cli.md) | Opciones, flujos por recurso, menú, selector de motor, mensajes y pruebas | HU-005, HU-010, HU-015, HU-018, HU-021, HU-024, HU-025 |
-| [Persistencia](persistencia.md) | MariaDB y MongoDB, identificadores, relaciones, puertos, scripts, aislamiento y cambio dinámico | HU-004, HU-009, HU-011, HU-013, HU-017, HU-020, HU-023, HU-025 |
+| [API REST](api-rest.md) | Endpoints confirmados de la base, propuesta de recursos, DTO, respuestas, OpenAPI y registro de cambios | HU-005, HU-014, HU-018, HU-021, HU-024, HU-028 |
+| [CLI](cli.md) | Opciones, flujos por recurso, menú, selector de motor, mensajes y pruebas | HU-005, HU-015, HU-018, HU-021, HU-024, HU-025 |
+| [Persistencia](persistencia.md) | MariaDB y MongoDB, identificadores, relaciones, puertos, scripts, aislamiento y cambio dinámico | HU-004, HU-011, HU-013, HU-017, HU-020, HU-023, HU-025 |
 | [Validaciones y errores](validaciones-y-errores.md) | Validación por recurso y origen, errores REST/CLI, casos negativos y regresión de mappers | HU-006, HU-011, HU-026, HU-027 |
 | [backlog único](../06-backlog/README.md) | Historias y criterios de aceptación | HU-025, HU-026, HU-028 |
 

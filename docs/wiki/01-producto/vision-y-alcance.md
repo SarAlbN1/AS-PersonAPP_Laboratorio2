@@ -12,9 +12,9 @@ Completar, ejecutar, verificar y documentar el laboratorio tomando como punto de
 
 ## 3. Objetivos específicos
 
-1. Ejecutar las versiones originales de la plantilla antes de cualquier migración, registrando entorno, scripts, compilación, REST y CLI.
+1. Ejecutar las versiones originales de la plantilla en JDK 11, registrando entorno, scripts, compilación, REST y CLI.
 2. Reproducir y corregir el problema de Mapper advertido por el profesor, con evidencia de regresión.
-3. Completar la entrega con JDK 11. La modernización se difiere.
+3. Completar la entrega con JDK 11.
 4. Completar los cuatro dominios con puertos, casos de uso, adaptadores, mapeadores y operaciones CRUD.
 5. Demostrar cada recurso desde REST y CLI contra **cada** motor y alternancia sin reinicio.
 6. Entregar documentación OpenAPI, instrucciones reproducibles, scripts, informe y tag Git.
@@ -42,12 +42,11 @@ La representación documental en MongoDB deberá definirse y validarse contra lo
 | Orden | Etapa | Hitos del backlog |
 |---|---|---|
 | 1 | Fork, diagnóstico, preparación y ejecución original | EP-01 / HU-001 a HU-006 |
-| 2 | Modernización diferida, fuera de entrega | EP-02 / HU-007 a HU-010 |
-| 3 | Completar dominio, REST, CLI y persistencias | EP-03 / HU-011 a HU-024 |
-| 4 | Validar CRUD, arquitectura, Swagger y alternancia | EP-04 / HU-025 a HU-028 |
-| 5 | Documentar, demostrar y publicar entrega | EP-05 / HU-029 a HU-032 |
+| 2 | Completar dominio, REST, CLI y persistencias | EP-03 / HU-011 a HU-024 |
+| 3 | Validar CRUD, arquitectura, Swagger y alternancia | EP-04 / HU-025 a HU-028 |
+| 4 | Documentar, demostrar y publicar entrega | EP-05 / HU-029 a HU-032 |
 
-La distribución en tres sprints es **una propuesta de planificación**, no un calendario oficial del docente.
+Los hitos de entrega se mantienen en el backlog.
 
 ## 6. Fuera de alcance
 
