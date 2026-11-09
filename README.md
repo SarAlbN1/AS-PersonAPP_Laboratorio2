@@ -10,6 +10,13 @@ PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) 
 
 **Estado observado.** Los cuatro modelos de dominio existen. Persona tiene puertos, caso de uso y persistencia para ambos motores. REST declara listado y alta, con el mapper de alta incompleto. CLI conecta el listado. El conteo de Persona existe en el caso de uso. La compilación, los arranques y la persistencia de la entrega siguen pendientes de comprobación.
 
+## Repositorios y colaboración
+
+- [Repositorio base del docente](https://github.com/andres-karoll/personapp-hexa-spring-boot).
+- [Fork del equipo](https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2). Clona este repositorio para trabajar en el laboratorio.
+
+Crea tu rama desde `main` con el formato `<tipo>/HU-###-descripcion` y abre el PR hacia `main` del fork. Incluye la evidencia de verificación y solicita la revisión de otro integrante. Sigue la [política de integración](CONTRIBUTING.md#pull-requests-y-releases).
+
 ## Explorar la wiki
 
 Empieza por el [índice de la wiki](docs/wiki/Home.md). Desde allí puedes seguir el recorrido completo, desde los requisitos del laboratorio hasta la entrega.
@@ -40,5 +47,4 @@ Los comandos exactos de arranque y la reproducción desde un clon limpio están 
 
 ## Referencias
 
-- [Repositorio docente de origen](https://github.com/andres-karoll/personapp-hexa-spring-boot), del que parte el fork del equipo.
 - [Decisiones de arquitectura](docs/wiki/02-arquitectura/decisiones-adr.md) y [versiones de la entrega](docs/wiki/04-implementacion/versiones.md).
