@@ -1,0 +1,15 @@
+sequenceDiagram
+    actor Client as Cliente REST o CLI
+    participant APP as PersonAPP (misma ejecución)
+    participant MARIA as Adaptador Maria
+    participant MONGO as Adaptador Mongo
+    Client->>APP: Operación A, motor MARIA
+    APP->>MARIA: Ejecutar A
+    MARIA-->>Client: Resultado A
+    Client->>APP: Operación B, motor MONGO
+    APP->>MONGO: Ejecutar B
+    MONGO-->>Client: Resultado B
+    Client->>APP: Operación C, motor MARIA
+    APP->>MARIA: Ejecutar C
+    MARIA-->>Client: Resultado C
+    Note over APP: Sin reiniciar ni recompilar

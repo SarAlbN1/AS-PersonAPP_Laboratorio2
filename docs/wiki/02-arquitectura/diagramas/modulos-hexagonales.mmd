@@ -1,0 +1,10 @@
+flowchart TB
+    REST[rest-input-adapter] --> APP[application - puertos y casos de uso]
+    CLI[cli-input-adapter] --> APP
+    APP --> DOM[domain]
+    APP --> PORT[Puerto de salida]
+    PORT -. implementación .-> MARIA[maria-output-adapter]
+    PORT -. implementación .-> MONGO[mongo-output-adapter]
+    MARIA --> DB1[(MariaDB)]
+    MONGO --> DB2[(MongoDB)]
+    COMMON[common - transversal] -. tipos compartidos .-> APP

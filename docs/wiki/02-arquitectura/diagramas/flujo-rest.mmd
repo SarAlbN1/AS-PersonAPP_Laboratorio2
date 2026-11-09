@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor Client as Cliente
+    participant REST as Adaptador REST
+    participant UC as Caso de uso
+    participant PORT as Puerto salida
+    participant AD as Adaptador elegido
+    participant DB as Motor
+    Client->>REST: Petición + motor
+    REST->>UC: Solicitud dominio
+    UC->>PORT: Operación
+    PORT->>AD: Resolver MARIA/MONGO
+    AD->>DB: Leer / persistir
+    DB-->>AD: Resultado
+    AD-->>UC: Dominio
+    UC-->>REST: Resultado
+    REST-->>Client: HTTP

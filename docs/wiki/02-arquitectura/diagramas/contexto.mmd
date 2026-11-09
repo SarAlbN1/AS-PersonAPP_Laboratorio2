@@ -1,0 +1,7 @@
+flowchart LR
+    U[Usuario REST / Swagger] --> R[PersonAPP - entrada REST]
+    T[Operador CLI] --> C[PersonAPP - entrada CLI]
+    R --> A[Núcleo de casos de uso]
+    C --> A
+    A --> M[(MariaDB)]
+    A --> N[(MongoDB)]

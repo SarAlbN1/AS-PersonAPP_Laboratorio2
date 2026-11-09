@@ -1,0 +1,533 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noquoting]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{url}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+
+\geometry{left=2.6cm,right=2.6cm,top=2.6cm,bottom=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\emergencystretch=3em
+\setcounter{tocdepth}{2}
+\setlist[itemize]{leftmargin=*,topsep=2pt,itemsep=2pt}
+\setlist[enumerate]{leftmargin=*,topsep=2pt,itemsep=2pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Arquitectura de Software}
+\rhead{\small Laboratorio 2 -- PersonAPP}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{15pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+
+\newcommand{\pendiente}[1]{\textbf{Pendiente de completar:} #1}
+\newcommand{\base}{\textit{plantilla del profesor}}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+{\large Pontificia Universidad Javeriana\par}
+\vspace{0.25cm}
+{Facultad de Ingeniería\par}
+{Departamento de Ingeniería de Sistemas\par}
+\vspace{3.0cm}
+{\LARGE\bfseries Laboratorio 2\par}
+\vspace{0.45cm}
+{\Large Implementación de un servicio web\par}
+{\Large con arquitectura hexagonal, Repository y Service\par}
+\vspace{0.65cm}
+{\large PersonAPP -- Spring Boot\par}
+\vspace{0.8cm}
+{JDK 11 \(\cdot\) Spring Boot \(\cdot\) Maven\par}
+{MariaDB y MongoDB \(\cdot\) REST y CLI \(\cdot\) Swagger 3\par}
+\vfill
+\textbf{Integrantes}\par
+Sara Albarracín\par
+Juan Diego Rojas\par
+Miguel Sarmiento\par
+\vspace{1cm}
+\textbf{Profesor}\par
+Andrés Armando Sánchez Martín\par
+\vspace{1cm}
+Arquitectura de Software\par
+Bogotá D. C., noviembre de 2026\par
+\end{center}
+\end{titlepage}
+\tableofcontents
+\clearpage
+
+\section{Marco conceptual}
+El Laboratorio 2 consiste en desarrollar un servicio web con operaciones CRUD
+(\emph{Create, Read, Update, Delete}) para un modelo de personas, profesiones,
+estudios y teléfonos. A diferencia del Laboratorio 1, cuyo diseño se centraba
+en un monolito .NET con MVC y DAO, en este ejercicio se emplean Java, Spring Boot,
+Maven y la organización por puertos y adaptadores propia de la arquitectura hexagonal.
+La solución debe contemplar dos clientes (REST y CLI), dos motores de persistencia
+(MariaDB y MongoDB) y documentación de los servicios mediante Swagger/OpenAPI.
+El punto de partida es el repositorio de referencia proporcionado por el profesor
+\cite{plantilla}.
+
+El enunciado escrito fija JDK 11 y Swagger 3. La explicación presencial
+registrada por el equipo menciona una posible modernización. El plan de
+entrega conserva las versiones de la plantilla. El equipo incorporó la
+selección de persistencia en ejecución como criterio de integración.
+
+\subsection{Arquitectura de software}
+La arquitectura de software describe las estructuras de un sistema, las
+responsabilidades de sus elementos y sus relaciones. Una decisión relevante en
+este laboratorio es aislar la lógica del negocio de las interfaces de usuario
+y de los mecanismos de persistencia; esto facilita la sustitución de adaptadores,
+las pruebas y el mantenimiento.
+
+\subsection{Arquitectura limpia y arquitectura hexagonal}
+La arquitectura hexagonal, también denominada \emph{Ports and Adapters},
+organiza el sistema alrededor del núcleo de negocio, que se comunica mediante
+contratos explícitos \cite{cockburn}. Los \textbf{puertos de entrada} describen
+las operaciones que pueden solicitar los clientes y los \textbf{puertos de salida}
+definen los servicios externos que requieren los casos de uso, especialmente
+la persistencia. Los \textbf{adaptadores} conectan estos contratos con
+tecnologías concretas.
+
+La arquitectura limpia comparte la idea de orientar las dependencias hacia
+la lógica central y evitar que reglas de negocio dependan de frameworks o bases
+de datos concretas \cite{martin}. En este laboratorio se expresa mediante
+módulos Maven: \texttt{domain} contiene los modelos de negocio;
+\texttt{application} incorpora los puertos y casos de uso;
+\texttt{rest-input-adapter} y \texttt{cli-input-adapter} reciben solicitudes;
+\texttt{maria-output-adapter} y \texttt{mongo-output-adapter} realizan la
+persistencia. El módulo \texttt{common} reúne elementos compartidos. La existencia
+de estos módulos expresa el diseño previsto, aunque la dirección real de las
+dependencias debe revisarse en el código.
+
+\subsection{Modularidad y Maven}
+La modularidad divide la aplicación en unidades con responsabilidades específicas.
+Maven define su compilación, dependencias y configuración mediante archivos
+\texttt{pom.xml}. La plantilla es un proyecto multimódulo con un POM padre y
+siete módulos, cada uno con su propio POM \cite{maven,plantilla}. Esta división
+facilita localizar los puntos de cambio, pero no implica que cada módulo sea
+un microservicio independiente.
+
+\subsection{Puertos, adaptadores, casos de uso, Service y Repository}
+El patrón \textbf{Repository} encapsula la persistencia de las entidades y
+proporciona operaciones de consulta y modificación. En la plantilla,
+\texttt{PersonOutputPort} define un contrato con \texttt{save},
+\texttt{delete}, \texttt{find} y \texttt{findById}; los adaptadores de salida
+implementan dicho contrato utilizando los repositorios de cada motor.
+
+Un \textbf{Service} o servicio de aplicación coordina operaciones del sistema.
+El caso de uso \texttt{PersonUseCase} implementa \texttt{PersonInputPort} y
+contiene operaciones como \texttt{create}, \texttt{edit}, \texttt{drop},
+\texttt{findAll}, \texttt{findOne}, \texttt{count}, \texttt{getPhones} y
+\texttt{getStudies}. Este caso de uso no debe confundirse con el controlador REST:
+un método definido en la aplicación no necesariamente está expuesto todavía
+por HTTP o por el menú de consola.
+
+\subsection{Inyección de dependencias y selección de persistencia}
+Spring dispone de un contenedor para crear e inyectar objetos. Cuando dos
+implementaciones cumplen la misma interfaz, una selección explícita, por
+ejemplo mediante \texttt{@Qualifier}, permite identificar el componente
+requerido \cite{spring}. La plantilla define adaptadores de salida de MariaDB
+y MongoDB que implementan \texttt{PersonOutputPort}; los adaptadores de entrada
+seleccionan la implementación según una opción como \texttt{MARIA} o
+\texttt{MONGO}. El objetivo del laboratorio es conservar esa capacidad de
+cambio durante la ejecución y probarla en los dos clientes.
+
+La explicación del profesor asocia esta posibilidad con el concepto de CQRS,
+pero \textbf{elegir una base u otra no implica automáticamente implementar CQRS}:
+ese patrón separa las responsabilidades de lectura y escritura, lo que requiere
+un diseño más específico \cite{fowler}.
+
+\subsection{DTO y Mapper}
+Un DTO (\emph{Data Transfer Object}) transporta la información entre una
+interfaz externa y la aplicación. Un Mapper convierte representaciones de
+datos entre capas, por ejemplo, una entidad de dominio \texttt{Person} y una
+entidad de MariaDB \texttt{PersonaEntity}, o un documento de MongoDB
+\texttt{PersonaDocument}. En la plantilla aparecen los métodos de conversión
+\texttt{fromAdapterToDomain} y \texttt{fromDomainToAdapter}, y sus equivalentes
+específicos de cada adaptador. El profesor advierte que existe un error en un
+Mapper: debe localizarse mediante ejecución y diagnóstico, sin asumir cuál
+es el fallo antes de reproducirlo.
+
+\subsection{Spring Boot, Java y las versiones del proyecto}
+Java es el lenguaje de implementación; el JDK proporciona las herramientas
+necesarias para compilar y ejecutar el programa. Spring Boot permite configurar
+y ejecutar aplicaciones Java y servicios HTTP \cite{spring}. El repositorio
+base declara \textbf{Java 11} y \textbf{Spring Boot 2.7.11} en el POM principal.
+La entrega se planifica con JDK 11 y Spring Boot 2.7.11. Las versiones
+efectivas se registrarán después de compilar y ejecutar ambas aplicaciones.
+La modernización queda diferida para después de la entrega.
+
+\subsection{MariaDB y MongoDB}
+MariaDB es un sistema de bases de datos relacional que representa los datos
+en tablas, índices, claves primarias y relaciones mediante claves foráneas.
+MongoDB es un sistema orientado a documentos, por lo que las entidades pueden
+guardarse como documentos con estructuras propias \cite{mariadb,mongodb}.
+En esta práctica se usan los adaptadores de salida correspondientes, sin
+acoplar el caso de uso a un único sistema gestor.
+
+\subsection{REST, CLI, Swagger y operaciones CRUD}
+REST es un estilo de interacción basado en recursos y en la semántica de HTTP.
+Para un CRUD se emplean habitualmente \texttt{GET} para consultar,
+\texttt{POST} para crear, \texttt{PUT}/\texttt{PATCH} para actualizar y
+\texttt{DELETE} para eliminar. CLI (\emph{Command Line Interface}) permite
+interactuar desde una terminal. Swagger UI proporciona una interfaz gráfica
+para consultar y probar una API descrita mediante OpenAPI \cite{openapi}.
+
+\subsection{Scripts DDL y DML}
+DDL (\emph{Data Definition Language}) agrupa instrucciones para definir
+estructuras, mientras que DML (\emph{Data Manipulation Language}) comprende
+operaciones para modificar los datos. El repositorio incluye los archivos
+\path{persona_ddl_maria.sql}, \path{persona_dml_maria.sql},
+\path{persona_ddl_mongo.js} y \path{persona_dml_mongo.js}.
+La estructura física de una base relacional no debe confundirse con la
+representación documental de MongoDB.
+
+\section{Diseño}
+
+\subsection{Objetivo y alcance}
+Diseñar, completar y documentar una aplicación Java organizada por módulos
+hexagonales para gestionar personas, profesiones, estudios y teléfonos,
+con operaciones CRUD a través de REST y CLI, persistencia en MariaDB y MongoDB
+y documentación de los endpoints. El trabajo parte de un fork de la plantilla
+oficial y debe publicarse con un tag Git y los scripts solicitados.
+
+\subsection{Comparación con el Laboratorio 1}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{3.1cm}XX@{}}
+\toprule
+\textbf{Aspecto}&\textbf{Laboratorio 1}&\textbf{Laboratorio 2}\\\midrule
+Lenguaje / plataforma& C\# y .NET& Java y Spring Boot\\
+Diseño principal& Monolito con MVC y DAO& Arquitectura hexagonal, limpia y modular\\
+Acceso a datos& Entity Framework Core y SQL Server& Adaptadores Repository, MariaDB y MongoDB\\
+Clientes& Vistas web MVC y API REST& API REST y aplicación CLI\\
+Persistencia& Una tecnología central& Selección dinámica de motor\\
+Entrega técnica& Repositorio y etiqueta Git& Fork actualizado, scripts, README, código y etiqueta Git\\
+\bottomrule
+\end{tabularx}
+\caption{Cambios principales entre los dos laboratorios.}
+\end{table}
+
+\subsection{Requerimientos de la actividad}
+\begin{longtable}{@{}p{1.8cm}p{11.9cm}@{}}
+\toprule
+\textbf{Código}&\textbf{Requerimiento}\\\midrule
+\endfirsthead
+\toprule\textbf{Código}&\textbf{Requerimiento}\\\midrule
+\endhead
+RF-01 & Implementar el CRUD de Persona, Profesión, Estudios y Teléfono. El equipo definió crear, listar todos, listar parcial, editar, eliminar y contar.\\
+RF-02 & Publicar los endpoints REST correspondientes y documentarlos en Swagger/OpenAPI.\\
+RF-03 & Proporcionar operaciones equivalentes mediante un cliente CLI según el alcance definido.\\
+RF-04 & Conectar los casos de uso con MariaDB y MongoDB mediante adaptadores de salida.\\
+RF-05 & Como criterio del equipo, permitir escoger MariaDB o MongoDB en tiempo de ejecución, sin reiniciar la aplicación.\\
+RA-01 & Organizar las dependencias por módulos, siguiendo el diseño hexagonal y limpio.\\
+RT-01 & Utilizar JDK 11, Spring Boot y Maven. Verificar y registrar las versiones de ejecución.\\
+RT-02 & Emplear Repository, Service/casos de uso, puertos y adaptadores.\\
+RE-01 & Incluir README con configuración del ambiente, compilación y despliegue.\\
+RE-02 & Entregar scripts DDL/DML, código y URL del tag Git del repositorio del equipo.\\
+RE-03 & Entregar portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.\\
+\bottomrule
+\caption{Requerimientos sistematizados a partir del enunciado y la explicación del profesor.}
+\end{longtable}
+
+\subsection{Modelo de datos}
+El modelo funcional es el mismo del Laboratorio 1. La plantilla conserva
+las entidades de persona, profesion, estudios y telefono. El archivo
+\texttt{scripts/persona\_ddl\_maria.sql} define las tablas que se resumen
+a continuación.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{2.2cm}p{5.2cm}X@{}}
+\toprule
+\textbf{Tabla}&\textbf{Campos}&\textbf{Clave y relaciones}\\\midrule
+\texttt{persona}&\texttt{cc}, \texttt{nombre}, \texttt{apellido}, \texttt{genero}, \texttt{edad}&PK: \texttt{cc}; genero restringido a M/F en el DDL base.\\
+\texttt{profesion}&\texttt{id}, \texttt{nom}, \texttt{des}&PK: \texttt{id}.\\
+\texttt{estudios}&\texttt{id\_prof}, \texttt{cc\_per}, \texttt{fecha}, \texttt{univer}&PK compuesta por \texttt{id\_prof} y \texttt{cc\_per}. FK hacia profesion y persona.\\
+\texttt{telefono}&\texttt{num}, \texttt{oper}, \texttt{duenio}&PK: \texttt{num}; FK \texttt{duenio} hacia persona.\\
+\bottomrule
+\end{tabularx}
+\caption{Modelo relacional del repositorio base en MariaDB.}
+\end{table}
+
+Una persona puede asociarse con varios números telefónicos y varios registros
+de estudios; cada estudio enlaza una persona con una profesión. En MongoDB
+se debe describir cómo se representan estos datos como documentos y verificar
+que los adaptadores preserven su significado.
+
+\subsection{Arquitectura propuesta y módulos Maven}
+El archivo \texttt{pom.xml} principal de la plantilla declara siete módulos.
+La Tabla \ref{tab:modulos} relaciona sus responsabilidades.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{4.0cm}X@{}}
+\toprule
+\textbf{Módulo}&\textbf{Responsabilidad}\\\midrule
+\texttt{common}&Anotaciones personalizadas, excepciones y opciones de configuración compartidas.\\
+\texttt{domain}&Objetos de negocio: Person, Phone, Profession, Study y Gender.\\
+\texttt{application}&Puertos de entrada/salida y casos de uso (p. ej., \texttt{PersonUseCase}).\\
+\texttt{rest-input-adapter}&Inicio de Spring REST, controlador, DTO y Mapper para HTTP.\\
+\texttt{cli-input-adapter}&Inicio de Spring CLI, menús, DTO y Mapper de consola.\\
+\texttt{maria-output-adapter}&Entidades JPA, repositorios y mapeadores MariaDB.\\
+\texttt{mongo-output-adapter}&Documentos, repositorios y mapeadores MongoDB.\\
+\bottomrule
+\end{tabularx}
+\caption{Estructura del proyecto entregado como plantilla.}
+\label{tab:modulos}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+ every node/.style={font=\footnotesize,align=center},
+ blk/.style={draw,rounded corners=2pt,minimum height=1cm,text width=3.4cm,fill=white},
+ core/.style={draw,very thick,rounded corners=2pt,minimum height=1cm,text width=3.8cm,fill=white},
+ arr/.style={-{Latex[length=2mm]},line width=.7pt}
+]
+\node[blk] (rest) at (-4.3,2.6) {REST / HTTP\\\texttt{rest-input-adapter}};
+\node[blk] (cli) at (4.3,2.6) {Terminal / CLI\\\texttt{cli-input-adapter}};
+\node[core] (app) at (0,0.65) {Puertos y casos de uso\\\texttt{application}};
+\node[core] (dom) at (0,-1.1) {Modelos de negocio\\\texttt{domain}};
+\node[blk] (ma) at (-4.3,-2.9) {\texttt{maria-output-adapter}\\MariaDB};
+\node[blk] (mo) at (4.3,-2.9) {\texttt{mongo-output-adapter}\\MongoDB};
+\draw[arr] (rest) -- (app);
+\draw[arr] (cli) -- (app);
+\draw[arr] (app) -- (dom);
+\draw[arr] (app) -- (ma);
+\draw[arr] (app) -- (mo);
+\end{tikzpicture}
+\caption{Interacciones conceptuales de la arquitectura hexagonal. Las flechas representan el recorrido lógico, no dependencias de código compilado.}
+\end{figure}
+
+En la implementación, los adaptadores de salida materializan el contrato del
+puerto de persistencia y deben depender de abstracciones definidas en
+\texttt{application}; las entidades de \texttt{domain} deben mantenerse
+independientes de esos detalles externos. Las dos clases de arranque de
+Spring se ubican en los adaptadores de entrada.
+
+\subsection{Flujo de una petición y selección de persistencia}
+Como ejemplo, en la plantilla la consulta de personas por REST sigue este
+recorrido: \texttt{PersonaController\allowbreak V1} recibe la petición,
+\texttt{PersonaInputAdapter\allowbreak Rest} interpreta la base solicitada,
+\texttt{PersonUseCase} ejecuta el caso de uso mediante
+\texttt{PersonOutputPort}, el adaptador de salida consulta el repositorio
+elegido y el Mapper construye la respuesta. La CLI realiza un recorrido
+análogo desde el menú de consola.
+
+La selección dinámica es central: el usuario o la solicitud indica la base
+a emplear, y la aplicación selecciona la implementación de persistencia
+correspondiente. Durante las pruebas deberá comprobarse que distintas
+peticiones puedan utilizar ambas bases sin detener el servicio.
+
+\subsection{Estado inicial del código de referencia}
+La revisión directa del repositorio base, antes del trabajo del equipo,
+permite distinguir las operaciones declaradas de las efectivamente expuestas.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{3.6cm}X@{}}
+\toprule
+\textbf{Elemento}&\textbf{Estado observado en la plantilla}\\\midrule
+\texttt{PersonInputPort}&Declara creación, edición, eliminación, listado, consulta individual, conteo y consultas de teléfonos/estudios.\\
+\texttt{PersonaControllerV1}&Publica \texttt{GET /api/v1/persona/\{database\}} y \texttt{POST /api/v1/persona}.\\
+\texttt{PersonaMenu}&Permite elegir MariaDB/MongoDB y listar personas; las otras opciones aparecen como trabajo pendiente.\\
+Persistencia&Existen repositorios y adaptadores para MariaDB y MongoDB.\\
+Otros dominios&Existen modelos de negocio, pero no se observa una implementación funcional completa equivalente a persona.\\
+\bottomrule
+\end{tabularx}
+\caption{Alcance verificado en el repositorio del profesor, no en el trabajo final del equipo.}
+\end{table}
+
+En el \texttt{PersonaRequest} inicial los campos son \texttt{dni},
+\texttt{firstName}, \texttt{lastName}, \texttt{age}, \texttt{sex}
+y \texttt{database}. Los endpoints finales, sus cuerpos y sus códigos de
+respuesta tendrán que actualizarse en el documento según el código efectivo
+que entregue el grupo.
+
+\subsection{Parámetros iniciales de configuración}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{3.2cm}p{3.3cm}X@{}}
+\toprule
+\textbf{Componente}&\textbf{Valor en plantilla}&\textbf{Ubicación o nota}\\\midrule
+REST&Puerto 3000&\texttt{application.properties} del adaptador REST\\
+Swagger UI&\url{http://localhost:3000/swagger-ui.html}&Según el README del profesor\\
+MariaDB&Puerto 3307&\texttt{jdbc:mariadb://localhost:3307/persona\_db}\\
+MongoDB&Puerto 27017&Base \texttt{persona\_db} en propiedades de Spring\\
+Java&11&\texttt{global.java.version} en POM padre\\
+Spring Boot&2.7.11&\texttt{global.springframework.boot.version} en POM padre\\
+\bottomrule
+\end{tabularx}
+\caption{Valores originales, sujetos a cambios en la migración.}
+\end{table}
+
+\section{Procedimiento}
+
+Esta sección documenta la \emph{secuencia prevista} con base en la explicación
+del profesor. Los subapartados marcados como pendientes se completarán con
+comandos y evidencias \textbf{realmente obtenidos}, no con resultados supuestos.
+La guía no trae un tutorial detallado: el grupo debe ejecutar, diagnosticar,
+y completar el proyecto con JDK 11.
+
+\subsection{Fase 1. Fork y puesta en funcionamiento de la plantilla}
+\subsubsection*{Actividad 1. Preparar el repositorio del equipo}
+El profesor solicita crear un \emph{fork} del repositorio
+\url{https://github.com/andres-karoll/personapp-hexa-spring-boot},
+trabajar sobre la copia del grupo y conservar un historial Git. No deben
+presentar como entrega un vínculo al repositorio original del profesor.
+
+\textbf{Pendiente del equipo:} URL del fork, responsables, rama, fecha y
+captura o registro del estado inicial.
+
+\subsubsection*{Actividad 2. Preparar el ambiente}
+La ejecución inicial se realiza respetando las versiones de la plantilla:
+Java 11, Spring Boot 2.7.11, las dependencias Maven y los motores de base
+de datos. Se debe habilitar Lombok en el IDE si es necesario y comprobar
+la configuración de los dos adaptadores de entrada. Como mínimo,
+registrar las salidas de \texttt{java -version}, \texttt{mvn -version} y
+la versión de cada motor de base de datos.
+
+\textbf{Pendiente del equipo:} programas instalados, versiones,
+configuración efectiva y capturas.
+
+\subsubsection*{Actividad 3. Ejecutar los scripts DDL/DML}
+La carpeta \texttt{scripts} del proyecto contiene los archivos de MariaDB
+y MongoDB. La ejecución debe crear estructuras y cargar registros de prueba.
+Se detecta un punto de revisión en los archivos base: la configuración
+Spring señala \texttt{persona\_db} para MongoDB, mientras que el
+\texttt{persona\_dml\_mongo.js} selecciona \texttt{prueba\_db}.
+Antes de probar, el grupo debe verificar y unificar la base de datos
+utilizada. Las contraseñas de ejemplo son propias de un ambiente local de
+laboratorio y no deben asumirse como configuración segura de producción.
+
+\textbf{Pendiente del equipo:} ejecución de scripts, esquema/colecciones,
+registros insertados y tratamiento del nombre de base de datos.
+
+\subsubsection*{Actividad 4. Compilar y ejecutar la versión base}
+Desde el directorio raíz Maven se puede intentar la compilación con:
+\begin{verbatim}
+mvn clean install
+\end{verbatim}
+El proyecto contiene dos clases de arranque independientes:
+\texttt{PersonAppRestApi} y \texttt{PersonAppCli}. Se deben ejecutar
+ambos clientes, verificar el endpoint inicial de personas y comprobar
+el acceso a Swagger y al menú CLI.
+
+\textbf{Pendiente del equipo:} comandos exactos de ejecución,
+resultados, errores, correcciones y evidencias de REST y CLI.
+
+\subsubsection*{Actividad 5. Identificar y corregir el Mapper}
+El profesor advierte expresamente que hay un error en un Mapper de la
+plantilla. Su resolución debe documentarse como una actividad de
+\emph{depuración}: reproducir el error, registrar su mensaje, localizar
+la conversión defectuosa, explicar la causa, aplicar la corrección y
+volver a ejecutar la prueba. \textbf{No se indica aquí una línea o clase
+como culpable sin la evidencia obtenida durante la ejecución.}
+
+\textbf{Pendiente del equipo:} archivo afectado, diagnóstico,
+corrección y prueba de regresión.
+
+\subsection{Fase 2. Completar el modelo y las operaciones CRUD}
+El profesor explicó que el trabajo funcional de la plantilla está
+concentrado en persona, por lo que deberán implementarse completamente
+profesión, estudios y teléfono. Esto implica completar los puertos de
+entrada/salida, los casos de uso, las entidades/documentos, mapeadores,
+repositorios y adaptadores que falten. Cada función debe exponerse
+según el alcance de REST y CLI y validarse en los dos motores. El listado
+parcial utiliza páginas con orden estable por clave. La agregación de conteo
+devuelve el total del motor elegido y devuelve cero si la colección está vacía.
+
+\textbf{Pendiente del equipo:} clases creadas o modificadas,
+justificación de las decisiones, endpoints finales, menús y pruebas.
+
+\subsection{Pruebas funcionales y de integración}
+Se comprobarán las seis operaciones de cada recurso desde REST y CLI con
+MariaDB y MongoDB. Las evidencias deben incluir listados con orden estable,
+conteo antes y después de un alta o baja y aislamiento entre motores.
+
+Además de las operaciones exitosas, se documentarán entradas inválidas,
+identificadores inexistentes, relaciones entre entidades, y el cambio
+\textbf{en caliente} entre bases durante la misma ejecución. En REST
+se registrarán método, ruta, cuerpo de solicitud, respuesta y código HTTP;
+en CLI, opción seleccionada y salida observada. Deben conservarse
+capturas útiles y consistentes con la versión etiquetada.
+
+\subsection{README, publicación y etiqueta final}
+La entrega técnica deberá incluir un README que explique requisitos,
+configuración del ambiente, preparación de MariaDB/MongoDB, ejecución de
+scripts, compilación Maven, arranque de REST y CLI, uso de Swagger y
+comandos de prueba. También debe contener los scripts DDL/DML y el
+código fuente, y publicarse con un tag Git que identifique el estado
+final entregado.
+
+\textbf{Pendiente del equipo:} URL definitiva del repositorio,
+URL del tag, identificación de commit, resultados de pruebas y
+confirmación de que el README reproduce el despliegue.
+
+\section{Conclusiones y lecciones aprendidas}
+
+\subsection{Conclusiones preliminares de diseño}
+La organización por puertos, casos de uso y adaptadores proporciona una
+base para separar las responsabilidades del negocio de REST, CLI y de
+los mecanismos de persistencia. En comparación con la estructura usada
+para el Laboratorio 1, este diseño permite estudiar explícitamente la
+intercambiabilidad de adaptadores y el papel de las dependencias
+entre módulos.
+
+La plantilla permite identificar dos entradas y dos tecnologías de
+persistencia, así como contratos de aplicación que deben completarse y
+exponerse. La validación del funcionamiento en JDK 11
+y de las seis operaciones queda sujeta a la implementación y a las pruebas
+reales del equipo.
+
+\subsection{Lecciones aprendidas por documentar}
+\textbf{Pendiente del equipo:} describir dificultades reales en la
+compilación y ejecución inicial, el diagnóstico del Mapper, la
+preparación de los motores, la implementación de los dominios
+faltantes y la selección dinámica de MariaDB/MongoDB. Esta subsección
+se completará al terminar las actividades para no atribuir al grupo
+experiencias que todavía no se han documentado.
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{plantilla} Sánchez Martín, A. A. (s. f.). \textit{PersonAPP: plantilla de arquitectura limpia con Spring Boot}.
+Repositorio de GitHub. \url{https://github.com/andres-karoll/personapp-hexa-spring-boot}.
+\bibitem{cockburn} Cockburn, A. (2005). \textit{Hexagonal Architecture}.
+\url{https://alistair.cockburn.us/hexagonal-architecture/}.
+\bibitem{martin} Martin, R. C. (2017). \textit{Clean Architecture: A Craftsman's Guide to Software Structure and Design}. Prentice Hall.
+\bibitem{maven} Apache Software Foundation. (s. f.). \textit{Maven Guides}.
+\url{https://maven.apache.org/guides/}.
+\bibitem{spring} Spring. (s. f.). \textit{Spring Boot reference documentation}.
+\url{https://docs.spring.io/spring-boot/}.
+\bibitem{fowler} Fowler, M. (2011). \textit{CQRS}.
+\url{https://martinfowler.com/bliki/CQRS.html}.
+\bibitem{mariadb} MariaDB Foundation. (s. f.). \textit{MariaDB documentation}.
+\url{https://mariadb.com/docs/}.
+\bibitem{mongodb} MongoDB. (s. f.). \textit{MongoDB manual}.
+\url{https://www.mongodb.com/docs/manual/}.
+\bibitem{openapi} OpenAPI Initiative. (s. f.). \textit{OpenAPI Specification}.
+\url{https://spec.openapis.org/oas/latest.html}.
+\end{thebibliography}
+\end{document}
