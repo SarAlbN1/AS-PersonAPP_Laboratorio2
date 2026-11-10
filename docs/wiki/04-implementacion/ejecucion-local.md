@@ -1,6 +1,6 @@
 # Ejecución local: plan de reproducción
 
-> **Estado:** HU-003 preparó y verificó el ambiente JDK 11, Maven y ambos motores. También se ejecutaron los scripts y el build (ver [ambiente local verificado](#ambiente-local-verificado-hu-003)). No se han arrancado REST ni CLI. La entrega se verifica en JDK 11. El DML Mongo usa prueba_db, las aplicaciones persona_db; el DDL Maria elimina esquema y usuario.
+> **Estado:** HU-003 preparó y verificó el ambiente JDK 11, Maven y ambos motores. También se ejecutaron los scripts y el build (ver [ambiente local verificado](#ambiente-local-verificado-hu-003)). No se han arrancado REST ni CLI. La entrega se verifica en JDK 11. HU-004 verificó la carga inicial en ambos motores y alineó el DML de MongoDB con la base `persona_db`. El DDL de MariaDB elimina el esquema y el usuario antes de recrearlos.
 
 ## Fase 1: línea base en JDK 11
 
@@ -57,10 +57,25 @@ Procedimiento ejecutado el 2026-11-08 desde un clon limpio en Windows 11 (commit
 
 **Resultados observados:**
 - MariaDB: las cuatro tablas creadas y cinco personas; el usuario `persona_db` accede.
-- MongoDB: el usuario `persona_db` se creó en `admin`. El DML, tal como está, carga las cinco personas en `prueba_db`, y en `persona_db` la colección queda vacía. Para probar localmente se cargaron los mismos datos en `persona_db` cambiando solo la primera línea al vuelo (`use persona_db`), sin modificar el script. La corrección del script es parte de HU-004.
+- MongoDB: en la línea base de HU-003, el usuario `persona_db` se creó en `admin`. El DML original cargaba cinco personas en `prueba_db`. Para comprobar el acceso a `persona_db`, se ajustó el nombre de la base en una copia temporal del script. La HU-004 corrigió el script del repositorio.
 - Build: `BUILD SUCCESS` en los ocho artefactos.
 
 Para reiniciar los motores después de apagar el equipo: `docker start personapp-mariadb personapp-mongo`.
+
+## Verificación de datos iniciales (HU-004)
+
+Sigue los pasos de carga y comprobación de la sección anterior en instancias de prueba limpias. El DML actual de MongoDB carga en `persona_db.persona`, la misma base que usan REST y CLI.
+
+Para comprobar también los registros, ejecuta `SELECT * FROM persona_db.persona ORDER BY cc` en MariaDB y `db.getSiblingDB("persona_db").persona.find().sort({_id: 1}).toArray()` en MongoDB.
+
+El 9 de noviembre de 2026 se ejecutaron los cuatro scripts de la rama HU-004 en contenedores limpios con las imágenes `mariadb:11.4` y `mongo:6.0`. Los scripts de MongoDB se ejecutaron con `mongosh --file`. Las consultas de tablas, colección y registros se hicieron con la cuenta de aplicación `persona_db`.
+
+| Motor | Versión observada | Estructuras y registros |
+|---|---|---|
+| MariaDB | 11.4.13 | `SHOW TABLES FROM persona_db` devolvió `estudios`, `persona`, `profesion` y `telefono`. `SELECT COUNT(*) FROM persona_db.persona` devolvió 5. |
+| MongoDB | 6.0.28 | `getCollectionNames()` devolvió `["persona"]` en `persona_db` y `[]` en `prueba_db`. `db.persona.countDocuments()` devolvió 5. |
+
+Los identificadores observados en ambos motores fueron 123456789, 147258369, 321654987, 963852741 y 987654321. La persona 123456789 es Pepe Perez, de 30 años. Para 987654321, MariaDB devolvió `NULL` en `edad` y MongoDB devolvió el documento sin ese campo.
 
 ## Fase 2: funcionalidad faltante
 

@@ -34,7 +34,7 @@ Empieza por el [índice de la wiki](docs/wiki/Home.md). Desde allí puedes segui
 ## Preparación y ejecución
 
 1. Instalar JDK 11 y Maven. Configurar Lombok en el IDE y preparar MariaDB en el puerto 3307 y MongoDB en el 27017.
-2. Revisar los scripts DDL/DML en `scripts/` y los `application.properties` de cada entrada. El DDL de MariaDB elimina el esquema y el usuario antes de recrearlos. Usar bases de prueba. El DML Mongo selecciona `prueba_db` y las aplicaciones consultan `persona_db`. Alinear la carga y la conexión del entorno de pruebas y registrar el ajuste.
+2. Revisar los scripts DDL/DML en `scripts/` y los `application.properties` de cada entrada. El DDL de MariaDB elimina el esquema y el usuario antes de recrearlos. Usar bases de prueba. El DML de MongoDB carga los ejemplos en `persona_db`, la base que usan REST y CLI.
 3. Desde la raíz, el comando de compilación previsto es `mvn clean install`.
 4. Iniciar por separado `PersonAppRestApi` y `PersonAppCli`. REST está configurado en el puerto 3000. OpenAPI se configura en `/api-docs` y la dirección prevista de Swagger UI es `http://localhost:3000/swagger-ui.html`.
 
