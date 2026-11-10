@@ -31,6 +31,6 @@ Ambiente preparado el 2026-11-08 en Windows 11 sobre el commit `9d44066`. Estas 
 | Driver MariaDB | 3.1.4 | `mvn dependency:list` |
 | Driver MongoDB (sync) | 4.6.1 | `mvn dependency:list` |
 
-`mvn -B clean install -DskipTests` termina con `BUILD SUCCESS` en los ocho artefactos del reactor con JDK 11. No se arrancaron REST ni CLI; ese paso corresponde a HU-005.
+`mvn -B clean install -DskipTests` termina con `BUILD SUCCESS` en los ocho artefactos del reactor con JDK 11. El 2026-11-09, HU-005 repitió el build y arrancó REST y CLI con Temurin 11.0.33 y Maven 3.9.14 ([arranque](ejecucion-local.md#arranque-de-rest-y-cli-hu-005)).
 
 Se eligió MongoDB 6.0 porque es la versión de servidor más alta que soporta oficialmente el driver Java 4.6, incluido con Spring Boot 2.7.11. MariaDB 11.4 es la versión LTS vigente; el POM no fija la versión del servidor. El procedimiento está en [ejecución local](ejecucion-local.md#ambiente-local-verificado-hu-003).
