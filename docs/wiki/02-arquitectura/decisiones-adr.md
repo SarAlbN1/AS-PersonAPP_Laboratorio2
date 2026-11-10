@@ -13,7 +13,7 @@
 | BASE-02 | Elección de motor en ejecución sin reiniciar | Base del enunciado | RF-05 y HU-025 |
 | ADR-001 | Conservar JDK 11 y Spring Boot de la plantilla | Decidido para el laboratorio | [ADR-001](adr/ADR-001-estrategia-migracion.md) |
 | ADR-002 | Selección de adaptador por operación sin estado mutable global | Propuesto | [ADR-002](adr/ADR-002-seleccion-dinamica.md) |
-| ADR-003 | Política de identidad y asociaciones MariaDB/MongoDB | Propuesto (HU-011) | [ADR-003](adr/ADR-003-modelo-persistencia.md) |
+| ADR-003 | Política de identidad y asociaciones MariaDB/MongoDB | Aprobado (HU-011, #36, 2026-11-10) | [ADR-003](adr/ADR-003-modelo-persistencia.md) |
 
 ## Cambios que requieren ADR o actualización del SAD
 

@@ -45,9 +45,9 @@ INICIO
 
 **Regla:** el selector de la CLI no debe modificar una variable global que afecte solicitudes REST concurrentes. La solución concreta se formaliza en [ADR-002](../02-arquitectura/adr/ADR-002-seleccion-dinamica.md).
 
-### Menú común · Propuesto (HU-011)
+### Menú común · Aprobado (HU-011)
 
-Conserva el orden de la plantilla (primero recurso, luego motor) y aplica las reglas de [persistencia §6.1](persistencia.md#61-reglas-comunes--propuesto-hu-011).
+Conserva el orden de la plantilla (primero recurso, luego motor) y aplica las reglas de [persistencia §6.1](persistencia.md#61-reglas-comunes--aprobado-hu-011).
 
 ```text
 Menú principal:  1 Persona · 2 Profesión · 3 Teléfono · 4 Estudios · 0 Salir
@@ -60,7 +60,7 @@ Menú de operaciones (igual para los cuatro recursos):
 - **Listar parcial:** pide la página (desde 0) y el tamaño (1 a 100). Muestra los registros y una línea `Página N · M registros`.
 - **Editar y eliminar:** piden primero la clave (en Estudios, la profesión y luego la persona). Al editar, muestra el registro actual antes de pedir los campos editables.
 - **Contar:** muestra `Total en <motor>: N`.
-- **Errores:** siguen el [formato común](validaciones-y-errores.md#22-formato-de-error--propuesto-hu-011) (`[ERR-xx] mensaje`). Una entrada no numérica se descarta y se vuelve a pedir, sin cerrar la sesión.
+- **Errores:** siguen el [formato común](validaciones-y-errores.md#22-formato-de-error--aprobado-hu-011) (`[ERR-xx] mensaje`). Una entrada no numérica se descarta y se vuelve a pedir, sin cerrar la sesión.
 
 ## 4. Entradas esperadas
 
