@@ -1,6 +1,4 @@
-use admin
-
-db.createUser({
+db.getSiblingDB("admin").createUser({
   user: "persona_db",
   pwd: "persona_db",
   roles: [
