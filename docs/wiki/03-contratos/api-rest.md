@@ -14,7 +14,7 @@ El módulo `rest-input-adapter` recibe HTTP, valida formato de entrada, mapea DT
 | Método | Ruta identificada | Para qué | Verificación del fork |
 |---|---|---|---|
 | `GET` | `/api/v1/persona/{database}` | Listar personas en el motor indicado | HU-005: `MARIA` y `MONGO` devuelven 200 con las cinco personas de cada motor. Un motor desconocido devuelve 200 con `[]` ([evidencia](../04-implementacion/ejecucion-local.md#arranque-de-rest-y-cli-hu-005)). |
-| `POST` | `/api/v1/persona` | Crear persona | HU-005: devuelve 500 con `NullPointerException` en `PersonaMapperMaria.validateGenero` y no persiste. Pendiente de HU-006 ([evidencia](../04-implementacion/ejecucion-local.md#arranque-de-rest-y-cli-hu-005)). |
+| `POST` | `/api/v1/persona` | Crear persona | HU-005: devolvía 500 con `NullPointerException` en `PersonaMapperMaria.validateGenero`. HU-006: devuelve 200 y guarda en el motor indicado. La respuesta siempre indica `MariaDB`, y un `sex` o un `dni` inválido devuelve 500 ([evidencia](../04-implementacion/ejecucion-local.md#corrección-del-mapper-rest-hu-006)). |
 
 **DTO inicial referenciado:** `PersonaRequest` con `dni`, `firstName`, `lastName`, `age`, `sex`, `database`. Tipos, serialización, campos obligatorios y reglas de validación deben leerse del código del fork. La referencia del profesor sitúa Swagger UI en `http://localhost:3000/swagger-ui.html` con configuración original; no se garantiza la misma ruta tras migrar.
 
