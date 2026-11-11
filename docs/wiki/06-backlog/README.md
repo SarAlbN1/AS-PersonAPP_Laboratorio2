@@ -127,7 +127,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-012 · Completar puertos y casos de uso CRUD de Persona
 
-**Estado:** Parcial. **Dependencias:** HU-007, HU-011. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Parcial. **Dependencias:** HU-011, HU-034. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
 - [ ] Las seis operaciones funcionan por puertos.
 - [ ] El caso de uso no importa entidades de MariaDB/MongoDB.
