@@ -45,6 +45,23 @@ INICIO
 
 **Regla:** el selector de la CLI no debe modificar una variable global que afecte solicitudes REST concurrentes. La solución concreta se formaliza en [ADR-002](../02-arquitectura/adr/ADR-002-seleccion-dinamica.md).
 
+### Menú común · Aprobado (HU-011)
+
+Conserva el orden de la plantilla (primero recurso, luego motor) y aplica las reglas de [persistencia §6.1](persistencia.md#61-reglas-comunes--aprobado-hu-011).
+
+```text
+Menú principal:  1 Persona · 2 Profesión · 3 Teléfono · 4 Estudios · 0 Salir
+Menú de motor:   1 MariaDB · 2 MongoDB · 0 Regresar
+Menú de operaciones (igual para los cuatro recursos):
+  1 Crear · 2 Listar todos · 3 Listar parcial · 4 Editar · 5 Eliminar · 6 Contar · 0 Regresar al menú de motor
+```
+
+- **Cambio de motor:** con 0 se vuelve al menú de motor y se elige el otro sin reiniciar la aplicación.
+- **Listar parcial:** pide la página (desde 0) y el tamaño (1 a 100). Muestra los registros y una línea `Página N · M registros`.
+- **Editar y eliminar:** piden primero la clave (en Estudios, la profesión y luego la persona). Al editar, muestra el registro actual antes de pedir los campos editables.
+- **Contar:** muestra `Total en <motor>: N`.
+- **Errores:** siguen el [formato común](validaciones-y-errores.md#22-formato-de-error--aprobado-hu-011) (`[ERR-xx] mensaje`). Una entrada no numérica se descarta y se vuelve a pedir, sin cerrar la sesión.
+
 ## 4. Entradas esperadas
 
 | Recurso | Identidad base | Datos relevantes del esquema de referencia | Validación mínima objetivo |

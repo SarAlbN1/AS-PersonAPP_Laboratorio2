@@ -37,6 +37,32 @@ Editar y eliminar identifican el registro por su clave. La edición conserva la 
 
 **Criterios para fijar las rutas definitivas:** coherencia con `/api/v1/persona`, compatibilidad con consumidores de la base, identificadores (`cc`, `id`, `num`, par `id_prof`/`cc_per`), URL del recurso retornado y selector dinámico de motor. El equipo debe decidir si conserva la ruta actual o introduce una v2/versionado explícito, y registrar esa decisión **antes** de consumir el contrato desde pruebas.
 
+### 3.1 Rutas comunes · Aprobado (HU-011)
+
+Estas rutas se aprobaron en HU-011 (#36). No existen hasta que las implementen HU-014, HU-018, HU-021 y HU-024. Las reglas de identidad, orden, paginación, conteo y motor son las de [persistencia §6.1](persistencia.md#61-reglas-comunes--aprobado-hu-011).
+
+`{recurso}` es `persona`, `profesion`, `telefono` o `estudio`, en singular, como la ruta actual `/api/v1/persona`. La clave es `{cc}`, `{id}` o `{num}`; en Estudios son dos segmentos: `/{idProfesion}/{ccPersona}`. Todas las rutas exigen el parámetro de consulta `database=MARIA|MONGO`.
+
+| Operación | Método y ruta | Éxito | Errores |
+|---|---|---|---|
+| Crear | `POST /api/v1/{recurso}?database=` | `201` con el registro creado | ERR-01, ERR-02, ERR-04, ERR-05, ERR-07 |
+| Listar todos | `GET /api/v1/{recurso}?database=` | `200` con un arreglo ordenado por clave | ERR-02, ERR-07 |
+| Listar parcial | `GET /api/v1/{recurso}/pagina?database=&page=0&size=10` | `200` con un arreglo; vacío si la página está fuera de rango | ERR-01, ERR-02, ERR-07 |
+| Editar | `PUT /api/v1/{recurso}/{clave}?database=` | `200` con el registro actualizado | ERR-01, ERR-02, ERR-03, ERR-05, ERR-07, ERR-09 |
+| Eliminar | `DELETE /api/v1/{recurso}/{clave}?database=` | `204` sin cuerpo | ERR-02, ERR-03, ERR-06, ERR-07 |
+| Contar | `GET /api/v1/{recurso}/conteo?database=` | `200` con un entero (por ejemplo, `5`) | ERR-02, ERR-07 |
+
+`page` y `size` son opcionales y valen 0 y 10 por defecto. Los errores usan el [formato común](validaciones-y-errores.md#22-formato-de-error--aprobado-hu-011).
+
+**DTO propuestos.** Persona conserva `PersonaRequest` (`dni`, `firstName`, `lastName`, `age`, `sex`) sin el campo `database`, que pasa al parámetro de consulta. Para los demás recursos se usan los mismos nombres que el dominio:
+- `ProfesionRequest`: `id`, `name`, `description`.
+- `TelefonoRequest`: `number`, `company`, `ownerId`.
+- `EstudioRequest`: `professionId`, `personId`, `graduationDate`, `universityName`.
+
+Las respuestas devuelven esos mismos campos. Los DTO usan tipos JSON reales (número, texto o fecha) en lugar de convertir todo a `String`.
+
+**Cambios frente a la plantilla (decisión D-04):** la ruta `GET /api/v1/persona/{database}` se sustituye por `GET /api/v1/persona?database=`. El campo `database` del cuerpo del `POST` pasa a ser parámetro de consulta. Así las seis operaciones eligen el motor del mismo modo, y `/{clave}` queda libre para editar y eliminar. Los ejemplos de Swagger se actualizan para usar `?database=` (HU-014 y HU-028).
+
 ## 4. Ficha obligatoria por endpoint
 
 Usar esta tabla para **cada una de las operaciones reales** al desarrollarla:

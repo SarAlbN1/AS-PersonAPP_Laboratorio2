@@ -24,6 +24,36 @@
 
 **Principio:** no convertir una validación razonable (por ejemplo, edad máxima arbitraria) en requisito docente sin respaldo. Los límites exactos se derivan de fuentes y se aprueban en HU-011.
 
+### 2.1 Tipos y límites · Aprobado (HU-011)
+
+Los límites salen del DDL de MariaDB (`scripts/persona_ddl_maria.sql`) y de los modelos de `domain`. MongoDB aplica los mismos límites desde el caso de uso. Una violación produce ERR-01, salvo que se indique otra cosa.
+
+| Recurso | Campo (dominio · MariaDB) | Tipo | Regla propuesta |
+|---|---|---|---|
+| Persona | `identification` · `cc` | Entero | Obligatorio, entre 1 y 2147483647. |
+| Persona | `firstName` · `nombre`, `lastName` · `apellido` | Texto | Obligatorios, de 1 a 45 caracteres tras recortar espacios. |
+| Persona | `gender` · `genero` | `MALE` o `FEMALE` | Obligatorio. `OTHER` existe en `Gender`, pero el `ENUM('M','F')` de MariaDB no lo admite; se rechaza con ERR-01 (decisión D-01). El mapper REST traduce solo `M` y `F`; el rechazo de los demás valores corresponde a la validación de Persona. |
+| Persona | `age` · `edad` | Entero | Opcional. Si viene, `≥ 0`. Sin máximo, para no inventar un límite sin fuente. `isValidAge` debe aceptar `null`. |
+| Profesión | `identification` · `id` | Entero | Obligatorio, entre 1 y 2147483647. |
+| Profesión | `name` · `nom` | Texto | Obligatorio, de 1 a 90 caracteres. |
+| Profesión | `description` · `des` | Texto | Opcional, sin límite (`TEXT`). |
+| Teléfono | `number` · `num` | Texto | Obligatorio, de 1 a 15 dígitos (`^[0-9]{1,15}$`). Se guarda como texto para conservar los ceros iniciales. |
+| Teléfono | `company` · `oper` | Texto | Obligatorio, de 1 a 45 caracteres. |
+| Teléfono | `owner` · `duenio` | Entero (`cc`) | Obligatorio. La persona debe existir en el motor elegido; si no, ERR-05. |
+| Estudios | `profession` · `id_prof`, `person` · `cc_per` | Enteros | Obligatorios. Forman la clave y ambos deben existir en el motor elegido; si no, ERR-05. |
+| Estudios | `graduationDate` · `fecha` | Fecha ISO `yyyy-MM-dd` | Opcional. Si viene, debe ser una fecha válida. |
+| Estudios | `universityName` · `univer` | Texto | Opcional, hasta 50 caracteres. |
+
+### 2.2 Formato de error · Aprobado (HU-011)
+
+REST responde los errores con el código HTTP de la sección 3 y este cuerpo JSON:
+
+```json
+{ "error": "ERR-04", "message": "Ya existe una persona con cc 123456789 en MARIA" }
+```
+
+CLI muestra el mismo `message` precedido del código (`[ERR-04] ...`) y vuelve al menú sin cerrar la sesión. Ninguna de las dos expone trazas, SQL ni credenciales.
+
 ## 3. Catálogo de condiciones de error
 
 | ID | Condición | Resultado funcional esperado | REST propuesto* | CLI esperado |
@@ -32,14 +62,14 @@
 | ERR-02 | Motor desconocido | Rechazar, no elegir por defecto | `400` | Mostrar opciones admitidas |
 | ERR-03 | Entidad consultada no existe | Distinguir ausencia de error técnico | `404` | No encontrado |
 | ERR-04 | Clave duplicada | Rechazar alta; mantener integridad | `409` | Registro duplicado |
-| ERR-05 | Referencia de dueño/profesión/persona inexistente | Rechazar asociación | `400` o `409` según política | Referencia inexistente |
-| ERR-06 | Borrado con dependientes | Aplicar política de integridad acordada | `409` si borrado es restrictivo | Informar conflicto |
-| ERR-07 | MariaDB/MongoDB fuera de servicio | No responder éxito ni saltar al otro motor | `503` candidato | Motor no disponible |
+| ERR-05 | Referencia de dueño/profesión/persona inexistente | Rechazar asociación | `422` (decisión D-03), solo para referencias del cuerpo; si no existe el registro de la ruta, ERR-03 | Referencia inexistente |
+| ERR-06 | Borrado con dependientes | Rechazar el borrado (política restrictiva C-05) | `409` | Informar conflicto e indicar los dependientes |
+| ERR-07 | MariaDB/MongoDB fuera de servicio | No responder éxito ni saltar al otro motor | `503` | Motor no disponible |
 | ERR-08 | Error de mapper / inconsistencia | Registrar diagnóstico, no persistir datos erróneos | `500` si no es entrada inválida | Operación fallida |
 | ERR-09 | Ruta y cuerpo con identidad distinta | Rechazar modificación ambigua | `400` | Confirmar clave correcta |
 | ERR-10 | Excepción no clasificada | Error genérico y registro técnico seguro | `500` | Error controlado |
 
-*Los códigos REST son **propuesta de política**, no respuestas observadas; cerrar al definir el contrato HTTP y probarlo sobre ambas persistencias. No hay autorización para afirmar equivalencia de errores simplemente porque sean similares.
+*Los códigos REST son la **política acordada** en HU-011 (#36), no respuestas observadas. ERR-05 usa `422` porque la petición está bien formada y la clave propia no choca con nada (no es un `409`), pero apunta a un registro que no existe en el motor elegido; cerrar al definir el contrato HTTP y probarlo sobre ambas persistencias. No hay autorización para afirmar equivalencia de errores simplemente porque sean similares.
 
 ## 4. Política mínima para errores técnicos
 
@@ -77,7 +107,7 @@ El caso concreto y su ejecución se registran en [backlog único](../06-backlog/
 
 ## 7. Decisiones abiertas y cierre
 
-- **HU-011:** tipos, campos obligatorios, longitudes, políticas de borrado y traducción de error.
+- **HU-011:** cerrada en #36. Tipos, campos obligatorios y longitudes en §2.1, formato de error en §2.2 y política de borrado en [ADR-003](../02-arquitectura/adr/ADR-003-modelo-persistencia.md#decisiones-acordadas).
 - **HU-014/018/021/024:** JSON de petición/respuesta y errores efectivos por endpoint.
 - **HU-025:** selector de motor erróneo y aislamiento por sesión/petición.
 - **HU-026/027:** batería de casos positivos y negativos, coherencia entre motores y mappers.
