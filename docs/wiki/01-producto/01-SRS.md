@@ -30,8 +30,8 @@ Especificar **qué** debe cumplir la solución y cómo se acepta, sin sustituir 
 | RF-05 | Elegir el motor en tiempo de ejecución. | Alternar `MARIA`/`MONGO` por solicitud o desde la CLI **sin reiniciar ni recompilar**. |
 | RF-06 | Preservar identidad, vínculos y reglas de validación del dominio. | Rechazar duplicados, datos inválidos y referencias imposibles según los contratos acordados. |
 | RF-07 | Manejar ausencias y errores de manera controlada en REST y CLI. | No devolver éxito falso, excepciones sin procesar ni respuestas contradictorias; códigos/mensajes se fijan en contratos. |
-| RF-09 | Consultar una persona con todos sus teléfonos por REST y CLI en ambos motores. | Persona con cero/uno/varios teléfonos, colección vacía sin teléfonos y error controlado si no existe; HU-033. |
 | RF-08 | Realizar correctamente los mapeos entre DTO, dominio, entidad JPA y documentos Mongo. | Pruebas de conversión/round-trip y regresión del defecto encontrado. |
+| RF-09 | Consultar una persona con todos sus teléfonos por REST y CLI en ambos motores. | Persona con cero/uno/varios teléfonos, colección vacía sin teléfonos y error controlado si no existe; HU-033. |
 
 **Desglose de RF-01 acordado como alcance del proyecto:** la cobertura CRUD alcanza cuatro entidades × seis operaciones (crear, consultar por identificador, listar todos, editar, eliminar y contar), en dos interfaces y dos motores; HU-026 recoge el criterio de verificación en el [backlog único](../06-backlog/README.md). La disponibilidad de un método Java no acredita que se exponga desde HTTP o CLI.
 
@@ -50,8 +50,8 @@ Los siete módulos de la plantilla son `common`, `domain`, `application`, `rest-
 |---|---|---|
 | RT-01 | Usar Java, Spring Boot y Maven multimódulo, partiendo de la plantilla original. | Compilación y arranque de ambas interfaces sobre los módulos originales. |
 | RT-02 | Actualizar Java, Spring Boot, librerías y plugins compatibles y soportados. | LTS más alta compatible donde aplique, dependencias verificadas y procedimiento reproducible documentado sin cambiar módulos ni arquitectura (HU-007). |
-| RT-04 | Contenerizar aplicación REST/CLI, MariaDB y MongoDB. | Dockerfile(s), Compose, configuración externa, persistencia y reproducción desde clon limpio; HU-034. |
 | RT-03 | Documentar la API real mediante Swagger/OpenAPI. | Swagger accesible y actualizado con operaciones, parámetros y respuestas implementadas. |
+| RT-04 | Contenerizar aplicación REST/CLI, MariaDB y MongoDB. | Dockerfile(s), Compose, configuración externa, persistencia y reproducción desde clon limpio; HU-034. |
 
 **Línea base:** JDK 11 y Spring Boot 2.7.11. La entrega usa las versiones compatibles y soportadas seleccionadas y verificadas en HU-007, conservando MariaDB, MongoDB, REST, CLI, Swagger y los siete módulos originales.
 
@@ -103,6 +103,5 @@ Para un requisito cumplido se necesita: issue y PR reales, implementación verif
 - Registrar fork, responsables, cronograma y tag efectivos.
 
 Consultar y actualizar [puntos-abiertos.md](../02-arquitectura/puntos-abiertos.md) antes de introducir decisiones que cambien el alcance.
-
 
 La preservación de los siete módulos originales, sus responsabilidades y las dependencias hexagonales es obligatoria en todas las HU, incluidas actualización y contenedorización; HU-027 la verifica antes del cierre. HU-033 y HU-034 completan consultas agregadas y despliegue en contenedores.

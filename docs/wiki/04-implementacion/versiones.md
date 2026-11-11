@@ -35,7 +35,6 @@ Ambiente preparado el 2026-11-08 en Windows 11 sobre el commit `9d44066`. Estas 
 
 Se eligió MongoDB 6.0 porque es la versión de servidor más alta que soporta oficialmente el driver Java 4.6, incluido con Spring Boot 2.7.11. MariaDB 11.4 es la versión LTS vigente; el POM no fija la versión del servidor. El procedimiento está en [ejecución local](ejecucion-local.md#ambiente-local-verificado-hu-003).
 
-
 ## Procedimiento de actualización (HU-007)
 
 Pendiente de ejecución. Registrar aquí la versión inicial y final de cada componente, la fuente oficial de soporte y la razón de compatibilidad. Elegir la LTS más alta disponible y compatible donde exista esa clasificación y, para el resto, la versión estable más reciente compatible y con soporte vigente.
