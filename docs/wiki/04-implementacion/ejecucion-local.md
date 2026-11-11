@@ -119,6 +119,52 @@ Procedimiento ejecutado el 2026-11-09 en Windows 11 sobre el commit `f727fcd`, c
 - La opción 2 del menú principal (Profesión) registra `WARN ... MenuPrincipal : Implementar Menu`.
 - La opción 0 termina la aplicación con código de salida 0.
 
+## Corrección del Mapper REST (HU-006)
+
+Procedimiento ejecutado el 2026-11-10 sobre `e1a360d`, con el ambiente y el arranque de las secciones anteriores.
+
+**Reproducción** (2026-11-09, antes de la corrección). Entradas de `POST /api/v1/persona`:
+- `{"dni":"999","firstName":"Prueba","lastName":"Mapper","age":"30","sex":"M","database":"MARIA"}`
+- `{"dni":"998","firstName":"Prueba","lastName":"Mapper","age":"30","sex":"F","database":"MONGO"}`
+
+Salida: `500` en ambos motores y ningún registro guardado. Error: `java.lang.NullPointerException: gender is marked non-null but is null`, con esta cadena de llamadas:
+
+```text
+PersonaControllerV1.crearPersona:40 → PersonaInputAdapterRest.crearPersona:72 → PersonUseCase.create:35
+→ PersonOutputAdapter{Maria|Mongo}.save → PersonaMapper{Maria|Mongo}.fromDomainToAdapter:33 → validateGenero:40
+```
+
+**Causa.** `PersonaMapperRest.fromAdapterToDomain` era un método sin implementar y devolvía `new Person()`. Todos los campos llegaban nulos a los mappers de salida, y `validateGenero` es el primero que exige un valor. Los mappers de MariaDB y MongoDB no tienen el defecto.
+
+**Corrección.** Solo cambia `PersonaMapperRest.fromAdapterToDomain`:
+- `dni` pasa a entero; si falta o no es numérico, se lanza `IllegalArgumentException`.
+- `firstName` y `lastName` se copian sin cambios.
+- `age` pasa a entero, o queda nula si viene vacía.
+- `sex` admite `M`/`MALE` y `F`/`FEMALE` sin distinguir mayúsculas. Cualquier otro valor se rechaza, según la decisión D-01 de HU-011.
+
+Las respuestas HTTP para entradas inválidas (hoy `500`) corresponden a la validación de Persona (HU-014).
+
+**Prueba de regresión.** `rest-input-adapter/src/test/.../PersonaMapperRestTest.java`, con JUnit 5.8.2 como dependencia de prueba. Sus seis casos cubren la transformación completa, los dos formatos de sexo, la edad vacía, el rechazo de sexo y `dni` inválidos, y la respuesta construida a partir del dominio.
+
+```powershell
+mvn -B clean install
+```
+
+`Tests run: 6, Failures: 0, Errors: 0` y `BUILD SUCCESS` en los ocho artefactos. Con el método original, la misma prueba falla en cinco de los seis casos. Para ejecutar solo este módulo se usa `mvn -B -pl rest-input-adapter -am test`, por el `${revision}` descrito en HU-005.
+
+**Resultados en REST** (arranque como en HU-005). Los cuerpos enviados a `POST /api/v1/persona` son los que muestra la tabla. Los que no aparecen son `firstName` `Prueba` y `lastName` `Mapper` en las dos primeras filas, `X`/`Y` en la de sexo inválido, y `Sin`/`Edad` en las de edad ausente.
+
+| Solicitud | HTTP | Resultado |
+|---|---|---|
+| `{"dni":"999","age":"30","sex":"M","database":"MARIA"}` (2026-11-10) | 200 | Responde la persona con `"sex":"MALE"`. MariaDB guarda `999, Prueba, Mapper, M, 30`. |
+| `{"dni":"998","age":"25","sex":"F","database":"MONGO"}` (2026-11-10) | 200 | MongoDB guarda `{_id: 998, genero: 'F', edad: 25}`. La respuesta indica `"database":"MariaDB"` porque `PersonaInputAdapterRest.crearPersona` usa siempre la etiqueta de MariaDB; queda para HU-014. |
+| `{"dni":"997","age":"1","sex":"O","database":"MARIA"}` (2026-11-10) | 500 | `IllegalArgumentException: Sexo no admitido: O. Use M o F.` No se guarda nada. |
+| `{"dni":"996","sex":"F","database":"MARIA"}`, sin `age` (2026-11-11) | 200 | MariaDB guarda `edad` como `NULL`. |
+| `{"dni":"995","age":"","sex":"M","database":"MONGO"}` (2026-11-11) | 200 | MongoDB guarda el documento sin el campo `edad`, igual que la persona 987654321 del DML. `isValidAge` no se invoca en este flujo. |
+| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 | Cada motor incluye la persona creada en él, además de las cinco iniciales. Una edad ausente se muestra como `"age":"null"`, igual que en HU-005. |
+
+Al terminar se borraron los registros de prueba, y ambos motores volvieron a cinco personas.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
