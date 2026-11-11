@@ -90,8 +90,7 @@ El punto de partida es el repositorio de referencia proporcionado por el profeso
 
 El stack del laboratorio es JDK 11, Spring Boot, MongoDB y MariaDB, REST y CLI,
 y Swagger 3. El POM principal declara Spring Boot 2.7.11, y la entrega conserva
-esas versiones. La modernización a versiones posteriores queda diferida y no forma
-parte de esta entrega.
+esas versiones sin migrarlas a versiones posteriores.
 
 El equipo desglosó el CRUD de Persona, Profesión, Teléfono y Estudios en seis
 operaciones: \textbf{crear}, \textbf{listar todos}, \textbf{listar parcial} con
@@ -397,10 +396,26 @@ por lo que el aislamiento entre solicitudes concurrentes que eligen motores
 distintos debe comprobarse en las pruebas.
 
 \subsection{Pruebas ejecutadas}
-\textbf{Pendiente del equipo:} todavía no hay pruebas ejecutadas registradas
-(compilación, arranque, peticiones REST, sesiones CLI ni pruebas automatizadas).
-Esta subsección recogerá solo resultados observados, con comando o solicitud,
-resultado esperado, resultado obtenido, fecha y commit.
+Las pruebas del hito 1 se ejecutaron en Windows 11, con MariaDB y MongoDB en
+contenedores Docker (\texttt{mariadb:11.4} y \texttt{mongo:6.0}). Todavía no hay
+pruebas automatizadas (\texttt{src/test}). Los comandos completos están en la
+página de ejecución local de la wiki del repositorio.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.3cm}@{}}
+\toprule
+\textbf{Prueba}&\textbf{Resultado observado}&\textbf{Fecha y PR}\\\midrule
+Ambiente (HU-003)&Temurin 11.0.32.1, Maven 3.9.9, MariaDB 11.4.13 y MongoDB 6.0.28.&2026-11-08, \#33\\
+Compilación&\texttt{mvn -B clean install -DskipTests} termina con \texttt{BUILD SUCCESS} en los ocho artefactos con JDK 11.&2026-11-08, \#33; 2026-11-09, \#35\\
+Scripts DDL/DML (HU-004)&MariaDB crea las tablas \texttt{persona}, \texttt{profesion}, \texttt{telefono} y \texttt{estudios} y carga cinco personas. MongoDB carga las mismas cinco personas en \texttt{persona\_db.persona}.&2026-11-09, \#34\\
+REST (HU-005)&\texttt{GET /api/v1/persona/MARIA} y \texttt{/MONGO} responden 200 con cinco personas cada uno; un motor desconocido responde 200 con una lista vacía. \texttt{POST /api/v1/persona} responde 500 por una \texttt{NullPointerException} en \texttt{PersonaMapperMaria.validateGenero} y no guarda datos.&2026-11-09, \#35\\
+Swagger (HU-005)&\path{/swagger-ui.html} responde 200 y redirige a \path{/swagger-ui/index.html}. \path{/api-docs} publica OpenAPI 3.0.1 con las dos rutas.&2026-11-09, \#35\\
+CLI (HU-005)&En una sola sesión lista las cinco personas de MariaDB y luego las de MongoDB, sin reiniciar. Profesión registra ``Implementar Menu''.&2026-11-09, \#35\\
+\bottomrule
+\end{tabularx}
+\caption{Pruebas ejecutadas en el hito 1.}
+\end{table}
 
 \subsection{Parámetros iniciales de configuración}
 \begin{table}[H]
@@ -410,7 +425,7 @@ resultado esperado, resultado obtenido, fecha y commit.
 \textbf{Componente}&\textbf{Valor en plantilla}&\textbf{Ubicación o nota}\\\midrule
 REST&Puerto 3000&\texttt{application.properties} del adaptador REST\\
 OpenAPI 3&\texttt{/api-docs}&\texttt{springdoc.api-docs.path}; \texttt{springdoc-openapi-ui} 1.7.0\\
-Swagger UI&\url{http://localhost:3000/swagger-ui.html}&Dirección prevista según el README; sin verificar\\
+Swagger UI&\url{http://localhost:3000/swagger-ui.html}&Verificada en HU-005; redirige a \path{/swagger-ui/index.html}\\
 MariaDB&Puerto 3307&\texttt{jdbc:mariadb://localhost:3307/persona\_db}\\
 MongoDB&Puerto 27017&Base \texttt{persona\_db} en propiedades de Spring\\
 Java&11&\texttt{global.java.version} en POM padre\\
@@ -441,8 +456,10 @@ El profesor solicita crear un \emph{fork} del repositorio
 trabajar sobre la copia del grupo y conservar un historial Git. No deben
 presentar como entrega un vínculo al repositorio original del profesor.
 
-\textbf{Pendiente del equipo:} URL del fork, responsables, rama, fecha y
-captura o registro del estado inicial.
+\textbf{Resultado (HU-001):} el repositorio del equipo es
+\url{https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2}, fork de la plantilla.
+Los cambios se integran a \texttt{main} mediante una rama por historia y un PR
+revisado por otro integrante (PR \#30, 2026-11-08).
 
 \subsubsection*{Actividad 2. Preparar el ambiente}
 La ejecución inicial se realiza respetando las versiones de la plantilla:
@@ -452,8 +469,10 @@ la configuración de los dos adaptadores de entrada. Como mínimo,
 registrar las salidas de \texttt{java -version}, \texttt{mvn -version} y
 la versión de cada motor de base de datos.
 
-\textbf{Pendiente del equipo:} programas instalados, versiones,
-configuración efectiva y capturas.
+\textbf{Resultado (HU-003):} Temurin 11.0.32.1, Maven 3.9.9, MariaDB 11.4.13 y
+MongoDB 6.0.28 en contenedores Docker. Se eligió MongoDB 6.0 por ser la versión
+más alta que admite el controlador Java 4.6 incluido en Spring Boot 2.7.11
+(PR \#33, 2026-11-08).
 
 \subsubsection*{Actividad 3. Ejecutar los scripts DDL/DML}
 La carpeta \texttt{scripts} del proyecto contiene los archivos de MariaDB
@@ -465,8 +484,10 @@ Antes de probar, el grupo debe verificar y unificar la base de datos
 utilizada. Las contraseñas de ejemplo son propias de un ambiente local de
 laboratorio y no deben asumirse como configuración segura de producción.
 
-\textbf{Pendiente del equipo:} ejecución de scripts, esquema/colecciones,
-registros insertados y tratamiento del nombre de base de datos.
+\textbf{Resultado (HU-004):} los cuatro scripts se ejecutaron en contenedores
+limpios. El DML de MongoDB se corrigió para cargar en \texttt{persona\_db}, la base
+que usan REST y CLI. Ambos motores contienen las mismas cinco personas
+(PR \#34, 2026-11-09).
 
 \subsubsection*{Actividad 4. Compilar y ejecutar la versión base}
 Desde el directorio raíz Maven se puede intentar la compilación con:
@@ -478,8 +499,12 @@ El proyecto contiene dos clases de arranque independientes:
 ambos clientes, verificar el endpoint inicial de personas y comprobar
 el acceso a Swagger y al menú CLI.
 
-\textbf{Pendiente del equipo:} comandos exactos de ejecución,
-resultados, errores, correcciones y evidencias de REST y CLI.
+\textbf{Resultado (HU-005):} la compilación termina con \texttt{BUILD SUCCESS}.
+Los JAR generados no son ejecutables, porque \texttt{spring-boot-maven-plugin}
+no declara \texttt{repackage}, y \texttt{spring-boot:run} falla dentro de cada
+módulo por la propiedad \texttt{\$\{revision\}}. Por eso ambas aplicaciones se
+arrancaron con el classpath que calcula el reactor Maven, sin cambiar el código.
+Los resultados están en la tabla de pruebas ejecutadas (PR \#35, 2026-11-09).
 
 \subsubsection*{Actividad 5. Identificar y corregir el Mapper}
 El profesor advierte expresamente que hay un error en un Mapper de la
@@ -541,11 +566,11 @@ final entregado.
 
 \begin{table}[H]
 \centering\small
-\begin{tabularx}{\textwidth}{@{}p{3.4cm}X@{}}
+\begin{tabularx}{\textwidth}{@{}p{3.8cm}X@{}}
 \toprule
-\textbf{Entregable}&\textbf{Estado en el commit \texttt{a83523b}}\\\midrule
+\textbf{Entregable}&\textbf{Estado al 2026-11-09}\\\midrule
 README reproducible&\texttt{README.md} declara el stack y los pasos de preparación, scripts y arranque. Falta comprobarlo desde un clon limpio.\\
-Scripts DDL/DML&\path{scripts/} contiene \path{persona_ddl_maria.sql}, \path{persona_dml_maria.sql}, \path{persona_ddl_mongo.js} y \path{persona_dml_mongo.js}. Sigue pendiente unificar \texttt{prueba\_db} y \texttt{persona\_db}.\\
+Scripts DDL/DML&\path{scripts/} contiene \path{persona_ddl_maria.sql}, \path{persona_dml_maria.sql}, \path{persona_ddl_mongo.js} y \path{persona_dml_mongo.js}. HU-004 unificó MongoDB en \texttt{persona\_db}.\\
 Código fuente&Siete módulos Maven. Persona está parcialmente expuesta y los otros tres recursos no tienen entradas.\\
 URL del tag&No existe tag en el repositorio. \textbf{Pendiente.}\\
 \bottomrule
