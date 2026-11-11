@@ -2,7 +2,7 @@
 
 Proyecto de Arquitectura de Software de la Pontificia Universidad Javeriana desarrollado por **Sara Albarracín, Miguel Sarmiento y Juan Diego Rojas**.
 
-PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) y repositorios (Repository) para gestionar Persona, Profesión, Teléfono y Estudios desde REST y CLI. El equipo acordó seis operaciones por recurso: crear, listar todos, listar parcial, editar, eliminar y contar.
+PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) y repositorios (Repository) para gestionar Persona, Profesión, Teléfono y Estudios desde REST y CLI. El equipo acordó seis operaciones por recurso: tres lecturas (consultar por identificador, listar todos y contar) y tres escrituras (crear, editar y eliminar). El listado parcial es una operación adicional.
 
 **[Explorar la wiki de PersonAPP](docs/wiki/Home.md)**
 

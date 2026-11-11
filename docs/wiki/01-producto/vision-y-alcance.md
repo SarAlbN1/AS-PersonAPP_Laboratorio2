@@ -23,10 +23,10 @@ Completar, ejecutar, verificar y documentar el laboratorio tomando como punto de
 
 | Recurso | CRUD esperado | Relación o identidad conocida en el modelo relacional base |
 |---|---|---|
-| Persona | Crear, listar todos, listar parcial, editar, eliminar y contar | `cc` como identificador |
-| Profesión | Crear, listar todos, listar parcial, editar, eliminar y contar | `id` como identificador |
-| Teléfono | Crear, listar todos, listar parcial, editar, eliminar y contar | `num` como identificador, `duenio` vincula Persona |
-| Estudios | Crear, listar todos, listar parcial, editar, eliminar y contar | `(id_prof, cc_per)` vincula Profesión y Persona |
+| Persona | Consultar por identificador, listar todos, contar, crear, editar y eliminar; adicional: listar parcial | `cc` como identificador |
+| Profesión | Consultar por identificador, listar todos, contar, crear, editar y eliminar; adicional: listar parcial | `id` como identificador |
+| Teléfono | Consultar por identificador, listar todos, contar, crear, editar y eliminar; adicional: listar parcial | `num` como identificador, `duenio` vincula Persona |
+| Estudios | Consultar por identificador, listar todos, contar, crear, editar y eliminar; adicional: listar parcial | `(id_prof, cc_per)` vincula Profesión y Persona |
 
 La representación documental en MongoDB deberá definirse y validarse contra los adaptadores, preservando el significado de esas relaciones. No asumir claves o restricciones MongoDB no verificadas.
 

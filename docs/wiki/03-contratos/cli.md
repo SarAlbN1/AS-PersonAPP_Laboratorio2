@@ -11,12 +11,14 @@ El `cli-input-adapter` recibe acciones de terminal, construye solicitudes al pue
 
 ## 2. Contrato funcional objetivo
 
-| Recurso | Crear | Listar todos | Listar parcial | Editar | Eliminar | Contar | HU |
-|---|---|---|---|---|---|---|---|
-| Persona | Sí | Sí | Sí | Sí | Sí | Sí | HU-015 |
-| Profesión | Sí | Sí | Sí | Sí | Sí | Sí | HU-018 |
-| Teléfono | Sí | Sí | Sí | Sí | Sí | Sí | HU-021 |
-| Estudios | Sí | Sí | Sí | Sí | Sí | Sí | HU-024 |
+Las seis operaciones son tres lecturas (consultar por identificador, listar todos y contar) y tres escrituras (crear, editar y eliminar). El listado parcial es una operación adicional.
+
+| Recurso | Consultar por identificador | Listar todos | Contar | Crear | Editar | Eliminar | Adicional: listar parcial | HU |
+|---|---|---|---|---|---|---|---|---|
+| Persona | Sí | Sí | Sí | Sí | Sí | Sí | Sí | HU-015 |
+| Profesión | Sí | Sí | Sí | Sí | Sí | Sí | Sí | HU-018 |
+| Teléfono | Sí | Sí | Sí | Sí | Sí | Sí | Sí | HU-021 |
+| Estudios | Sí | Sí | Sí | Sí | Sí | Sí | Sí | HU-024 |
 
 La HU-026 verifica las operaciones por recurso y motor. [Backlog único](../06-backlog/README.md).
 
@@ -28,7 +30,7 @@ La numeración de opciones y textos son **orientativos**; no deben copiarse como
 INICIO
   → seleccionar motor (MARIA | MONGO)
   → seleccionar recurso (Persona | Profesión | Teléfono | Estudios)
-  → seleccionar operación (crear | listar todos | listar parcial | editar | eliminar | contar)
+  → seleccionar operación (consultar por identificador | listar todos | contar | crear | editar | eliminar | listar parcial)
   → introducir datos requeridos
   → invocar caso de uso mediante puerto de entrada
   → mostrar resultado o error controlado
@@ -53,10 +55,14 @@ Conserva el orden de la plantilla (primero recurso, luego motor) y aplica las re
 Menú principal:  1 Persona · 2 Profesión · 3 Teléfono · 4 Estudios · 0 Salir
 Menú de motor:   1 MariaDB · 2 MongoDB · 0 Regresar
 Menú de operaciones (igual para los cuatro recursos):
-  1 Crear · 2 Listar todos · 3 Listar parcial · 4 Editar · 5 Eliminar · 6 Contar · 0 Regresar al menú de motor
+  Lecturas:   1 Consultar por identificador · 2 Listar todos · 3 Contar
+  Escrituras: 4 Crear · 5 Editar · 6 Eliminar
+  Adicional:  7 Listar parcial
+  0 Regresar al menú de motor
 ```
 
 - **Cambio de motor:** con 0 se vuelve al menú de motor y se elige el otro sin reiniciar la aplicación.
+- **Consultar por identificador:** pide la clave completa; en Estudios, la profesión y luego la persona. Muestra el registro con todos sus campos, sin teléfonos ni estudios asociados (esa consulta es HU-033). Si la clave no existe en el motor elegido, muestra `[ERR-03] No existe <recurso> con <clave> en <motor>` y vuelve al menú de operaciones. Una clave con tipo incorrecto se vuelve a pedir (ERR-01).
 - **Listar parcial:** pide la página (desde 0) y el tamaño (1 a 100). Muestra los registros y una línea `Página N · M registros`.
 - **Editar y eliminar:** piden primero la clave (en Estudios, la profesión y luego la persona). Al editar, muestra el registro actual antes de pedir los campos editables.
 - **Contar:** muestra `Total en <motor>: N`.
@@ -87,7 +93,7 @@ Los tipos y límites exactos se fijan en [persistencia](persistencia.md) y [vali
 
 ## 6. Casos de prueba para HU-026
 
-- Para cada recurso: alta → listado total → listado parcial → edición → conteo → eliminación → verificar ausencia en listado y decremento del conteo.
+- Para cada recurso: alta → consulta por identificador → listado total → listado parcial → edición → consulta por identificador del valor editado → conteo → eliminación → verificar ERR-03 al consultar la clave eliminada, ausencia en el listado y decremento del conteo.
 - Repetir la secuencia en `MARIA` y `MONGO` sin cambiar código.
 - Intentar crear registros duplicados o relaciones inexistentes; comprobar que el almacén no se altera.
 - Comprobar que `num` no pierde ceros iniciales, si el contrato lo define como texto.
