@@ -123,7 +123,11 @@ Procedimiento ejecutado el 2026-11-09 en Windows 11 sobre el commit `f727fcd`, c
 
 Procedimiento ejecutado el 2026-11-10 sobre `e1a360d`, con el ambiente y el arranque de las secciones anteriores.
 
-**Reproducción.** Entrada: `POST /api/v1/persona` con `{"dni":"999","firstName":"Prueba","lastName":"Mapper","age":"30","sex":"M","database":"MARIA"}`, y la misma con `"database":"MONGO"`. Salida: `500` en ambos motores y ningún registro guardado. Error: `java.lang.NullPointerException: gender is marked non-null but is null`, con esta cadena de llamadas:
+**Reproducción** (2026-11-09, antes de la corrección). Entradas de `POST /api/v1/persona`:
+- `{"dni":"999","firstName":"Prueba","lastName":"Mapper","age":"30","sex":"M","database":"MARIA"}`
+- `{"dni":"998","firstName":"Prueba","lastName":"Mapper","age":"30","sex":"F","database":"MONGO"}`
+
+Salida: `500` en ambos motores y ningún registro guardado. Error: `java.lang.NullPointerException: gender is marked non-null but is null`, con esta cadena de llamadas:
 
 ```text
 PersonaControllerV1.crearPersona:40 → PersonaInputAdapterRest.crearPersona:72 → PersonUseCase.create:35
@@ -148,16 +152,18 @@ mvn -B clean install
 
 `Tests run: 6, Failures: 0, Errors: 0` y `BUILD SUCCESS` en los ocho artefactos. Con el método original, la misma prueba falla en cinco de los seis casos. Para ejecutar solo este módulo se usa `mvn -B -pl rest-input-adapter -am test`, por el `${revision}` descrito en HU-005.
 
-**Resultados en REST** (arranque como en HU-005):
+**Resultados en REST** (arranque como en HU-005). Los cuerpos enviados a `POST /api/v1/persona` son los que muestra la tabla. Los que no aparecen son `firstName` `Prueba` y `lastName` `Mapper` en las dos primeras filas, `X`/`Y` en la de sexo inválido, y `Sin`/`Edad` en las de edad ausente.
 
 | Solicitud | HTTP | Resultado |
 |---|---|---|
-| `POST` con `dni` 999, `sex` `M` y `MARIA` | 200 | Responde la persona con `"sex":"MALE"`. MariaDB guarda `999, Prueba, Mapper, M, 30`. |
-| `POST` con `dni` 998, `sex` `F` y `MONGO` | 200 | MongoDB guarda `{_id: 998, genero: 'F', edad: 25}`. La respuesta indica `"database":"MariaDB"` porque `PersonaInputAdapterRest.crearPersona` usa siempre la etiqueta de MariaDB; queda para HU-014. |
-| `POST` con `sex` `O` | 500 | `IllegalArgumentException: Sexo no admitido: O. Use M o F.` No se guarda nada. |
-| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 | Cada motor incluye la persona creada en él, además de las cinco iniciales. |
+| `{"dni":"999","age":"30","sex":"M","database":"MARIA"}` (2026-11-10) | 200 | Responde la persona con `"sex":"MALE"`. MariaDB guarda `999, Prueba, Mapper, M, 30`. |
+| `{"dni":"998","age":"25","sex":"F","database":"MONGO"}` (2026-11-10) | 200 | MongoDB guarda `{_id: 998, genero: 'F', edad: 25}`. La respuesta indica `"database":"MariaDB"` porque `PersonaInputAdapterRest.crearPersona` usa siempre la etiqueta de MariaDB; queda para HU-014. |
+| `{"dni":"997","age":"1","sex":"O","database":"MARIA"}` (2026-11-10) | 500 | `IllegalArgumentException: Sexo no admitido: O. Use M o F.` No se guarda nada. |
+| `{"dni":"996","sex":"F","database":"MARIA"}`, sin `age` (2026-11-11) | 200 | MariaDB guarda `edad` como `NULL`. |
+| `{"dni":"995","age":"","sex":"M","database":"MONGO"}` (2026-11-11) | 200 | MongoDB guarda el documento sin el campo `edad`, igual que la persona 987654321 del DML. `isValidAge` no se invoca en este flujo. |
+| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 | Cada motor incluye la persona creada en él, además de las cinco iniciales. Una edad ausente se muestra como `"age":"null"`, igual que en HU-005. |
 
-Al terminar se borraron los registros 999 y 998, y ambos motores volvieron a cinco personas.
+Al terminar se borraron los registros de prueba, y ambos motores volvieron a cinco personas.
 
 ## Fase 2: funcionalidad faltante
 
