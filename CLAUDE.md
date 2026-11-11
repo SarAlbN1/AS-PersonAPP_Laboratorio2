@@ -24,6 +24,7 @@ El código, los commits y las pruebas ejecutadas son la evidencia del estado rea
 ## Trabajo con asistentes
 
 - Confirma el alcance y los permisos antes de intervenir en trabajo ajeno o modificar GitHub. Aplica las [reglas de ramas y commits](docs/wiki/05-proceso/git-ramas-y-commits.md) y la [política de integración](CONTRIBUTING.md#pull-requests-y-releases).
+- Al iniciar una issue, abrir o preparar su PR para revisión, o verificar su cierre, actualiza su tarjeta en GitHub Projects como parte de la misma tarea. Aplica los [estados del tablero](CONTRIBUTING.md#estados-del-tablero) y el [flujo para asistentes](docs/wiki/05-proceso/trabajo-con-ia.md#actualización-del-tablero). Comprueba las dependencias antes de iniciar y verifica el estado guardado.
 - Puedes revisar un PR y comunicar hallazgos sin emitir un voto. Si te piden aprobar o fusionar en nombre de un colaborador, aplica las condiciones de la [revisión delegada](CONTRIBUTING.md#revisión-delegada-a-un-asistente) y detente si la identidad, la autorización o el estado del PR no coinciden.
 - Trabaja dentro del alcance asignado. Comunica los defectos ajenos al cambio y pide revisión antes de alterar un contrato o una decisión.
 - Informa en el chat de los cambios, pruebas, resultados y pendientes. Consulta antes de crear documentos nuevos y actualiza la fuente que mantiene cada dato. [Trabajo con IA](docs/wiki/05-proceso/trabajo-con-ia.md).

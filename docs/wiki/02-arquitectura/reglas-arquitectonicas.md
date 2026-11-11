@@ -22,6 +22,12 @@
 | AR-11 | No se incluyen contraseñas, tokens ni datos sensibles en Git o logs de prueba | Revisión de cambios | HU-029/032 |
 | AR-12 | No se modifica un contrato arquitectónico sin revisar SRS/SAD/ADR/contratos y las pruebas afectadas | Checklist del PR | Transversal |
 
+## Preservación obligatoria de la arquitectura
+
+Todas las HU conservan exactamente los módulos `common`, `domain`, `application`, `rest-input-adapter`, `cli-input-adapter`, `maria-output-adapter` y `mongo-output-adapter`, sus responsabilidades y las dependencias hexagonales. No se permite añadir, eliminar, fusionar o renombrar módulos ni trasladar responsabilidades entre capas. Las migraciones y los contenedores deben adaptarse a esta estructura. Un ADR no constituye una excepción automática: cualquier propuesta que cambie esta restricción requiere una nueva instrucción expresa del responsable del proyecto antes de implementarse.
+
+HU-027 comprueba esta regla y su incumplimiento bloquea el cierre de cualquier HU afectada y de la entrega.
+
 ## Distinciones técnicas
 
 - **`Service`** representa un caso de uso de aplicación; **`Repository`** encapsula acceso tecnológico. No sustituir uno por otro.
@@ -39,4 +45,4 @@
 - [ ] Cualquier cambio de endpoint, esquema o versión actualiza contrato, ADR y pruebas.
 - [ ] No se incluyen secretos ni se afirma ejecución sin evidencia.
 
-**Política:** una infracción bloquea la integración hasta corregirse o aprobar una revisión formal de arquitectura. La política de PR se administra en [05-proceso](../05-proceso/README.md).
+**Política:** una infracción bloquea la integración hasta corregirse. La preservación modular y hexagonal es obligatoria para este alcance. La política de PR se administra en [05-proceso](../05-proceso/README.md).

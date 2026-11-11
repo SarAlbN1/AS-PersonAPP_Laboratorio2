@@ -13,6 +13,16 @@ Empieza por la [wiki](docs/wiki/Home.md) y consulta el documento que mantiene ca
 
 Consulta el [README](README.md) para preparar y ejecutar el proyecto.
 
+## Estados del tablero
+
+Actualiza la tarjeta de la issue en el [tablero de PersonAPP](https://github.com/users/SarAlbN1/projects/10) cuando cambie su situación.
+
+- **Backlog**. La historia puede iniciarse y aún no se ha empezado.
+- **Blocked**. Una dependencia abierta impide avanzar con la historia. Registra en la issue qué dependencia la bloquea. Cuando se resuelva la última, pasa la tarjeta a **Backlog** si el trabajo aún no comenzó o al estado que corresponda según el avance real.
+- **In progress**. Mueve la tarjeta al comenzar el trabajo efectivo. Un PR en borrador mantiene este estado si el trabajo puede seguir.
+- **In review**. Mueve la tarjeta cuando haya un PR abierto, listo para revisión y vinculado a la entrega de la historia. Un PR parcial que solo referencia la issue no cambia el estado de la historia completa.
+- **Done**. Mueve la tarjeta cuando el cambio esté integrado, se hayan verificado los criterios y la issue esté cerrada.
+
 ## Pull requests y releases
 
 Esta página es la fuente de las reglas de revisión, aprobación y fusión de PersonAPP. Describe el proceso del equipo. La configuración efectiva de protección de `main` en GitHub queda por verificar.
