@@ -91,7 +91,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-007 · Actualizar Java, Spring Boot, librerías y plugins compatibles
 
-**Estado:** Pendiente. **Dependencias:** HU-002, HU-005, HU-006. **Trazabilidad:** RT-02, RF-08, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Issue:** #40. **Responsable:** @SarAlbN1. **Estado:** Pendiente. **Dependencias:** HU-002, HU-005, HU-006. **Trazabilidad:** RT-02, RF-08, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
 - [ ] Registrar las versiones iniciales y adoptar la versión LTS más alta disponible y compatible para Java y cada tecnología que publique versiones LTS. Para tecnologías sin etiqueta LTS, elegir la versión estable más reciente compatible y con soporte vigente. Citar las fuentes oficiales y justificar cualquier versión inferior con la incompatibilidad comprobada.
 - [ ] Comparar el árbol de dependencias directas y transitivas antes y después. Revisar POM padre e hijos, plugins, librerías, anotaciones, APIs y configuración, y resolver incompatibilidades.
@@ -101,7 +101,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-034 · Contenerizar aplicación y ambos motores conservando los módulos
 
-**Estado:** Pendiente. **Dependencias:** HU-007, HU-004. **Trazabilidad:** RT-04, RE-01, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Issue:** #41. **Responsable:** @ma-sarmiento. **Estado:** Pendiente. **Dependencias:** HU-007, HU-004. **Trazabilidad:** RT-04, RE-01, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
 - [ ] Versionar Dockerfile(s) reproducibles para las entradas REST y CLI, construyendo el reactor de siete módulos sin cambiar su estructura ni responsabilidades.
 - [ ] Versionar Docker Compose para REST, CLI interactiva y MariaDB/MongoDB, con versiones compatibles con HU-007, conectividad y comprobaciones de disponibilidad.
@@ -118,12 +118,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-011 · Definir contratos de dominio, identificadores y validaciones comunes
 
-**Estado:** Parcial. **Dependencias:** HU-002, HU-034. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #7, PR #36). **Dependencias:** HU-002, HU-005. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Se documentan llaves de persona, profesión, teléfono y estudios (compuesta).
-- [ ] Se define comportamiento para duplicados, FKs, datos inválidos y eliminaciones.
-- [ ] REST/CLI y ambos motores acuerdan las mismas reglas funcionales; no se inventan rutas como hechos existentes.
-- [ ] Se definen listado total, paginación con orden estable y conteo por motor, además de las reglas de identidad para editar y eliminar.
+- [x] Se documentan llaves de persona, profesión, teléfono y estudios (compuesta).
+- [x] Se define comportamiento para duplicados, FKs, datos inválidos y eliminaciones.
+- [x] REST/CLI y ambos motores acuerdan las mismas reglas funcionales; no se inventan rutas como hechos existentes.
+- [x] Se definen listado total, paginación con orden estable y conteo por motor, además de las reglas de identidad para editar y eliminar.
 
 #### HU-012 · Completar puertos y casos de uso CRUD de Persona
 
@@ -165,7 +165,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-016 · Implementar dominio, puertos y casos de uso de Profesión
 
-**Estado:** Parcial. **Dependencias:** HU-011. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
 - [ ] Modelo y puertos de profesión implementados.
 - [ ] Casos de uso CRUD y validaciones probados.
@@ -192,7 +192,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-019 · Implementar dominio, puertos y casos de uso de Teléfono
 
-**Estado:** Parcial. **Dependencias:** HU-011. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
 - [ ] Modelo, identificador y referencia a persona validados.
 - [ ] Puertos y casos de uso realizan CRUD.
@@ -219,7 +219,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-022 · Implementar dominio, puertos y casos de uso de Estudios
 
-**Estado:** Parcial. **Dependencias:** HU-011. **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
 - [ ] Se usa identidad compuesta (id_prof, cc_per) del modelo base, salvo decisión documentada.
 - [ ] Casos de uso CRUD e integridad de dos referencias.
@@ -246,7 +246,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-033 · Consultar una persona con todos sus teléfonos asociados
 
-**Estado:** Pendiente. **Dependencias:** HU-013, HU-014, HU-015, HU-020, HU-021. **Trazabilidad:** RF-09, RF-02, RF-03, RF-04, RF-07. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Issue:** #42. **Responsable:** @Juandi48. **Estado:** Pendiente. **Dependencias:** HU-013, HU-014, HU-015, HU-020, HU-021. **Trazabilidad:** RF-09, RF-02, RF-03, RF-04, RF-07. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
 - [ ] Definir e implementar consulta por identificador que entregue la persona y todos sus teléfonos asociados desde REST y CLI, mediante puertos y casos de uso existentes.
 - [ ] Devolver una colección vacía cuando la persona exista sin teléfonos; definir y probar error controlado para persona inexistente.
@@ -307,7 +307,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-030 · Consolidar informe académico y evidencias del procedimiento
 
-**Estado:** Abierta. El informe sigue en elaboración y la HU permanece abierta hasta incorporar las evidencias finales y verificar sus criterios. **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
+**Estado:** Parcial. El informe sigue en elaboración y la HU permanece abierta hasta incorporar las evidencias finales y verificar sus criterios. **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
 
 - [ ] Informe incluye portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.
 - [ ] Evidencias distinguen línea base JDK 11, versiones finales actualizadas y funcionalidades finales.
