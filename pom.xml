@@ -15,8 +15,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<revision>0.0.1-SNAPSHOT</revision>
-		<global.java.version>17</global.java.version>
-		<global.springframework.boot.version>3.5.16</global.springframework.boot.version>
+		<global.java.version>25</global.java.version>
+		<global.lombok.version>1.18.48</global.lombok.version>
+		<global.springframework.boot.version>4.1.2</global.springframework.boot.version>
 		<global.mariadb.client.version>3.1.4</global.mariadb.client.version>
 	</properties>
 	<licenses>
@@ -60,6 +61,20 @@
 	</dependencyManagement>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<proc>full</proc>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${global.lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
