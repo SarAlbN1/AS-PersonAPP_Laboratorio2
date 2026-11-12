@@ -255,11 +255,15 @@ RF-02 & Publicar los endpoints REST correspondientes y documentarlos en Swagger 
 RF-03 & Proporcionar operaciones equivalentes mediante un cliente CLI según el alcance definido.\\
 RF-04 & Conectar los casos de uso con MariaDB y MongoDB mediante adaptadores de salida.\\
 RF-05 & Como criterio del equipo, permitir escoger MariaDB o MongoDB en tiempo de ejecución, sin reiniciar la aplicación.\\
+RF-06 & Preservar la identidad, los vínculos y las reglas de validación del dominio: rechazar duplicados, datos inválidos y referencias imposibles.\\
+RF-07 & Manejar las ausencias y los errores de forma controlada en REST y CLI, sin éxitos falsos ni excepciones sin procesar.\\
+RF-08 & Realizar correctamente los mapeos entre DTO, dominio, entidad JPA y documento MongoDB, con pruebas de regresión del defecto encontrado.\\
 RF-09 & Consultar una persona con todos sus teléfonos por REST y CLI en ambos motores.\\
-RA-01 & Organizar las dependencias por módulos, siguiendo el diseño hexagonal y limpio, sin añadir, fusionar ni renombrar los siete módulos de la plantilla.\\
+RA-01 & Mantener el núcleo de dominio desacoplado de REST, CLI, JPA y MongoDB y respetar la dirección de las dependencias hexagonales. Se conservan los siete módulos de la plantilla, sin añadir, fusionar ni renombrar ninguno.\\
 RA-02 & Emplear Repository, Service/casos de uso, puertos y adaptadores.\\
 RT-01 & Partir de la plantilla con JDK 11, Spring Boot 2.7.11 y Maven multimódulo, y hacerla funcionar.\\
 RT-02 & Actualizar Java, Spring Boot, librerías y plugins a versiones recientes y compatibles, resolviendo dependencias y cambios de API.\\
+RT-03 & Documentar la API real mediante Swagger 3 (OpenAPI 3), con las operaciones, parámetros y respuestas implementados.\\
 RT-04 & Contenerizar la aplicación REST y CLI junto con MariaDB y MongoDB.\\
 RE-01 & Incluir README con configuración del ambiente, compilación y despliegue.\\
 RE-02 & Entregar scripts DDL/DML, código y URL del tag Git del repositorio del equipo.\\
@@ -379,11 +383,13 @@ Estudios usa la clave compuesta (\texttt{id\_prof}, \texttt{cc\_per}) del modelo
 base. Las rutas REST, las opciones de menú y los códigos de respuesta están en los
 contratos de la wiki del equipo y se describirán aquí cuando estén implementados.
 
-\subsection{Implementación observada en el código actual}
+\subsection{Implementación observada en la plantilla (commit \texttt{a83523b})}
 Esta subsección describe el código del repositorio del equipo en el commit
 \texttt{a83523b}. Hasta ese commit el equipo solo ha modificado documentación, de
 modo que el código coincide con la plantilla del profesor. La tabla distingue lo
-declarado de lo efectivamente expuesto. No describe resultados de ejecución.
+declarado de lo efectivamente expuesto. No describe resultados de ejecución. Los
+cambios posteriores se indican en cada fila y se detallan en la fase 1 del
+procedimiento.
 
 \begin{table}[H]
 \centering\small
@@ -393,11 +399,11 @@ declarado de lo efectivamente expuesto. No describe resultados de ejecución.
 \texttt{PersonInputPort} y \texttt{PersonUseCase}&Declaran e implementan crear, editar, eliminar, listar, consultar por identificador, contar y consultar teléfonos/estudios. \texttt{count} se calcula como el tamaño de \texttt{findAll()} y no se expone en REST ni en CLI. No existe listado paginado.\\
 \texttt{PersonOutputPort}&Ofrece \texttt{save}, \texttt{delete}, \texttt{find} y \texttt{findById}. Lo implementan \texttt{PersonOutputAdapterMaria} y \texttt{PersonOutputAdapterMongo}, que cuentan con sus repositorios.\\
 \texttt{PersonaControllerV1}&Declara solo \texttt{GET /api/v1/persona/\{database\}} (listado) y \texttt{POST /api/v1/persona} (alta).\\
-\texttt{PersonaMapperRest}&\texttt{fromAdapterToDomain} está incompleto: devuelve un \texttt{Person} vacío (\texttt{TODO}) y no copia los datos de \texttt{PersonaRequest}. La respuesta del alta se etiqueta siempre como MariaDB.\\
+\texttt{PersonaMapperRest}&\texttt{fromAdapterToDomain} está incompleto: devuelve un \texttt{Person} vacío (\texttt{TODO}) y no copia los datos de \texttt{PersonaRequest}. La respuesta del alta se etiqueta siempre como MariaDB. \emph{Corregido en HU-006 (PR \#38): el método ya copia los datos; la etiqueta de la respuesta queda para HU-014.}\\
 \texttt{MenuPrincipal}&Muestra los módulos Persona, Profesión, Teléfono y Estudios. Solo Persona abre un submenú; las otras opciones registran ``Implementar Menu''.\\
 \texttt{PersonaMenu}&Permite elegir MariaDB (1) o MongoDB (2) y conecta únicamente la opción 1, que lista todas las personas.\\
 Profesión, Teléfono y Estudios&Existen modelos de dominio, entidades JPA, documentos MongoDB y mappers en ambos adaptadores de salida. No existen puertos, casos de uso, repositorios, adaptadores de salida ni rutas o menús.\\
-Pruebas automatizadas&No hay directorios \texttt{src/test} en los módulos.\\
+Pruebas automatizadas&No hay directorios \texttt{src/test} en los módulos. \emph{Desde HU-006 (PR \#38) existe \texttt{PersonaMapperRestTest} en \texttt{rest-input-adapter}.}\\
 \bottomrule
 \end{tabularx}
 \caption{Implementación observada en el código del commit \texttt{a83523b}, sin ejecución.}
@@ -560,8 +566,12 @@ los cambios de las API que usa el proyecto. HU-007 registra las versiones
 iniciales, adopta la LTS más alta compatible para Java y para cada tecnología que
 publique versiones LTS, y elige para las demás la versión estable más reciente con
 soporte vigente. Compara el árbol de dependencias antes y después, revisa los POM,
-plugins, anotaciones, API y configuración, y añade la ejecución
-\texttt{repackage} en REST y CLI y \texttt{flatten-maven-plugin} en el POM padre.
+plugins, anotaciones, API y configuración. También corrige tres defectos de
+construcción comprobados sobre la fase 1: añade la ejecución \texttt{repackage} en
+REST y CLI para que sus JAR sean ejecutables, el \texttt{flatten-maven-plugin} en
+el POM padre para que el POM instalado no conserve \texttt{\$\{revision\}} ni
+\texttt{\$\{global.springframework.boot.version\}}, y el Maven Wrapper para que
+todos construyan con la misma versión de Maven.
 
 \textbf{Pendiente del equipo (HU-007):} versiones iniciales y finales con su
 fuente, cambios de dependencias y de API, errores encontrados y su solución, y
