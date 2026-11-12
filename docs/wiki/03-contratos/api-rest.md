@@ -24,16 +24,18 @@ Una operación declarada en `PersonInputPort` o `PersonUseCase` no puede contars
 
 La siguiente tabla **es un inventario de capacidades a diseñar**, no una lista de rutas ya existentes. Mantiene la nomenclatura REST convencional, pero no fija unilateralmente la versión, pluralización, idioma o ubicación de `database`.
 
-| Recurso | Crear | Listar todos | Listar parcial | Editar | Eliminar | Agregación (contar) | HU |
-|---|---|---|---|---|---|---|---|
-| Persona | POST | GET | GET | PUT | DELETE | GET | HU-014 |
-| Profesión | POST | GET | GET | PUT | DELETE | GET | HU-018 |
-| Teléfono | POST | GET | GET | PUT | DELETE | GET | HU-021 |
-| Estudios | POST | GET | GET | PUT | DELETE | GET | HU-024 |
+Las seis operaciones son tres lecturas (consultar por identificador, listar todos y contar) y tres escrituras (crear, editar y eliminar). El listado parcial paginado es una operación adicional.
 
-**Contrato propuesto para las lecturas.** Listar todos devuelve la colección completa del motor elegido. Listar parcial devuelve una página con tamaño positivo y orden estable por clave, incluida la clave compuesta de Estudios. Una página fuera del rango devuelve una colección vacía. Los parámetros inválidos producen un error de validación. Contar devuelve un entero no negativo con el total de la colección en el motor elegido, independientemente de la página. Una colección vacía devuelve 0.
+| Recurso | Consultar por identificador | Listar todos | Contar | Crear | Editar | Eliminar | Adicional: listar parcial | HU |
+|---|---|---|---|---|---|---|---|---|
+| Persona | GET | GET | GET | POST | PUT | DELETE | GET | HU-014 |
+| Profesión | GET | GET | GET | POST | PUT | DELETE | GET | HU-018 |
+| Teléfono | GET | GET | GET | POST | PUT | DELETE | GET | HU-021 |
+| Estudios | GET | GET | GET | POST | PUT | DELETE | GET | HU-024 |
 
-Editar y eliminar identifican el registro por su clave. La edición conserva la identidad y una operación sobre una clave ausente devuelve el error documentado. El detalle por clave puede seguir siendo un método interno del caso de uso.
+**Contrato propuesto para las lecturas.** Consultar por identificador devuelve un único registro del motor elegido a partir de su clave completa; en Estudios, el par profesión y persona. Si la clave no existe, devuelve ERR-03 en lugar de un cuerpo vacío o `null`. Listar todos devuelve la colección completa del motor elegido. Contar devuelve un entero no negativo con el total de la colección en el motor elegido. Una colección vacía devuelve 0. Listar parcial, operación adicional, devuelve una página con tamaño positivo y orden estable por clave, incluida la clave compuesta de Estudios. Una página fuera del rango devuelve una colección vacía y los parámetros inválidos producen un error de validación.
+
+Consultar, editar y eliminar identifican el registro por su clave. La edición conserva la identidad y una operación sobre una clave ausente devuelve ERR-03.
 
 **Criterios para fijar las rutas definitivas:** coherencia con `/api/v1/persona`, compatibilidad con consumidores de la base, identificadores (`cc`, `id`, `num`, par `id_prof`/`cc_per`), URL del recurso retornado y selector dinámico de motor. El equipo debe decidir si conserva la ruta actual o introduce una v2/versionado explícito, y registrar esa decisión **antes** de consumir el contrato desde pruebas.
 
@@ -43,14 +45,19 @@ Estas rutas se aprobaron en HU-011 (#36). No existen hasta que las implementen H
 
 `{recurso}` es `persona`, `profesion`, `telefono` o `estudio`, en singular, como la ruta actual `/api/v1/persona`. La clave es `{cc}`, `{id}` o `{num}`; en Estudios son dos segmentos: `/{idProfesion}/{ccPersona}`. Todas las rutas exigen el parámetro de consulta `database=MARIA|MONGO`.
 
-| Operación | Método y ruta | Éxito | Errores |
-|---|---|---|---|
-| Crear | `POST /api/v1/{recurso}?database=` | `201` con el registro creado | ERR-01, ERR-02, ERR-04, ERR-05, ERR-07 |
-| Listar todos | `GET /api/v1/{recurso}?database=` | `200` con un arreglo ordenado por clave | ERR-02, ERR-07 |
-| Listar parcial | `GET /api/v1/{recurso}/pagina?database=&page=0&size=10` | `200` con un arreglo; vacío si la página está fuera de rango | ERR-01, ERR-02, ERR-07 |
-| Editar | `PUT /api/v1/{recurso}/{clave}?database=` | `200` con el registro actualizado | ERR-01, ERR-02, ERR-03, ERR-05, ERR-07, ERR-09 |
-| Eliminar | `DELETE /api/v1/{recurso}/{clave}?database=` | `204` sin cuerpo | ERR-02, ERR-03, ERR-06, ERR-07 |
-| Contar | `GET /api/v1/{recurso}/conteo?database=` | `200` con un entero (por ejemplo, `5`) | ERR-02, ERR-07 |
+| Tipo | Operación | Método y ruta | Éxito | Errores |
+|---|---|---|---|---|
+| Lectura | Consultar por identificador | `GET /api/v1/{recurso}/{clave}?database=` | `200` con el registro | ERR-01, ERR-02, ERR-03, ERR-07 |
+| Lectura | Listar todos | `GET /api/v1/{recurso}?database=` | `200` con un arreglo ordenado por clave | ERR-02, ERR-07 |
+| Lectura | Contar | `GET /api/v1/{recurso}/conteo?database=` | `200` con un entero (por ejemplo, `5`) | ERR-02, ERR-07 |
+| Escritura | Crear | `POST /api/v1/{recurso}?database=` | `201` con el registro creado | ERR-01, ERR-02, ERR-04, ERR-05, ERR-07 |
+| Escritura | Editar | `PUT /api/v1/{recurso}/{clave}?database=` | `200` con el registro actualizado | ERR-01, ERR-02, ERR-03, ERR-05, ERR-07, ERR-09 |
+| Escritura | Eliminar | `DELETE /api/v1/{recurso}/{clave}?database=` | `204` sin cuerpo | ERR-02, ERR-03, ERR-06, ERR-07 |
+| Adicional | Listar parcial | `GET /api/v1/{recurso}/pagina?database=&page=0&size=10` | `200` con un arreglo; vacío si la página está fuera de rango | ERR-01, ERR-02, ERR-07 |
+
+**Consultar por identificador.** La respuesta tiene los mismos campos que la de crear y no incluye teléfonos ni estudios asociados; la persona con sus teléfonos es la consulta de HU-033. Una clave con formato inválido, como un `cc` no numérico, devuelve ERR-01. Una clave válida que no existe en el motor elegido devuelve ERR-03 (`404`), aunque exista en el otro motor. En Estudios la ruta es `GET /api/v1/estudio/{idProfesion}/{ccPersona}?database=` y se necesitan las dos partes de la clave; con una sola no hay consulta parcial.
+
+Las rutas literales `/pagina` y `/conteo` tienen prioridad sobre `/{clave}` en Spring MVC, y ninguna clave válida coincide con ellas: `cc` e `id` son enteros y `num` solo admite dígitos.
 
 `page` y `size` son opcionales y valen 0 y 10 por defecto. Los errores usan el [formato común](validaciones-y-errores.md#22-formato-de-error--aprobado-hu-011).
 
@@ -61,7 +68,7 @@ Estas rutas se aprobaron en HU-011 (#36). No existen hasta que las implementen H
 
 Las respuestas devuelven esos mismos campos. Los DTO usan tipos JSON reales (número, texto o fecha) en lugar de convertir todo a `String`.
 
-**Cambios frente a la plantilla (decisión D-04):** la ruta `GET /api/v1/persona/{database}` se sustituye por `GET /api/v1/persona?database=`. El campo `database` del cuerpo del `POST` pasa a ser parámetro de consulta. Así las seis operaciones eligen el motor del mismo modo, y `/{clave}` queda libre para editar y eliminar. Los ejemplos de Swagger se actualizan para usar `?database=` (HU-014 y HU-028).
+**Cambios frente a la plantilla (decisión D-04):** la ruta `GET /api/v1/persona/{database}` se sustituye por `GET /api/v1/persona?database=`. El campo `database` del cuerpo del `POST` pasa a ser parámetro de consulta. Así las seis operaciones eligen el motor del mismo modo, y `/{clave}` queda libre para consultar, editar y eliminar. Los ejemplos de Swagger se actualizan para usar `?database=` (HU-014 y HU-028).
 
 ## 4. Ficha obligatoria por endpoint
 

@@ -30,7 +30,7 @@
 | Teléfono | Pendiente | Pendiente | Pendiente | Pendiente |
 | Estudios | Pendiente | Pendiente | Pendiente | Pendiente |
 
-En cada celda comprobar **crear, listar todos, listar parcialmente, editar, eliminar y contar**, más datos inválidos, referencias inexistentes y restricciones relevantes. No sustituir pruebas reales por una captura del menú o por métodos declarados en código.
+En cada celda comprobar **consultar por identificador, listar todos, contar, crear, editar y eliminar**, el listado parcial como operación adicional, y además datos inválidos, referencias inexistentes y restricciones relevantes. No sustituir pruebas reales por una captura del menú o por métodos declarados en código.
 
 ### Cambio dinámico (caso transversal)
 

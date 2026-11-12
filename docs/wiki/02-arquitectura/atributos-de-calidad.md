@@ -29,7 +29,7 @@ Los siguientes criterios son **objetivos de aceptación propuestos**, no medicio
 | Teléfono | CRUD | CRUD | CRUD | CRUD |
 | Estudios | CRUD | CRUD | CRUD | CRUD |
 
-CRUD comprende: alta, listado total, listado parcial, edición, eliminación y conteo. Se añaden pruebas negativas de validación, relación, motor desconocido y conexión indisponible.
+CRUD comprende tres lecturas (consulta por identificador, listado total y conteo) y tres escrituras (alta, edición y eliminación). El listado parcial se verifica como operación adicional. Se añaden pruebas negativas de validación, relación, motor desconocido y conexión indisponible.
 
 ## Reglas de evidencia
 

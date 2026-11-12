@@ -1,6 +1,6 @@
 # Versiones de la entrega
 
-**Entrega:** conservar JDK 11 y verificar la plantilla.
+**Línea base:** JDK 11. HU-007 seleccionará y verificará las versiones finales de entrega.
 
 | Componente | Línea base citada | Versión final validada | Evidencia |
 |---|---|---|---|
@@ -34,3 +34,9 @@ Ambiente preparado el 2026-11-08 en Windows 11 sobre el commit `9d44066`. Estas 
 `mvn -B clean install -DskipTests` termina con `BUILD SUCCESS` en los ocho artefactos del reactor con JDK 11. El 2026-11-09, HU-005 repitió el build y arrancó REST y CLI con Temurin 11.0.33 y Maven 3.9.14 ([arranque](ejecucion-local.md#arranque-de-rest-y-cli-hu-005)).
 
 Se eligió MongoDB 6.0 porque es la versión de servidor más alta que soporta oficialmente el driver Java 4.6, incluido con Spring Boot 2.7.11. MariaDB 11.4 es la versión LTS vigente; el POM no fija la versión del servidor. El procedimiento está en [ejecución local](ejecucion-local.md#ambiente-local-verificado-hu-003).
+
+## Procedimiento de actualización (HU-007)
+
+Pendiente de ejecución. Registrar aquí la versión inicial y final de cada componente, la fuente oficial de soporte y la razón de compatibilidad. Elegir la LTS más alta disponible y compatible donde exista esa clasificación y, para el resto, la versión estable más reciente compatible y con soporte vigente.
+
+Documentar el orden y los comandos del upgrade, los árboles de dependencias antes y después, los cambios de plugins, librerías, anotaciones, APIs y configuración, y la solución de cada incompatibilidad. Adjuntar los resultados de compilación, arranque de REST y CLI, acceso a ambos motores y pruebas de regresión de mappers. Verificar que se conservan los siete módulos, sus responsabilidades y los adaptadores hexagonales.

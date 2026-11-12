@@ -2,7 +2,7 @@
 
 - [ ] Fork propio del repositorio del profesor, URL registrada.
 - [ ] REST y CLI compilados y ejecutados.
-- [ ] Persona, Profesión, Teléfono y Estudios con alta, listado completo, listado parcial, edición, eliminación y conteo en REST y CLI.
+- [ ] Persona, Profesión, Teléfono y Estudios con consulta por identificador, listado completo, conteo, alta, edición y eliminación en REST y CLI, más el listado parcial como operación adicional.
 - [ ] Ambos motores probados con selección en ejecución.
 - [ ] Scripts DDL/DML incluidos y reproducibles.
 - [ ] README con preparación de entorno, bases, scripts, compilación y arranque.
