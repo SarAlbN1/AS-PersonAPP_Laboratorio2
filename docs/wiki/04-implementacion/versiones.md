@@ -1,15 +1,18 @@
 # Versiones de la entrega
 
-**Línea base:** JDK 11. HU-007 seleccionará y verificará las versiones finales de entrega.
+**Línea base:** JDK 11 y Spring Boot 2.7.11. **Versiones finales validadas en HU-007:** Java 25, Spring Boot 4.1.2 y Maven 3.10.0, verificadas en la [migración ejecutada](#migración-ejecutada-hu-007).
 
 | Componente | Línea base citada | Versión final validada | Evidencia |
 |---|---|---|---|
-| Java | 11 | Pendiente | `java -version` |
-| Spring Boot | 2.7.11 | Pendiente | POM y compilación |
-| Maven | Por registrar | Pendiente | `mvn -version` |
-| Springdoc | 1.7.0 en REST | Pendiente | POM/Swagger |
-| Driver MariaDB | 3.1.4 (POM Maria) | Pendiente | POM/prueba |
-| Starter MongoDB | 2.7.11 (POM Mongo; no equivale a versión del servidor ni del driver transitivo) | Pendiente | POM/prueba |
+| Java | 11 | 25 (OpenJDK 25.0.4.1) | `java -version` y `clean install` del [resultado](#migración-ejecutada-hu-007) |
+| Spring Boot | 2.7.11 | 4.1.2 | BOM del POM padre, arranque de REST y CLI |
+| Maven | Por registrar | 3.10.0, fijado con el Wrapper | `./mvnw -version` |
+| Springdoc | 1.7.0 en REST | `springdoc-openapi-starter-webmvc-ui` 3.2.0 | `/api-docs` publica OpenAPI 3.1.0 y Swagger UI responde 200 |
+| Driver MariaDB | 3.1.4 (POM Maria) | 3.1.4, gestionado en el padre | Árbol de dependencias y GET/POST contra MariaDB |
+| Starter MongoDB | 2.7.11 (POM Mongo; no equivale a versión del servidor ni del driver transitivo) | Starter 4.1.2 con driver `mongodb-driver-sync` 5.8.1 | Árbol de dependencias y GET/POST contra MongoDB |
+| Hibernate | 5.6.15.Final (transitivo) | 7.4.13.Final | Árbol de dependencias y lecturas por JPA |
+| Jakarta Persistence | 2.2.3 (`javax.*`) | 3.2.0 (`jakarta.*`) | Imports migrados en el adaptador de MariaDB |
+| Lombok | 1.18.26 | 1.18.48, declarado como procesador | `annotationProcessorPaths` del POM padre |
 
 
 ## Declaración frente a entorno observado
@@ -34,6 +37,46 @@ Ambiente preparado el 2026-11-08 en Windows 11 sobre el commit `9d44066`. Estas 
 `mvn -B clean install -DskipTests` termina con `BUILD SUCCESS` en los ocho artefactos del reactor con JDK 11. El 2026-11-09, HU-005 repitió el build y arrancó REST y CLI con Temurin 11.0.33 y Maven 3.9.14 ([arranque](ejecucion-local.md#arranque-de-rest-y-cli-hu-005)).
 
 Se eligió MongoDB 6.0 porque es la versión de servidor más alta que soporta oficialmente el driver Java 4.6, incluido con Spring Boot 2.7.11. MariaDB 11.4 es la versión LTS vigente; el POM no fija la versión del servidor. El procedimiento está en [ejecución local](ejecucion-local.md#ambiente-local-verificado-hu-003).
+
+## Migración ejecutada (HU-007)
+
+Ejecutada el 12 de noviembre de 2026 en macOS ARM64, a partir de la plantilla reparada `55c957f`, en cinco commits que se pueden revisar por separado.
+
+| Paso | Commit | Resultado |
+|---|---|---|
+| Empaquetado, aplanado y Wrapper | `3657037` | `repackage` con clasificador `exec`, `flatten-maven-plugin` en `resolveCiFriendliesOnly` y Maven Wrapper 3.10.0 |
+| BOM de Boot centralizado, sin cambiar de versión | `145d51c` | Árbol de 104 a 102 artefactos; Log4j y el driver MariaDB quedan gestionados en el padre |
+| Checkpoint Boot 3.5.16 con JDK 17 | `765e9ec` | Migración a `jakarta.*`, Springdoc 2.10.0 y retiro de JAXB; árbol de 102 a 106 |
+| Boot 4.1.2 con Java 25 | `9f9aa15` | `spring-boot-starter-webmvc`, Springdoc 3.2.0 y procesador de Lombok explícito; árbol de 106 a 123 |
+| Correcciones de ejecución | `c655a31` | `-parameters` y conexión a MongoDB por `spring.mongodb.uri` |
+
+### Incompatibilidades encontradas y su solución
+
+| Síntoma | Causa | Solución |
+|---|---|---|
+| `cannot find symbol: variable log` y getters ausentes al compilar con JDK 25 | Desde JDK 23 el procesamiento implícito de anotaciones está desactivado, y la plantilla no hereda de `spring-boot-starter-parent` | `proc=full` y `annotationProcessorPaths` con Lombok 1.18.48 en `maven-compiler-plugin` |
+| Los GET respondían 500: `Name for argument of type [java.lang.String] not specified … use the '-parameters' flag` | Al importar el BOM en lugar de heredar del starter parent, nadie activaba `-parameters` | `<parameters>true</parameters>` en `maven-compiler-plugin` |
+| MongoDB respondía 500 con `command find requires authentication` (error 13) | Boot 4 dejó de tomar la conexión de `spring.data.mongodb.host`, `port`, `username`, `password` y `authentication-database` | `spring.mongodb.uri` con `authSource=admin` en REST y CLI |
+| El BOM bajaba `log4j-api` a 2.17.2 frente al puente 2.20.0, y `mariadb-java-client` a 3.0.10 en REST y CLI | Un BOM importado no ve las propiedades del proyecto que lo importa, así que `log4j2.version` no sirve | Gestión explícita de ambos en el POM padre durante el checkpoint; al llegar a Boot 4 el BOM ya trae Log4j alineado |
+
+### Verificación con ambos motores
+
+Con `mariadb:11.4` y `mongo:6.0` en contenedores y los scripts DDL/DML del repositorio, sobre OpenJDK 25.0.4.1 y Maven 3.10.0:
+
+- `./mvnw -B -ntp clean install` termina en `BUILD SUCCESS` en el padre y los siete módulos, con `Tests run: 6, Failures: 0, Errors: 0` en `PersonaMapperRestTest`.
+- `GET /api/v1/persona/MARIA` y `/MONGO` responden `200` con las cinco personas de cada motor.
+- `POST /api/v1/persona` guarda en el motor elegido: `cc` 777001 en MariaDB y 777002 en MongoDB, ambos con género `F` y edad 28 comprobados en la base; un alta sin edad guarda `NULL`.
+- La CLI lista las personas de MariaDB y de MongoDB en la misma sesión, sin reiniciar, y termina con código 0.
+- `/api-docs` publica OpenAPI 3.1.0 con las dos rutas y el parámetro `database`, y Swagger UI responde `200`.
+- Un proyecto externo que importa `co.edu.javeriana.as.personapp.mapper.PersonaMapperRest` compila resolviendo el artefacto desde el repositorio local.
+
+Los siete módulos, sus responsabilidades y la dirección de las dependencias no cambian. La migración no toca puertos, casos de uso ni adaptadores salvo los imports de `javax.*` a `jakarta.*` en el adaptador de MariaDB.
+
+### Pendientes registrados
+
+- **Defecto ajeno a esta HU.** Con una persona que tenga estudios, `GET /api/v1/persona/MARIA` falla con `StackOverflowError`: `PersonaMapperMaria.fromAdapterToDomain` y `EstudiosMapperMaria.fromAdapterToDomain` se llaman mutuamente sin corte. Se reprodujo insertando un estudio de prueba, que después se retiró. Es un defecto de la plantilla, no de la migración, y corresponde a las HU de mappers de cada recurso.
+- Los scripts DML no cargan teléfonos ni estudios, así que las relaciones y las fechas solo se ejercitan con datos añadidos a mano.
+- Conviven Jackson 3.1.7 y Jackson 2.21.7 por una ruta transitiva. Falta decidir si se excluye la generación 2 al verificar la serialización de la API.
 
 ## Procedimiento de actualización (HU-007)
 
