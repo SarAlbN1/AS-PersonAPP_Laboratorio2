@@ -433,7 +433,7 @@ Scripts DDL/DML (HU-004)&MariaDB crea las tablas \texttt{persona}, \texttt{profe
 REST (HU-005)&\texttt{GET /api/v1/persona/MARIA} y \texttt{/MONGO} responden 200 con cinco personas cada uno; un motor desconocido responde 200 con una lista vacía. \texttt{POST /api/v1/persona} responde 500 por una \texttt{NullPointerException} en \texttt{PersonaMapperMaria.validateGenero} y no guarda datos.&2026-11-09, \#35\\
 Swagger (HU-005)&\path{/swagger-ui.html} responde 200 y redirige a \path{/swagger-ui/index.html}. \path{/api-docs} publica OpenAPI 3.0.1 con las dos rutas.&2026-11-09, \#35\\
 CLI (HU-005)&En una sola sesión lista las cinco personas de MariaDB y luego las de MongoDB, sin reiniciar. Profesión registra ``Implementar Menu''.&2026-11-09, \#35\\
-Mapper REST (HU-006)&\texttt{mvn -B clean install} termina con \texttt{BUILD SUCCESS} y \texttt{Tests run: 6, Failures: 0}. \texttt{POST /api/v1/persona} responde 200 y guarda en MariaDB y en MongoDB, también sin edad. Un \texttt{sex} no admitido responde 500 y no guarda datos.&2026-11-10/11, \#38\\
+Mapper REST (HU-006)&\texttt{mvn -B clean install} termina con \texttt{BUILD SUCCESS} y \texttt{Tests run: 6, Failures: 0}. \texttt{POST /api/v1/persona} responde 200 y guarda en MariaDB y en MongoDB, también sin edad. Un \texttt{sex} no admitido responde 500 y no guarda datos. Son códigos del código actual: el contrato fija 201 para el alta y \texttt{ERR-01} con 400 para una entrada inválida, y HU-014 cierra esa diferencia.&2026-11-10/11, \#38\\
 \bottomrule
 \end{tabularx}
 \caption{Pruebas ejecutadas en la fase 1.}
