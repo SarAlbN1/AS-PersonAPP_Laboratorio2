@@ -88,14 +88,17 @@ La solución debe contemplar dos clientes (REST y CLI), dos motores de persisten
 El punto de partida es el repositorio de referencia proporcionado por el profesor
 \cite{plantilla}.
 
-El stack del laboratorio es JDK 11, Spring Boot, MongoDB y MariaDB, REST y CLI,
-y Swagger 3. El POM principal declara Spring Boot 2.7.11, y la entrega conserva
-esas versiones sin migrarlas a versiones posteriores.
+El stack del laboratorio es Java, Spring Boot, MongoDB y MariaDB, REST y CLI,
+y Swagger 3. La plantilla declara JDK 11 y Spring Boot 2.7.11, que son la línea
+base. Según la explicación del profesor, después de hacerla funcionar se
+actualizan sus tecnologías a versiones recientes y compatibles, se contenedoriza
+la aplicación y, al final, se completan las funcionalidades.
 
 El equipo desglosó el CRUD de Persona, Profesión, Teléfono y Estudios en seis
-operaciones: \textbf{crear}, \textbf{listar todos}, \textbf{listar parcial} con
-paginación y orden estable, \textbf{editar}, \textbf{eliminar} y \textbf{contar}
-los registros del motor seleccionado. También es decisión del equipo permitir el
+operaciones: tres lecturas (\textbf{consultar por identificador}, \textbf{listar
+todos} y \textbf{contar} los registros del motor seleccionado) y tres escrituras
+(\textbf{crear}, \textbf{editar} y \textbf{eliminar}). El listado parcial con
+paginación y orden estable se conserva como operación adicional. También es decisión del equipo permitir el
 cambio de motor durante la ejecución, sin reiniciar la aplicación. Ambos son
 criterios de integración del equipo, no requisitos textuales del enunciado.
 
@@ -181,9 +184,13 @@ necesarias para compilar y ejecutar el programa. Spring Boot permite configurar
 y ejecutar aplicaciones Java y servicios HTTP \cite{spring}. El repositorio
 base declara \textbf{Java 11} y \textbf{Spring Boot 2.7.11} en el POM principal.
 El adaptador REST incorpora \texttt{springdoc-openapi-ui} 1.7.0, que genera la
-documentación OpenAPI 3 y la interfaz Swagger UI. La entrega se planifica con
-JDK 11 y Spring Boot 2.7.11, sin migrar de versión. Las versiones efectivas se
-registrarán después de compilar y ejecutar ambas aplicaciones.
+documentación OpenAPI 3 y la interfaz Swagger UI. Estas versiones son la línea
+base con la que se repara la plantilla. Después se actualizan a la versión LTS
+más alta compatible donde exista esa clasificación y, para el resto, a la versión
+estable más reciente con soporte vigente (HU-007). Actualizar no se reduce a
+cambiar números en el POM: obliga a revisar las dependencias directas y
+transitivas, los plugins, las anotaciones y las API que cambian entre versiones.
+Las versiones finales se registrarán cuando la migración esté verificada.
 
 \subsection{MariaDB y MongoDB}
 MariaDB es un sistema de bases de datos relacional que representa los datos
@@ -243,14 +250,21 @@ Entrega técnica& Repositorio y etiqueta Git& Fork actualizado, scripts, README,
 \endfirsthead
 \toprule\textbf{Código}&\textbf{Requerimiento}\\\midrule
 \endhead
-RF-01 & Implementar el CRUD de Persona, Profesión, Estudios y Teléfono. El equipo definió crear, listar todos, listar parcial, editar, eliminar y contar.\\
+RF-01 & Implementar el CRUD de Persona, Profesión, Estudios y Teléfono. El equipo definió tres lecturas (consultar por identificador, listar todos y contar) y tres escrituras (crear, editar y eliminar); el listado parcial es una operación adicional.\\
 RF-02 & Publicar los endpoints REST correspondientes y documentarlos en Swagger 3 (OpenAPI 3).\\
 RF-03 & Proporcionar operaciones equivalentes mediante un cliente CLI según el alcance definido.\\
 RF-04 & Conectar los casos de uso con MariaDB y MongoDB mediante adaptadores de salida.\\
 RF-05 & Como criterio del equipo, permitir escoger MariaDB o MongoDB en tiempo de ejecución, sin reiniciar la aplicación.\\
-RA-01 & Organizar las dependencias por módulos, siguiendo el diseño hexagonal y limpio.\\
-RT-01 & Utilizar JDK 11, Spring Boot (2.7.11 según el POM) y Maven. Verificar y registrar las versiones de ejecución.\\
-RT-02 & Emplear Repository, Service/casos de uso, puertos y adaptadores.\\
+RF-06 & Preservar la identidad, los vínculos y las reglas de validación del dominio: rechazar duplicados, datos inválidos y referencias imposibles.\\
+RF-07 & Manejar las ausencias y los errores de forma controlada en REST y CLI, sin éxitos falsos ni excepciones sin procesar.\\
+RF-08 & Realizar correctamente los mapeos entre DTO, dominio, entidad JPA y documento MongoDB, con pruebas de regresión del defecto encontrado.\\
+RF-09 & Consultar una persona con todos sus teléfonos por REST y CLI en ambos motores.\\
+RA-01 & Mantener el núcleo de dominio desacoplado de REST, CLI, JPA y MongoDB y respetar la dirección de las dependencias hexagonales. Se conservan los siete módulos de la plantilla, sin añadir, fusionar ni renombrar ninguno.\\
+RA-02 & Emplear Repository, Service/casos de uso, puertos y adaptadores.\\
+RT-01 & Partir de la plantilla con JDK 11, Spring Boot 2.7.11 y Maven multimódulo, y hacerla funcionar.\\
+RT-02 & Actualizar Java, Spring Boot, librerías y plugins a versiones recientes y compatibles, resolviendo dependencias y cambios de API.\\
+RT-03 & Documentar la API real mediante Swagger 3 (OpenAPI 3), con las operaciones, parámetros y respuestas implementados.\\
+RT-04 & Contenerizar la aplicación REST y CLI junto con MariaDB y MongoDB.\\
 RE-01 & Incluir README con configuración del ambiente, compilación y despliegue.\\
 RE-02 & Entregar scripts DDL/DML, código y URL del tag Git del repositorio del equipo.\\
 RE-03 & Entregar portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.\\
@@ -350,26 +364,32 @@ distintas peticiones puedan usar ambas bases sin detener el servicio.
 
 \subsection{Diseño de las seis operaciones}
 El diseño acordado por el equipo aplica las mismas seis operaciones a Persona,
-Profesión, Teléfono y Estudios, en REST y en CLI, sobre el motor seleccionado:
+Profesión, Teléfono y Estudios, en REST y en CLI, sobre el motor seleccionado.
+Son tres lecturas y tres escrituras:
 \begin{enumerate}
-\item \textbf{Crear} un registro.
-\item \textbf{Listar todos} los registros.
-\item \textbf{Listar parcial}: devolver una página de tamaño acotado con orden
-estable por clave, de modo que las páginas sucesivas no repitan ni omitan registros.
-\item \textbf{Editar} un registro existente identificado por su clave.
-\item \textbf{Eliminar} un registro existente.
+\item \textbf{Consultar por identificador}: devolver un único registro a partir de
+su clave completa; si no existe en el motor elegido, se informa un error controlado.
+\item \textbf{Listar todos} los registros, ordenados por clave.
 \item \textbf{Contar} los registros del motor seleccionado; con una colección vacía
 el resultado es cero.
+\item \textbf{Crear} un registro.
+\item \textbf{Editar} un registro existente identificado por su clave.
+\item \textbf{Eliminar} un registro existente.
 \end{enumerate}
+Como operación adicional, el \textbf{listado parcial} devuelve una página de tamaño
+acotado con orden estable por clave, de modo que las páginas sucesivas no repitan
+ni omitan registros. Además, HU-033 consulta una persona con todos sus teléfonos.
 Estudios usa la clave compuesta (\texttt{id\_prof}, \texttt{cc\_per}) del modelo
-base. Las rutas REST, las opciones de menú y los códigos de respuesta definitivos
-se fijarán en los contratos del equipo y se describirán aquí cuando estén implementados.
+base. Las rutas REST, las opciones de menú y los códigos de respuesta están en los
+contratos de la wiki del equipo y se describirán aquí cuando estén implementados.
 
-\subsection{Implementación observada en el código actual}
+\subsection{Implementación observada en la plantilla (commit \texttt{a83523b})}
 Esta subsección describe el código del repositorio del equipo en el commit
 \texttt{a83523b}. Hasta ese commit el equipo solo ha modificado documentación, de
 modo que el código coincide con la plantilla del profesor. La tabla distingue lo
-declarado de lo efectivamente expuesto. No describe resultados de ejecución.
+declarado de lo efectivamente expuesto. No describe resultados de ejecución. Los
+cambios posteriores se indican en cada fila y se detallan en la fase 1 del
+procedimiento.
 
 \begin{table}[H]
 \centering\small
@@ -379,11 +399,11 @@ declarado de lo efectivamente expuesto. No describe resultados de ejecución.
 \texttt{PersonInputPort} y \texttt{PersonUseCase}&Declaran e implementan crear, editar, eliminar, listar, consultar por identificador, contar y consultar teléfonos/estudios. \texttt{count} se calcula como el tamaño de \texttt{findAll()} y no se expone en REST ni en CLI. No existe listado paginado.\\
 \texttt{PersonOutputPort}&Ofrece \texttt{save}, \texttt{delete}, \texttt{find} y \texttt{findById}. Lo implementan \texttt{PersonOutputAdapterMaria} y \texttt{PersonOutputAdapterMongo}, que cuentan con sus repositorios.\\
 \texttt{PersonaControllerV1}&Declara solo \texttt{GET /api/v1/persona/\{database\}} (listado) y \texttt{POST /api/v1/persona} (alta).\\
-\texttt{PersonaMapperRest}&\texttt{fromAdapterToDomain} está incompleto: devuelve un \texttt{Person} vacío (\texttt{TODO}) y no copia los datos de \texttt{PersonaRequest}. La respuesta del alta se etiqueta siempre como MariaDB.\\
+\texttt{PersonaMapperRest}&\texttt{fromAdapterToDomain} está incompleto: devuelve un \texttt{Person} vacío (\texttt{TODO}) y no copia los datos de \texttt{PersonaRequest}. La respuesta del alta se etiqueta siempre como MariaDB. \emph{Corregido en HU-006 (PR \#38): el método ya copia los datos; la etiqueta de la respuesta queda para HU-014.}\\
 \texttt{MenuPrincipal}&Muestra los módulos Persona, Profesión, Teléfono y Estudios. Solo Persona abre un submenú; las otras opciones registran ``Implementar Menu''.\\
 \texttt{PersonaMenu}&Permite elegir MariaDB (1) o MongoDB (2) y conecta únicamente la opción 1, que lista todas las personas.\\
 Profesión, Teléfono y Estudios&Existen modelos de dominio, entidades JPA, documentos MongoDB y mappers en ambos adaptadores de salida. No existen puertos, casos de uso, repositorios, adaptadores de salida ni rutas o menús.\\
-Pruebas automatizadas&No hay directorios \texttt{src/test} en los módulos.\\
+Pruebas automatizadas&No hay directorios \texttt{src/test} en los módulos. \emph{Desde HU-006 (PR \#38) existe \texttt{PersonaMapperRestTest} en \texttt{rest-input-adapter}.}\\
 \bottomrule
 \end{tabularx}
 \caption{Implementación observada en el código del commit \texttt{a83523b}, sin ejecución.}
@@ -396,10 +416,11 @@ por lo que el aislamiento entre solicitudes concurrentes que eligen motores
 distintos debe comprobarse en las pruebas.
 
 \subsection{Pruebas ejecutadas}
-Las pruebas del hito 1 se ejecutaron en Windows 11, con MariaDB y MongoDB en
-contenedores Docker (\texttt{mariadb:11.4} y \texttt{mongo:6.0}). Todavía no hay
-pruebas automatizadas (\texttt{src/test}). Los comandos completos están en la
-página de ejecución local de la wiki del repositorio.
+Las pruebas de la fase 1 se ejecutaron en Windows 11 con JDK 11, con MariaDB y
+MongoDB en contenedores Docker (\texttt{mariadb:11.4} y \texttt{mongo:6.0}). La
+única prueba automatizada es la regresión del Mapper REST de HU-006
+(\texttt{PersonaMapperRestTest}). Los comandos completos están en la página de
+ejecución local de la wiki del repositorio.
 
 \begin{table}[H]
 \centering\small
@@ -412,9 +433,10 @@ Scripts DDL/DML (HU-004)&MariaDB crea las tablas \texttt{persona}, \texttt{profe
 REST (HU-005)&\texttt{GET /api/v1/persona/MARIA} y \texttt{/MONGO} responden 200 con cinco personas cada uno; un motor desconocido responde 200 con una lista vacía. \texttt{POST /api/v1/persona} responde 500 por una \texttt{NullPointerException} en \texttt{PersonaMapperMaria.validateGenero} y no guarda datos.&2026-11-09, \#35\\
 Swagger (HU-005)&\path{/swagger-ui.html} responde 200 y redirige a \path{/swagger-ui/index.html}. \path{/api-docs} publica OpenAPI 3.0.1 con las dos rutas.&2026-11-09, \#35\\
 CLI (HU-005)&En una sola sesión lista las cinco personas de MariaDB y luego las de MongoDB, sin reiniciar. Profesión registra ``Implementar Menu''.&2026-11-09, \#35\\
+Mapper REST (HU-006)&\texttt{mvn -B clean install} termina con \texttt{BUILD SUCCESS} y \texttt{Tests run: 6, Failures: 0}. \texttt{POST /api/v1/persona} responde 200 y guarda en MariaDB y en MongoDB, también sin edad. Un \texttt{sex} no admitido responde 500 y no guarda datos. Son códigos del código actual: el contrato fija 201 para el alta y \texttt{ERR-01} con 400 para una entrada inválida, y HU-014 cierra esa diferencia.&2026-11-10/11, \#38\\
 \bottomrule
 \end{tabularx}
-\caption{Pruebas ejecutadas en el hito 1.}
+\caption{Pruebas ejecutadas en la fase 1.}
 \end{table}
 
 \subsection{Parámetros iniciales de configuración}
@@ -441,15 +463,22 @@ Esta sección documenta la \emph{secuencia prevista} con base en la explicación
 del profesor. Los subapartados marcados como pendientes se completarán con
 comandos y evidencias \textbf{realmente obtenidos}, no con resultados supuestos.
 La guía no trae un tutorial detallado: el grupo debe ejecutar, diagnosticar,
-y completar el proyecto con JDK 11.
+actualizar, contenedorizar y completar el proyecto.
 
-El trabajo se organiza en tres hitos sucesivos: (1) línea base reproducible en
-JDK 11, (2) seis operaciones por recurso y (3) verificación y entrega. Cada hito
-parte del criterio de salida del anterior.
+El profesor fijó cuatro tareas en este orden: (1) hacer funcionar la plantilla
+original, (2) actualizar sus tecnologías, (3) contenedorizarla y (4) completar
+sus funcionalidades. El trabajo se organiza en esas cuatro fases y cada una se
+valida antes de iniciar la siguiente. En todas se conservan los siete módulos
+Maven, sus puertos y sus adaptadores: el profesor advirtió que pedir una
+corrección ambigua puede terminar cambiando la arquitectura, y el objetivo es
+aprender a trabajar con módulos y adaptadores. Al final se verifica y se publica
+la entrega.
 
-\subsection{Hito 1. Línea base reproducible en JDK 11}
+\subsection{Fase 1. Hacer funcionar la plantilla original}
 Criterio de salida: el ambiente se prepara con JDK 11, ambos motores son
-accesibles, REST y CLI arrancan y el mapeo defectuoso tiene una prueba de regresión.
+accesibles, REST y CLI arrancan y el defecto de mapeo tiene una prueba de
+regresión. Se corrigen solo los defectos de mapeo, anotaciones, librerías y
+dependencias que impidan ejecutar la plantilla.
 \subsubsection*{Actividad 1. Preparar el repositorio del equipo}
 El profesor solicita crear un \emph{fork} del repositorio
 \url{https://github.com/andres-karoll/personapp-hexa-spring-boot},
@@ -505,27 +534,72 @@ no declara \texttt{repackage}, y \texttt{spring-boot:run} falla dentro de cada
 módulo por la propiedad \texttt{\$\{revision\}}. Por eso ambas aplicaciones se
 arrancaron con el classpath que calcula el reactor Maven, sin cambiar el código.
 Los resultados están en la tabla de pruebas ejecutadas (PR \#35, 2026-11-09).
+Los JAR ejecutables y la resolución de \texttt{\$\{revision\}} se corrigen al
+actualizar los POM en la fase 2.
 
 \subsubsection*{Actividad 5. Identificar y corregir el Mapper}
 El profesor advierte expresamente que hay un error en un Mapper de la
 plantilla. Su resolución debe documentarse como una actividad de
 \emph{depuración}: reproducir el error, registrar su mensaje, localizar
 la conversión defectuosa, explicar la causa, aplicar la corrección y
-volver a ejecutar la prueba. La lectura del código muestra que
-\texttt{PersonaMapperRest.fromAdapterToDomain} está incompleto (sección de
-diseño). Ese método es un candidato, pero \textbf{no se confirmará como el
-error señalado por el profesor sin la evidencia obtenida durante la ejecución.}
+volver a ejecutar la prueba.
 
-\textbf{Pendiente del equipo:} archivo afectado, diagnóstico,
-corrección y prueba de regresión.
+\textbf{Resultado (HU-006):} el \texttt{POST /api/v1/persona} respondía 500 en
+ambos motores con \texttt{NullPointerException: gender is marked non-null but is
+null} en \texttt{validateGenero} de los mappers de salida. La causa era
+\texttt{PersonaMapperRest.fromAdapterToDomain}, que estaba sin implementar y
+devolvía un \texttt{Person} vacío; los mappers de MariaDB y MongoDB solo eran los
+primeros en recibirlo. La corrección se limitó a ese método: convierte
+\texttt{dni} y \texttt{age} a enteros, copia los nombres y traduce el sexo
+(\texttt{M}/\texttt{MALE} y \texttt{F}/\texttt{FEMALE}). Seis pruebas de regresión
+cubren la transformación, y después el alta guarda en los dos motores (PR \#38,
+2026-11-11).
 
-\subsection{Hito 2. Seis operaciones por recurso}
+\subsection{Fase 2. Actualizar las tecnologías}
+Criterio de salida: todos los módulos compilan con las versiones finales, REST y
+CLI arrancan, ambos motores responden y las pruebas de regresión de los mappers
+siguen pasando.
+
+El profesor aclaró que actualizar una plataforma no es solo cambiar el número de
+versión en el código: hay que resolver las dependencias de una versión a otra y
+los cambios de las API que usa el proyecto. HU-007 registra las versiones
+iniciales, adopta la LTS más alta compatible para Java y para cada tecnología que
+publique versiones LTS, y elige para las demás la versión estable más reciente con
+soporte vigente. Compara el árbol de dependencias antes y después, revisa los POM,
+plugins, anotaciones, API y configuración. También corrige tres defectos de
+construcción comprobados sobre la fase 1: añade la ejecución \texttt{repackage} en
+REST y CLI para que sus JAR sean ejecutables, el \texttt{flatten-maven-plugin} en
+el POM padre para que el POM instalado no conserve \texttt{\$\{revision\}} ni
+\texttt{\$\{global.springframework.boot.version\}}, y el Maven Wrapper para que
+todos construyan con la misma versión de Maven.
+
+\textbf{Pendiente del equipo (HU-007):} versiones iniciales y finales con su
+fuente, cambios de dependencias y de API, errores encontrados y su solución, y
+resultados de compilación, arranque y pruebas.
+
+\subsection{Fase 3. Contenedorizar la aplicación}
+Criterio de salida: desde un clon limpio se construyen las imágenes, se levantan
+REST, CLI, MariaDB y MongoDB, y la aplicación actualizada funciona con ambos
+motores.
+
+HU-034 versiona los Dockerfile de las entradas REST y CLI y un Docker Compose con
+ambos motores. Externaliza la configuración y las credenciales, define volúmenes
+persistentes y documenta la carga de los scripts DDL/DML. Los contenedores
+empaquetan las entradas y las bases existentes; ningún módulo Maven se convierte
+en un servicio aparte.
+
+\textbf{Pendiente del equipo (HU-034):} imágenes y Compose versionados,
+comandos de construcción y arranque, persistencia tras recrear los contenedores
+y procedimiento de parada y limpieza.
+
+\subsection{Fase 4. Completar las funcionalidades}
 Criterio de salida: Persona, Profesión, Teléfono y Estudios ofrecen las seis
-operaciones acordadas por el equipo (crear, listar todos, listar parcial, editar,
-eliminar y contar) en REST y CLI, con persistencia en ambos motores.
+operaciones acordadas por el equipo (consultar por identificador, listar todos,
+contar, crear, editar y eliminar), el listado parcial y la consulta de una
+persona con sus teléfonos, en REST y CLI, con persistencia en ambos motores.
 
 Según el profesor, la funcionalidad de la plantilla se concentra en Persona.
-El equipo completará primero Persona de punta a punta: listado parcial y conteo
+El equipo completará primero Persona de punta a punta: conteo y listado parcial
 en los puertos y adaptadores de salida, y rutas REST y opciones CLI para las seis
 operaciones. Después seguirán Profesión, Teléfono y Estudios. Para estos recursos
 ya existen modelos, entidades, documentos y mappers. Faltan los puertos, casos de
@@ -536,14 +610,14 @@ elegido, y cero si la colección está vacía.
 \textbf{Pendiente del equipo:} clases creadas o modificadas,
 justificación de las decisiones, endpoints finales, menús y pruebas.
 
-\subsection{Hito 3. Verificación y entrega}
+\subsection{Verificación y entrega}
 Criterio de salida: hay evidencias de las seis operaciones en ambos clientes y
-motores, Swagger 3 documenta la API final, el README es reproducible, el informe
-está completo y existe la URL del tag.
+motores sobre el despliegue en contenedores, Swagger 3 documenta la API final, el
+README es reproducible, el informe está completo y existe la URL del tag.
 
 \subsubsection*{Pruebas funcionales y de integración}
 Se comprobarán las seis operaciones de cada recurso desde REST y CLI con
-MariaDB y MongoDB. Las evidencias deben incluir listados con orden estable,
+MariaDB y MongoDB, con las versiones finales y en los contenedores. Las evidencias deben incluir listados con orden estable,
 conteo antes y después de un alta o baja y aislamiento entre motores. Por
 ejemplo, con tres registros y tamaño de página dos, la primera página debe
 devolver dos registros y la segunda uno, sin duplicados; el conteo debe pasar de
@@ -568,10 +642,10 @@ final entregado.
 \centering\small
 \begin{tabularx}{\textwidth}{@{}p{3.8cm}X@{}}
 \toprule
-\textbf{Entregable}&\textbf{Estado al 2026-11-09}\\\midrule
+\textbf{Entregable}&\textbf{Estado al 2026-11-11}\\\midrule
 README reproducible&\texttt{README.md} declara el stack y los pasos de preparación, scripts y arranque. Falta comprobarlo desde un clon limpio.\\
 Scripts DDL/DML&\path{scripts/} contiene \path{persona_ddl_maria.sql}, \path{persona_dml_maria.sql}, \path{persona_ddl_mongo.js} y \path{persona_dml_mongo.js}. HU-004 unificó MongoDB en \texttt{persona\_db}.\\
-Código fuente&Siete módulos Maven. Persona está parcialmente expuesta y los otros tres recursos no tienen entradas.\\
+Código fuente&Siete módulos Maven. El alta de Persona funciona desde HU-006 (PR \#38). Persona sigue parcialmente expuesta y los otros tres recursos no tienen entradas.\\
 URL del tag&No existe tag en el repositorio. \textbf{Pendiente.}\\
 \bottomrule
 \end{tabularx}
@@ -594,14 +668,15 @@ entre módulos.
 
 La plantilla permite identificar dos entradas y dos tecnologías de
 persistencia, así como contratos de aplicación que deben completarse y
-exponerse. La validación del funcionamiento en JDK 11
-y de las seis operaciones queda sujeta a la implementación y a las pruebas
-reales del equipo.
+exponerse. La validación de la actualización tecnológica, del despliegue en
+contenedores y de las seis operaciones queda sujeta a la implementación y a las
+pruebas reales del equipo.
 
 \subsection{Lecciones aprendidas por documentar}
 \textbf{Pendiente del equipo:} describir dificultades reales en la
 compilación y ejecución inicial, el diagnóstico del Mapper, la
-preparación de los motores, la implementación de los dominios
+preparación de los motores, la actualización de versiones y sus dependencias,
+la contenedorización, la implementación de los dominios
 faltantes y la selección dinámica de MariaDB/MongoDB. Esta subsección
 se completará al terminar las actividades para no atribuir al grupo
 experiencias que todavía no se han documentado.
