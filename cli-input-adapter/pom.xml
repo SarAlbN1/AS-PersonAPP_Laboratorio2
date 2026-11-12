@@ -34,7 +34,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<version>${global.springframework.boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
