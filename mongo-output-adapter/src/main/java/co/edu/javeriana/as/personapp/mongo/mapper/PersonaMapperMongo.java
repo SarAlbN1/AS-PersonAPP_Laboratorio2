@@ -37,6 +37,17 @@ public class PersonaMapperMongo {
 		return personaDocument;
 	}
 
+	/**
+	 * Referencia a la persona desde un teléfono o un estudio: solo la clave,
+	 * porque @DocumentReference solo guarda el _id. No recorre sus colecciones, así que no
+	 * vuelve al teléfono o al estudio que la referencia (#47).
+	 */
+	public PersonaDocument fromDomainToAdapterReference(Person person) {
+		PersonaDocument personaDocument = new PersonaDocument();
+		personaDocument.setId(person.getIdentification());
+		return personaDocument;
+	}
+
 	private String validateGenero(@NonNull Gender gender) {
 		return gender == Gender.FEMALE ? "F" : gender == Gender.MALE ? "M" : " ";
 	}
@@ -58,14 +69,24 @@ public class PersonaMapperMongo {
 	}
 
 	public Person fromAdapterToDomain(PersonaDocument personaDocument) {
+		Person person = fromAdapterToDomainBasic(personaDocument);
+		person.setStudies(validateStudies(personaDocument.getEstudios()));
+		person.setPhoneNumbers(validatePhones(personaDocument.getTelefonos()));
+		return person;
+	}
+
+	/**
+	 * Persona sin teléfonos ni estudios, para usarla como dueño de un teléfono o
+	 * persona de un estudio. Ese corte evita la recursión mutua con los mappers de
+	 * Teléfono y Estudios (#47). Las colecciones quedan en null porque no se cargan.
+	 */
+	public Person fromAdapterToDomainBasic(PersonaDocument personaDocument) {
 		Person person = new Person();
 		person.setIdentification(personaDocument.getId());
 		person.setFirstName(personaDocument.getNombre());
 		person.setLastName(personaDocument.getApellido());
 		person.setGender(validateGender(personaDocument.getGenero()));
 		person.setAge(validateAge(personaDocument.getEdad()));
-		person.setStudies(validateStudies(personaDocument.getEstudios()));
-		person.setPhoneNumbers(validatePhones(personaDocument.getTelefonos()));
 		return person;
 	}
 

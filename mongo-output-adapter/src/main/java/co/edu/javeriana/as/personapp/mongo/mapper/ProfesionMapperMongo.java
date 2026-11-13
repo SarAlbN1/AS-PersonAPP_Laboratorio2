@@ -27,6 +27,13 @@ public class ProfesionMapperMongo {
 		return profesionDocument;
 	}
 
+	/** Referencia a la profesión desde un estudio: solo la clave, porque @DocumentReference solo guarda el _id (#47). */
+	public ProfesionDocument fromDomainToAdapterReference(Profession profession) {
+		ProfesionDocument profesionDocument = new ProfesionDocument();
+		profesionDocument.setId(profession.getIdentification());
+		return profesionDocument;
+	}
+
 	private String validateDes(String description) {
 		return description != null ? description : "";
 	}
@@ -38,11 +45,20 @@ public class ProfesionMapperMongo {
 	}
 
 	public Profession fromAdapterToDomain(ProfesionDocument profesionDocument) {
+		Profession profession = fromAdapterToDomainBasic(profesionDocument);
+		profession.setStudies(validateStudies(profesionDocument.getEstudios()));
+		return profession;
+	}
+
+	/**
+	 * Profesión sin estudios, para usarla dentro de un estudio. Evita la recursión
+	 * mutua con el mapper de Estudios (#47). La colección queda en null.
+	 */
+	public Profession fromAdapterToDomainBasic(ProfesionDocument profesionDocument) {
 		Profession profession = new Profession();
 		profession.setIdentification(profesionDocument.getId());
 		profession.setName(profesionDocument.getNom());
 		profession.setDescription(validateDescription(profesionDocument.getDes()));
-		profession.setStudies(validateStudies(profesionDocument.getEstudios()));
 		return profession;
 	}
 
