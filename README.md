@@ -47,4 +47,4 @@ Los comandos exactos de arranque y la reproducción desde un clon limpio están 
 
 ## Referencias
 
-- [Decisiones de arquitectura](docs/wiki/02-arquitectura/decisiones-adr.md) y [versiones de la entrega](docs/wiki/04-implementacion/versiones.md).
+- [Decisiones de arquitectura](docs/wiki/02-arquitectura/decisiones-adr.md) y [versiones de la entrega](docs/wiki/04-implementacion/versiones.md), que incluye el [procedimiento reproducible de la actualización tecnológica](docs/wiki/04-implementacion/versiones.md#migración-ejecutada-hu-007).

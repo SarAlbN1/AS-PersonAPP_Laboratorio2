@@ -79,3 +79,6 @@ build/
 ._*
 .Spotlight-V100
 .Trashes
+
+# POM aplanado por flatten-maven-plugin (HU-007)
+.flattened-pom.xml
