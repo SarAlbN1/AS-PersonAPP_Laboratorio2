@@ -40,11 +40,11 @@ Se eligió MongoDB 6.0 porque es la versión de servidor más alta que soporta o
 
 ## Migración ejecutada (HU-007)
 
-Ejecutada el 12 de noviembre de 2026 en macOS ARM64, a partir de la plantilla reparada `55c957f`, en cinco commits que se pueden revisar por separado.
+Ejecutada el 12 de noviembre de 2026 en macOS ARM64, a partir de la plantilla reparada `55c957f`, en seis commits que se pueden revisar por separado: cinco de construcción y migración y uno de documentación.
 
 | Paso | Commit | Resultado |
 |---|---|---|
-| Empaquetado, aplanado y Wrapper | `3657037` | `repackage` con clasificador `exec`, `flatten-maven-plugin` en `resolveCiFriendliesOnly` y Maven Wrapper 3.10.0 |
+| Empaquetado, aplanado y Wrapper | `3657037` | `repackage` con clasificador `exec`, `flatten-maven-plugin` 1.9.0 en `resolveCiFriendliesOnly`, Maven Wrapper 3.10.0 y `.gitattributes` que fija `mvnw` en LF |
 | BOM de Boot centralizado, sin cambiar de versión | `145d51c` | Árbol de 104 a 102 artefactos; Log4j y el driver MariaDB quedan gestionados en el padre |
 | Checkpoint Boot 3.5.16 con JDK 17 | `765e9ec` | Migración a `jakarta.*`, Springdoc 2.10.0 y retiro de JAXB; árbol de 102 a 106 |
 | Boot 4.1.2 con Java 25 | `9f9aa15` | `spring-boot-starter-webmvc`, Springdoc 3.2.0 y procesador de Lombok explícito; árbol de 106 a 123 |
@@ -69,6 +69,7 @@ Con `mariadb:11.4` y `mongo:6.0` en contenedores y los scripts DDL/DML del repos
 - La CLI lista las personas de MariaDB y de MongoDB en la misma sesión, sin reiniciar, y termina con código 0.
 - `/api-docs` publica OpenAPI 3.1.0 con las dos rutas y el parámetro `database`, y Swagger UI responde `200`.
 - Un proyecto externo que importa `co.edu.javeriana.as.personapp.mapper.PersonaMapperRest` compila resolviendo el artefacto desde el repositorio local.
+- Con un repositorio local vacío (`-Dmaven.repo.local`), los POM instalados de los siete módulos quedan sin `${revision}`. Solo persiste `${global.springframework.boot.version}` en la versión del `spring-boot-maven-plugin` de REST y CLI, y el POM del padre conserva sus propias propiedades, que es donde se declaran.
 
 Los siete módulos, sus responsabilidades y la dirección de las dependencias no cambian. La migración no toca puertos, casos de uso ni adaptadores salvo los imports de `javax.*` a `jakarta.*` en el adaptador de MariaDB.
 
@@ -158,8 +159,8 @@ Tres defectos de construcción quedan dentro de HU-007, porque se corrigen en lo
 | Defecto | Comprobación ejecutada | Corrección prevista |
 |---|---|---|
 | Los JAR de REST y CLI no son ejecutables | El manifiesto de `rest-input-adapter-0.0.1-SNAPSHOT.jar` y de `cli-input-adapter-0.0.1-SNAPSHOT.jar` no declara `Main-Class` ni `Start-Class`, y ninguno contiene entradas `BOOT-INF` | Declarar la ejecución `repackage` del Boot Maven Plugin en los dos POM de entrada |
-| El POM instalado publica propiedades sin resolver | El POM de `rest-input-adapter` instalado en `~/.m2` conserva `<version>${revision}</version>` y `${global.springframework.boot.version}` | Agregar `flatten-maven-plugin` en el padre para que el POM publicado lleve las versiones resueltas |
-| El repositorio no fija la versión de Maven | No hay `mvnw` ni `.mvn/wrapper`; cada integrante usa el Maven que tenga instalado, y en esta sesión fue 3.10.0 frente al 3.9.14 del inventario | Añadir el Maven Wrapper con la versión elegida en la matriz, para que HU-034 construya sin instalar Maven en la imagen |
+| El POM instalado publica propiedades sin resolver | El POM de `rest-input-adapter` instalado en `~/.m2` conserva `<version>${revision}</version>` y `${global.springframework.boot.version}` | Agregar `flatten-maven-plugin` 1.9.0 en el padre. Resuelve las coordenadas propias y del padre y las versiones de las dependencias entre módulos, que es lo que impedía consumir los artefactos. `resolveCiFriendliesOnly` solo resuelve `revision`, `sha1` y `changelist`, así que `${global.springframework.boot.version}` permanece en la versión del `spring-boot-maven-plugin` de REST y CLI; esa sección no la lee quien consume el artefacto. Con 1.6.0 quedaba además `${revision}` en las dependencias entre módulos |
+| El repositorio no fija la versión de Maven | No hay `mvnw` ni `.mvn/wrapper`; cada integrante usa el Maven que tenga instalado, y en esta sesión fue 3.10.0 frente al 3.9.14 del inventario | Añadir el Maven Wrapper con la versión elegida en la matriz, para que HU-034 construya sin instalar Maven en la imagen, y un `.gitattributes` con `mvnw text eol=lf`, porque con `core.autocrlf=true` el checkout en Windows deja el script en CRLF y entonces `./mvnw` falla en Linux con `sh: 1: ./mvnw: not found` |
 
 **Evidencia de la línea base reparada.** El 11 de noviembre de 2026 se ejecutó el head de la [HU-006 (#38)](https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2/pull/38), commit `10465ff`, en macOS ARM64 con Homebrew OpenJDK 11.0.31 y Maven 3.10.0.
 
