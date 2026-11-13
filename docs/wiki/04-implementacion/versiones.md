@@ -75,8 +75,7 @@ Los siete módulos, sus responsabilidades y la dirección de las dependencias no
 
 ### Pendientes registrados
 
-- **Defecto ajeno a esta HU.** Con una persona que tenga estudios, `GET /api/v1/persona/MARIA` falla con `StackOverflowError`: `PersonaMapperMaria.fromAdapterToDomain` y `EstudiosMapperMaria.fromAdapterToDomain` se llaman mutuamente sin corte. Se reprodujo insertando un estudio de prueba, que después se retiró. Es un defecto de la plantilla, no de la migración, y corresponde a las HU de mappers de cada recurso.
-- Los scripts DML no cargan teléfonos ni estudios, así que las relaciones y las fechas solo se ejercitan con datos añadidos a mano.
+- **Defecto ajeno a esta HU, corregido en #47.** Con una persona que tuviera estudios o teléfonos, `GET /api/v1/persona/MARIA` y `/MONGO` fallaban con `StackOverflowError` porque los mappers de Persona, Estudios y Teléfono se llamaban mutuamente sin corte. Era un defecto de la plantilla, no de la migración. Desde #47, los scripts DML cargan además dos profesiones, tres teléfonos y dos estudios en cada motor.
 - Conviven Jackson 3.1.7 y Jackson 2.21.7 por una ruta transitiva. Falta decidir si se excluye la generación 2 al verificar la serialización de la API.
 
 ## Procedimiento de actualización (HU-007)
