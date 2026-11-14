@@ -114,6 +114,8 @@ Motor probado: MARIA / MONGO
 Prueba, commit, PR:
 ```
 
+**Profesión (HU-018).** Implementa el menú común completo para Profesión, con los textos de §3: `Total en <motor>: N`, `Página N · M registros` y `[ERR-xx] mensaje`. Una entrada no numérica se vuelve a pedir sin cerrar la sesión.
+
 **Pendientes de confirmar:** árbol exacto de `PersonaMenu`, DTO y Mapper CLI reales, política de errores, navegación de vuelta y comportamiento de cierre. Cerrar estas decisiones antes de declarar el contrato final.
 
 ## 8. Árbol real por inspección
