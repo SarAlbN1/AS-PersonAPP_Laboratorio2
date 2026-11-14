@@ -136,6 +136,7 @@ class ProfessionUseCaseTest {
 		assertThrows(InvalidDataException.class, () -> useCase.findAll(0, 101));
 		assertTrue(useCase.findAll(0, 100).isEmpty());
 		assertThrows(InvalidDataException.class, () -> useCase.findAll(null, 10));
+		assertThrows(InvalidDataException.class, () -> useCase.findAll(0, null));
 	}
 
 	@Test
