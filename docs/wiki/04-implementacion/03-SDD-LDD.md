@@ -18,11 +18,15 @@ El constructor de `PersonUseCase` recibe el puerto con `@Qualifier("personOutput
 
 `PersonaRequest` tiene seis campos String: `dni`, `firstName`, `lastName`, `age`, `sex`, `database`; `PersonaResponse` hereda esos campos y añade `status`. `Response` es otro modelo que el controlador actual no devuelve. `PersonaMapperRest.fromAdapterToDomain` devuelve `new Person()` sin copiar datos. POST usa siempre el mapper de respuesta MariaDB, incluso al seleccionar MongoDB.
 
+**Profesión por REST (HU-018).** `ProfesionControllerV1` publica las siete rutas de §3.1 en `/api/v1/profesion` con `database` obligatorio: `GET /{id}`, `GET`, `GET /conteo`, `GET /pagina` (`page` 0 y `size` 10 por defecto), `POST` (`201` con `Location`), `PUT /{id}` y `DELETE /{id}` (`204`). `ProfesionInputAdapterRest` crea `ProfessionUseCase` en cada llamada con el puerto del motor pedido, sin campo compartido (C-09). `ProfesionRequest` y `ProfesionResponse` son records con `id`, `name` y `description`. `RestExceptionHandler` traduce las excepciones al formato `{error, message}`: ERR-01 (datos, tipo de ruta o JSON inválidos), ERR-02 (motor ausente o desconocido), ERR-03, ERR-04, ERR-06, ERR-09, ERR-07 (`DataAccessResourceFailureException` o `CannotCreateTransactionException`, `503`) y ERR-10 sin traza. A los mensajes de ERR-03, ERR-04, ERR-06 y ERR-07 les agrega el motor. Por ahora solo atiende a `ProfesionControllerV1` (`assignableTypes`), para no cambiar las respuestas de Persona antes de HU-014.
+
 ## CLI existente
 
 `PersonAppCli` implementa `CommandLineRunner` y llama `MenuPrincipal`. Opciones principales: 0 salir, 1 Persona, 2 Profesión, 3 Teléfono, 4 Estudios. Las tres últimas solo registran `Implementar Menu`. En Persona: 1 MariaDB, 2 MongoDB, 0 regresar; después 1 listar, 0 regresar. `PersonaInputAdapterCli.historial` usa `findAll` y `PersonaMapperCli`; `historial1` es una variante existente, no otra funcionalidad.
 
-`leerOpcion` captura `InputMismatchException` y recurre sin consumir el token incorrecto: riesgo de repetición y agotamiento de pila, pendiente de prueba.
+**Profesión por CLI (HU-018).** La opción 2 del menú principal abre `ProfesionMenu`: primero el motor y luego las siete operaciones del menú común (1 consultar, 2 listar, 3 contar, 4 crear, 5 editar, 6 eliminar, 7 listar parcial, 0 regresar). `ProfesionInputAdapterCli` recibe el motor en cada operación y crea el caso de uso para ella. Los textos se leen por línea, así que un nombre puede tener varias palabras. Una entrada no numérica se descarta con `[ERR-01]` y se vuelve a pedir. `ErroresCli` aplica el mismo catálogo que REST con el formato `[ERR-xx] mensaje`. Editar muestra el registro actual antes de pedir los campos.
+
+`leerOpcion` (de `MenuPrincipal` y `PersonaMenu`) captura `InputMismatchException` y recurre sin consumir el token incorrecto: riesgo de repetición y agotamiento de pila, pendiente de prueba.
 
 ## Persistencia y mappers
 
