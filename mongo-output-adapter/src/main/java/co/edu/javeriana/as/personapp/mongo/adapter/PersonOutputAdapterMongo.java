@@ -50,7 +50,8 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 	@Override
 	public List<Person> find() {
 		log.debug("Into find on Adapter MongoDB");
-		return personaRepositoryMongo.findAll().stream().map(personaMapperMongo::fromAdapterToDomain)
+		// C-06: el orden por clave ascendente lo pide el motor, no se ordena en memoria.
+		return personaRepositoryMongo.findAll(Sort.by(Sort.Direction.ASC, "id")).stream().map(personaMapperMongo::fromAdapterToDomain)
 				.collect(Collectors.toList());
 	}
 
