@@ -43,15 +43,23 @@ public class EstudiosMapperMaria {
 
 	public Study fromAdapterToDomain(EstudiosEntity estudiosEntity) {
 		Study study = new Study();
-		study.setPerson(personaMapperMaria.fromAdapterToDomain(estudiosEntity.getPersona()));
-		study.setProfession(profesionMapperMaria.fromAdapterToDomain(estudiosEntity.getProfesion()));
+		study.setPerson(personaMapperMaria.fromAdapterToDomainBasic(estudiosEntity.getPersona()));
+		study.setProfession(profesionMapperMaria.fromAdapterToDomainBasic(estudiosEntity.getProfesion()));
 		study.setGraduationDate(validateGraduationDate(estudiosEntity.getFecha()));
 		study.setUniversityName(validateUniversityName(estudiosEntity.getUniver()));
-		return null;
+		return study;
 	}
 
+	/**
+	 * JPA entrega la columna DATE como {@link java.sql.Date}, cuyo {@code toInstant()}
+	 * lanza UnsupportedOperationException; ese tipo se convierte con {@code toLocalDate()}.
+	 */
 	private LocalDate validateGraduationDate(Date fecha) {
-		return fecha != null ? fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+		if (fecha == null)
+			return null;
+		if (fecha instanceof java.sql.Date sqlDate)
+			return sqlDate.toLocalDate();
+		return fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
 	private String validateUniversityName(String univer) {

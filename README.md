@@ -2,7 +2,7 @@
 
 Proyecto de Arquitectura de Software de la Pontificia Universidad Javeriana desarrollado por **Sara Albarracín, Miguel Sarmiento y Juan Diego Rojas**.
 
-PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) y repositorios (Repository) para gestionar Persona, Profesión, Teléfono y Estudios desde REST y CLI. El equipo acordó seis operaciones por recurso: crear, listar todos, listar parcial, editar, eliminar y contar.
+PersonAPP es un servicio web con arquitectura hexagonal, casos de uso (Service) y repositorios (Repository) para gestionar Persona, Profesión, Teléfono y Estudios desde REST y CLI. El equipo acordó seis operaciones por recurso: tres lecturas (consultar por identificador, listar todos y contar) y tres escrituras (crear, editar y eliminar). El listado parcial es una operación adicional.
 
 **[Explorar la wiki de PersonAPP](docs/wiki/Home.md)**
 
@@ -33,6 +33,21 @@ Empieza por el [índice de la wiki](docs/wiki/Home.md). Desde allí puedes segui
 
 ## Preparación y ejecución
 
+### Con Docker Compose
+
+Requiere Git y Docker con Compose v2. No hace falta instalar JDK ni Maven.
+
+```bash
+cp .env.example .env            # y cambiar PERSONAPP_ROOT_PW
+docker compose up -d --build    # MariaDB, MongoDB y REST en http://localhost:3000
+docker compose run --rm cli     # CLI interactiva
+docker compose down             # detiene y conserva los datos (down -v los borra)
+```
+
+Las bases cargan los scripts de `scripts/` la primera vez que se crean sus volúmenes. Swagger UI queda en `http://localhost:3000/swagger-ui.html`. La configuración, los resultados y la limpieza están en [Ejecución con Docker Compose](docs/wiki/04-implementacion/ejecucion-local.md#ejecución-con-docker-compose-hu-034).
+
+### Sin contenedores
+
 1. Instalar JDK 11 y Maven. Configurar Lombok en el IDE y preparar MariaDB en el puerto 3307 y MongoDB en el 27017.
 2. Revisar los scripts DDL/DML en `scripts/` y los `application.properties` de cada entrada. El DDL de MariaDB elimina el esquema y el usuario antes de recrearlos. Usar bases de prueba. El DML de MongoDB carga los ejemplos en `persona_db`, la base que usan REST y CLI.
 3. Desde la raíz, el comando de compilación previsto es `mvn clean install`.
@@ -47,4 +62,4 @@ Los comandos exactos de arranque y la reproducción desde un clon limpio están 
 
 ## Referencias
 
-- [Decisiones de arquitectura](docs/wiki/02-arquitectura/decisiones-adr.md) y [versiones de la entrega](docs/wiki/04-implementacion/versiones.md).
+- [Decisiones de arquitectura](docs/wiki/02-arquitectura/decisiones-adr.md) y [versiones de la entrega](docs/wiki/04-implementacion/versiones.md), que incluye el [procedimiento reproducible de la actualización tecnológica](docs/wiki/04-implementacion/versiones.md#migración-ejecutada-hu-007).

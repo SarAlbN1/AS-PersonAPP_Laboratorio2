@@ -23,7 +23,7 @@ Especificar **qué** debe cumplir la solución y cómo se acepta, sin sustituir 
 
 | ID | Requisito verificable | Criterio de aceptación |
 |---|---|---|
-| RF-01 | Operaciones CRUD para **Persona, Profesión, Teléfono y Estudios**. | Crear, listar todos, listar parcialmente, editar, eliminar y contar en cada recurso con resultados consistentes. |
+| RF-01 | Operaciones CRUD para **Persona, Profesión, Teléfono y Estudios**. | Crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listado parcial paginado en cada recurso con resultados consistentes. |
 | RF-02 | Publicar operaciones de los cuatro recursos por REST. | Solicitudes y respuestas HTTP verificadas y acordes con el contrato efectivo. |
 | RF-03 | Exponer por CLI las operaciones funcionales requeridas. | Menú ejecutable, entradas/salidas verificadas por recurso y sin operaciones de relleno. |
 | RF-04 | Persistir los recursos en **MariaDB y MongoDB** a través de adaptadores. | Escrituras, lecturas y modificaciones observables en el motor seleccionado. |
@@ -31,8 +31,9 @@ Especificar **qué** debe cumplir la solución y cómo se acepta, sin sustituir 
 | RF-06 | Preservar identidad, vínculos y reglas de validación del dominio. | Rechazar duplicados, datos inválidos y referencias imposibles según los contratos acordados. |
 | RF-07 | Manejar ausencias y errores de manera controlada en REST y CLI. | No devolver éxito falso, excepciones sin procesar ni respuestas contradictorias; códigos/mensajes se fijan en contratos. |
 | RF-08 | Realizar correctamente los mapeos entre DTO, dominio, entidad JPA y documentos Mongo. | Pruebas de conversión/round-trip y regresión del defecto encontrado. |
+| RF-09 | Consultar una persona con todos sus teléfonos por REST y CLI en ambos motores. | Persona con cero/uno/varios teléfonos, colección vacía sin teléfonos y error controlado si no existe; HU-033. |
 
-**Desglose de RF-01 acordado como alcance del proyecto:** la cobertura CRUD alcanza cuatro entidades × seis operaciones (crear, listar todos, listar parcialmente, editar, eliminar y contar), en dos interfaces y dos motores; HU-026 recoge el criterio de verificación en el [backlog único](../06-backlog/README.md). La disponibilidad de un método Java no acredita que se exponga desde HTTP o CLI.
+**Desglose de RF-01 acordado como alcance del proyecto:** la cobertura CRUD alcanza cuatro entidades × seis operaciones (crear, consultar por identificador, listar todos, editar, eliminar y contar), en dos interfaces y dos motores; HU-026 recoge el criterio de verificación en el [backlog único](../06-backlog/README.md). La disponibilidad de un método Java no acredita que se exponga desde HTTP o CLI.
 
 ## 4. Requisitos arquitectónicos
 
@@ -48,9 +49,11 @@ Los siete módulos de la plantilla son `common`, `domain`, `application`, `rest-
 | ID | Requisito | Evidencia de aceptación |
 |---|---|---|
 | RT-01 | Usar Java, Spring Boot y Maven multimódulo, partiendo de la plantilla original. | Compilación y arranque de ambas interfaces sobre los módulos originales. |
+| RT-02 | Actualizar Java, Spring Boot, librerías y plugins compatibles y soportados. | LTS más alta compatible donde aplique, dependencias verificadas y procedimiento reproducible documentado sin cambiar módulos ni arquitectura (HU-007). |
 | RT-03 | Documentar la API real mediante Swagger/OpenAPI. | Swagger accesible y actualizado con operaciones, parámetros y respuestas implementadas. |
+| RT-04 | Contenerizar aplicación REST/CLI, MariaDB y MongoDB. | Dockerfile(s), Compose, configuración externa, persistencia y reproducción desde clon limpio; HU-034. |
 
-**Stack escrito.** JDK 11, Spring Boot, MariaDB, MongoDB, REST, CLI y Swagger 3. La plantilla declara Spring Boot 2.7.11.
+**Línea base:** JDK 11 y Spring Boot 2.7.11. La entrega usa las versiones compatibles y soportadas seleccionadas y verificadas en HU-007, conservando MariaDB, MongoDB, REST, CLI, Swagger y los siete módulos originales.
 
 ## 6. Requisitos de entrega
 
@@ -84,7 +87,7 @@ El tag exacto `v1.0.0`, si se adopta, es una convención de planificación y deb
 
 ## 9. Estrategia de verificación propuesta
 
-La entrega sigue la línea base en JDK 11 (HU-001 a HU-006), el CRUD (HU-011 a HU-024), la verificación (HU-025 a HU-028) y los entregables (HU-029 a HU-032).
+El trabajo se valida en cuatro fases: plantilla original reparada (HU-001 a HU-006), actualización tecnológica (HU-007), contenedorización (HU-034) y funcionalidades finales (HU-011 a HU-024 y HU-033). Después se verifican las operaciones y los entregables (HU-025 a HU-032).
 
 HU-026 comprueba las seis operaciones de cada recurso desde REST y CLI sobre ambos motores. Los criterios y las evidencias se vinculan al backlog único.
 
@@ -96,7 +99,9 @@ Para un requisito cumplido se necesita: issue y PR reales, implementación verif
 - Definir opciones, navegación y comportamiento de errores en CLI.
 - Confirmar semántica del cambio de base por petición y consistencia de datos entre motores (son almacenes alternativos, no se presupone sincronización).
 - Concretar validaciones del dominio, integridad referencial y comportamiento de eliminación.
-- Registrar las versiones y resultados de ejecución con JDK 11.
+- Registrar las versiones y resultados de la línea base JDK 11 y de la migración final HU-007.
 - Registrar fork, responsables, cronograma y tag efectivos.
 
 Consultar y actualizar [puntos-abiertos.md](../02-arquitectura/puntos-abiertos.md) antes de introducir decisiones que cambien el alcance.
+
+La preservación de los siete módulos originales, sus responsabilidades y las dependencias hexagonales es obligatoria en todas las HU, incluidas actualización y contenedorización; HU-027 la verifica antes del cierre. HU-033 y HU-034 completan consultas agregadas y despliegue en contenedores.

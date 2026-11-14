@@ -2,9 +2,12 @@ package co.edu.javeriana.as.personapp.mariadb.adapter;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,4 +61,16 @@ public class PersonOutputAdapterMaria implements PersonOutputPort {
 		}
 	}
 
+	@Override
+	public Integer count() {
+		log.debug("Into count on Adapter MariaDB");
+		return (int) personaRepositoryMaria.count();
+	}
+
+	@Override
+	public List<Person> find(Integer page, Integer size) {
+		log.debug("Into find page on Adapter MariaDB");
+		return personaRepositoryMaria.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "cc"))).getContent().stream()
+				.map(personaMapperMaria::fromAdapterToDomain).collect(Collectors.toList());
+	}
 }

@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+.vscode
+.settings
+**/target
+**/logs
+**/*.log
+**/*.iml
+docs
+scripts
+.env
+compose.yaml
+Dockerfile
+.dockerignore

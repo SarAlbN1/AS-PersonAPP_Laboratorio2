@@ -7,8 +7,8 @@
 | EV-03 | DDL/DML MariaDB y MongoDB | Ejecutar scripts de referencia | Pendiente | Pendiente | No ejecutado |
 | EV-04 | Compilación baseline | `mvn clean install` | Pendiente | Pendiente | No ejecutado |
 | EV-05 | REST, CLI y Swagger | Arranques originales con JDK 11 ([procedimiento](ejecucion-local.md#arranque-de-rest-y-cli-hu-005)) | REST y CLI arrancan. Los GET por motor devuelven 200, el POST devuelve 500 y Swagger responde 200 | Commit `f727fcd`; [resultados](ejecucion-local.md#arranque-de-rest-y-cli-hu-005) | Ejecutado (HU-005) |
-| EV-06 | Depuración Mapper | Reproducción y regresión | Pendiente | Pendiente | No ejecutado |
-| EV-07 | Migración de versiones | Compilación y tests | Pendiente | Pendiente | No ejecutado |
+| EV-06 | Depuración Mapper | Reproducción y regresión ([procedimiento](ejecucion-local.md#corrección-del-mapper-rest-hu-006)) | `PersonaMapperRest.fromAdapterToDomain` corregido. Seis pruebas de regresión pasan y el POST guarda en MariaDB y MongoDB | Rama `fix/HU-006-mapper-rest` sobre `e1a360d`; [resultados](ejecucion-local.md#corrección-del-mapper-rest-hu-006) | Ejecutado (HU-006) |
+| EV-07 | Migración de versiones | `./mvnw -B -ntp clean install`, arranque de REST y CLI contra ambos motores y `/api-docs` ([procedimiento](versiones.md#migración-ejecutada-hu-007)) | Java 25 y Spring Boot 4.1.2. `BUILD SUCCESS` en el padre y los siete módulos con `Tests run: 6, Failures: 0`. GET y POST responden 200 en MariaDB y MongoDB, la CLI alterna motores en una sesión y Swagger publica OpenAPI 3.1.0 | Rama `chore/HU-007-actualizar-versiones`; [resultados](versiones.md#verificación-con-ambos-motores) | Ejecutado (HU-007) |
 | EV-08 | Matriz CRUD | REST/CLI × MariaDB/MongoDB | Pendiente | Pendiente | No ejecutado |
 | EV-09 | Cambio de base en caliente | Alternar motores sin reinicio | Pendiente | Pendiente | No ejecutado |
 | EV-10 | Tag final | URL y SHA | Pendiente | Pendiente | No ejecutado |

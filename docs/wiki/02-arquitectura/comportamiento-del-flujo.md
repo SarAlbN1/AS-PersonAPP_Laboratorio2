@@ -33,7 +33,7 @@ REST/CLI valida entrada y recibe motor → caso de uso usa puerto de salida → 
 
 ## 4. Operaciones y cobertura
 
-Para Persona, Profesión, Teléfono y Estudios: crear, listar todos, listar parcialmente, editar, eliminar y contar, desde REST y CLI, contra MariaDB y MongoDB. HU-026 recoge los criterios y la evidencia por escenario. Distinguir los éxitos de las rutas negativas de integridad.
+Para Persona, Profesión, Teléfono y Estudios: consultar por identificador, listar todos y contar (lecturas), y crear, editar y eliminar (escrituras), más el listado parcial como operación adicional, desde REST y CLI, contra MariaDB y MongoDB. HU-026 recoge los criterios y la evidencia por escenario. Distinguir los éxitos de las rutas negativas de integridad.
 
 ## 5. Criterio de cierre
 
