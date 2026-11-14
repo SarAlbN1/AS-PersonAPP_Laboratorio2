@@ -11,4 +11,6 @@ public interface PersonOutputPort {
 	public Boolean delete(Integer identification);
 	public List<Person> find();
 	public Person findById(Integer identification);
+	public Integer count();
+	public List<Person> find(Integer page, Integer size);
 }

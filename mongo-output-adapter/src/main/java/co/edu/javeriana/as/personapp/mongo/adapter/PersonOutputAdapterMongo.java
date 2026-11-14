@@ -1,6 +1,9 @@
 package co.edu.javeriana.as.personapp.mongo.adapter;
 
 import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,4 +64,16 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 		}
 	}
 
+	@Override
+	public Integer count() {
+		log.debug("Into count on Adapter MongoDB");
+		return (int) personaRepositoryMongo.count();
+	}
+
+	@Override
+	public List<Person> find(Integer page, Integer size) {
+		log.debug("Into find page on Adapter MongoDB");
+		return personaRepositoryMongo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"))).getContent().stream()
+				.map(personaMapperMongo::fromAdapterToDomain).collect(Collectors.toList());
+	}
 }
