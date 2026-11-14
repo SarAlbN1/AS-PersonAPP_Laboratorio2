@@ -22,7 +22,8 @@ public interface ProfessionInputPort {
 
 	public List<Profession> findAll();
 
-	public List<Profession> findPage(int page, int size) throws InvalidDataException;
+	/** Listado parcial (C-07): página desde 0 y tamaño de 1 a 100, con el orden de C-06. */
+	public List<Profession> findAll(Integer page, Integer size) throws InvalidDataException;
 
 	public Profession findOne(Integer identification) throws NoExistException;
 

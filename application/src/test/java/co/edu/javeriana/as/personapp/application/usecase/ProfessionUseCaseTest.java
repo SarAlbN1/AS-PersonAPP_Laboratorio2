@@ -123,18 +123,19 @@ class ProfessionUseCaseTest {
 		for (int id = 1; id <= 5; id++)
 			useCase.create(profession(id, "P" + id));
 
-		assertEquals(List.of(1, 2), ids(useCase.findPage(0, 2)));
-		assertEquals(List.of(3, 4), ids(useCase.findPage(1, 2)));
-		assertEquals(List.of(5), ids(useCase.findPage(2, 2)));
-		assertTrue(useCase.findPage(3, 2).isEmpty());
+		assertEquals(List.of(1, 2), ids(useCase.findAll(0, 2)));
+		assertEquals(List.of(3, 4), ids(useCase.findAll(1, 2)));
+		assertEquals(List.of(5), ids(useCase.findAll(2, 2)));
+		assertTrue(useCase.findAll(3, 2).isEmpty());
 	}
 
 	@Test
 	void listaParcialRechazaParametrosInvalidos() throws Exception {
-		assertThrows(InvalidDataException.class, () -> useCase.findPage(-1, 10));
-		assertThrows(InvalidDataException.class, () -> useCase.findPage(0, 0));
-		assertThrows(InvalidDataException.class, () -> useCase.findPage(0, 101));
-		assertTrue(useCase.findPage(0, 100).isEmpty());
+		assertThrows(InvalidDataException.class, () -> useCase.findAll(-1, 10));
+		assertThrows(InvalidDataException.class, () -> useCase.findAll(0, 0));
+		assertThrows(InvalidDataException.class, () -> useCase.findAll(0, 101));
+		assertTrue(useCase.findAll(0, 100).isEmpty());
+		assertThrows(InvalidDataException.class, () -> useCase.findAll(null, 10));
 	}
 
 	@Test
@@ -182,7 +183,7 @@ class ProfessionUseCaseTest {
 		}
 
 		@Override
-		public List<Profession> find(int page, int size) {
+		public List<Profession> find(Integer page, Integer size) {
 			return data.values().stream().skip((long) page * size).limit(size).collect(Collectors.toList());
 		}
 

@@ -82,3 +82,6 @@ build/
 
 # POM aplanado por flatten-maven-plugin (HU-007)
 .flattened-pom.xml
+
+# Configuración local de Docker Compose (HU-034)
+.env

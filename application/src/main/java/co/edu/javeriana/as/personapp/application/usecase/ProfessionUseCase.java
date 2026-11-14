@@ -67,7 +67,9 @@ public class ProfessionUseCase implements ProfessionInputPort {
 	}
 
 	@Override
-	public List<Profession> findPage(int page, int size) throws InvalidDataException {
+	public List<Profession> findAll(Integer page, Integer size) throws InvalidDataException {
+		if (page == null || size == null)
+			throw new InvalidDataException("La página y el tamaño son obligatorios en el listado parcial");
 		if (page < 0)
 			throw new InvalidDataException("La página debe ser mayor o igual a 0");
 		if (size < 1 || size > MAX_PAGE_SIZE)

@@ -56,7 +56,7 @@ public class ProfessionOutputAdapterMaria implements ProfessionOutputPort {
 	}
 
 	@Override
-	public List<Profession> find(int page, int size) {
+	public List<Profession> find(Integer page, Integer size) {
 		log.debug("Into find page on Adapter MariaDB");
 		return profesionRepositoryMaria.findAll(PageRequest.of(page, size, BY_ID)).stream()
 				.map(profesionMapperMaria::fromAdapterToDomainBasic).toList();

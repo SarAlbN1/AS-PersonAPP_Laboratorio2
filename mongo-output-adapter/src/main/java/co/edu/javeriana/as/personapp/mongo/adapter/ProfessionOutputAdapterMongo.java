@@ -61,7 +61,7 @@ public class ProfessionOutputAdapterMongo implements ProfessionOutputPort {
 	}
 
 	@Override
-	public List<Profession> find(int page, int size) {
+	public List<Profession> find(Integer page, Integer size) {
 		log.debug("Into find page on Adapter MongoDB");
 		return profesionRepositoryMongo.findAll(PageRequest.of(page, size, BY_ID)).stream()
 				.map(profesionMapperMongo::fromAdapterToDomainBasic).toList();

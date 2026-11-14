@@ -1,0 +1,86 @@
+# PersonAPP en contenedores (HU-034): REST, CLI, MariaDB y MongoDB.
+#   docker compose up -d --build          # bases y REST (http://localhost:3000/swagger-ui.html)
+#   docker compose run --rm cli           # CLI interactiva contra las mismas bases
+#   docker compose down                   # detiene y conserva los datos
+#   docker compose down -v                # borra también los volúmenes
+# La configuración sale de .env (plantilla en .env.example).
+
+name: personapp
+
+x-app-environment: &app-environment
+  SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/persona_db
+  SPRING_DATASOURCE_USERNAME: ${PERSONAPP_DB_USER:-persona_db}
+  SPRING_DATASOURCE_PASSWORD: ${PERSONAPP_DB_PASSWORD:-persona_db}
+  SPRING_MONGODB_URI: mongodb://${PERSONAPP_DB_USER:-persona_db}:${PERSONAPP_DB_PASSWORD:-persona_db}@mongo:27017/persona_db?authSource=admin
+  # Zona fija para que las fechas de MongoDB no dependan de la máquina (ver HU-023).
+  JAVA_TOOL_OPTIONS: -Duser.timezone=${PERSONAPP_TZ:-America/Bogota}
+
+x-app-depends-on: &app-depends-on
+  mariadb:
+    condition: service_healthy
+  mongo:
+    condition: service_healthy
+
+services:
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_ROOT_PASSWORD: ${PERSONAPP_ROOT_PW:?Defina PERSONAPP_ROOT_PW en .env}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      # Solo se ejecutan con el volumen vacío: un reinicio ordinario no borra datos.
+      - ./scripts/persona_ddl_maria.sql:/docker-entrypoint-initdb.d/01-persona_ddl_maria.sql:ro
+      - ./scripts/persona_dml_maria.sql:/docker-entrypoint-initdb.d/02-persona_dml_maria.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  mongo:
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${PERSONAPP_ROOT_PW:?Defina PERSONAPP_ROOT_PW en .env}
+    volumes:
+      - mongo-data:/data/db
+      - ./scripts/persona_ddl_mongo.js:/docker-entrypoint-initdb.d/01-persona_ddl_mongo.js:ro
+      - ./scripts/persona_dml_mongo.js:/docker-entrypoint-initdb.d/02-persona_dml_mongo.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  rest:
+    build:
+      context: .
+      target: rest
+    image: personapp-rest:local
+    environment: *app-environment
+    depends_on: *app-depends-on
+    ports:
+      - "${PERSONAPP_REST_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/3000"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  cli:
+    build:
+      context: .
+      target: cli
+    image: personapp-cli:local
+    environment: *app-environment
+    depends_on: *app-depends-on
+    stdin_open: true
+    tty: true
+    profiles: ["cli"]
+
+volumes:
+  mariadb-data:
+  mongo-data:

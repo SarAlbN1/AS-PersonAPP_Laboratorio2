@@ -12,7 +12,7 @@ public interface ProfessionOutputPort {
 	/** Todas las profesiones ordenadas por id ascendente (C-06). */
 	public List<Profession> find();
 	/** Página desde 0 con el orden de C-06, pedido al motor (C-07). */
-	public List<Profession> find(int page, int size);
+	public List<Profession> find(Integer page, Integer size);
 	public Profession findById(Integer identification);
 	/** Total calculado por el motor (C-08). */
 	public Integer count();

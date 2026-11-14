@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
+import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Phone;
@@ -18,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonUseCase implements PersonInputPort {
 
 	
+	private static final int PRIMERA_PAGINA = 0;
+	private static final int TAMANIO_MINIMO = 1;
+	private static final int TAMANIO_MAXIMO = 100;
+
 	private PersonOutputPort personPersintence;
 	
 	public PersonUseCase(@Qualifier("personOutputAdapterMaria") PersonOutputPort personPersintence) {
@@ -68,8 +73,22 @@ public class PersonUseCase implements PersonInputPort {
 	}
 
 	@Override
+	public List<Person> findAll(Integer page, Integer size) throws InvalidOptionException {
+		if (page == null || size == null)
+			throw new InvalidOptionException("The page and the size are required to list partially");
+		if (page < PRIMERA_PAGINA)
+			throw new InvalidOptionException("The page " + page + " is invalid, it starts at " + PRIMERA_PAGINA);
+		if (size < TAMANIO_MINIMO || size > TAMANIO_MAXIMO)
+			throw new InvalidOptionException(
+					"The size " + size + " is invalid, it goes from " + TAMANIO_MINIMO + " to " + TAMANIO_MAXIMO);
+		log.debug("Into findAll page " + page + " size " + size + " on Application Domain");
+		return personPersintence.find(page, size);
+	}
+
+	@Override
 	public Integer count() {
-		return findAll().size();
+		log.debug("Into count on Application Domain");
+		return personPersintence.count();
 	}
 
 	@Override

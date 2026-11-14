@@ -166,6 +166,87 @@ mvn -B clean install
 
 Al terminar se borraron los registros de prueba, y ambos motores volvieron a cinco personas.
 
+## Ejecución con Docker Compose (HU-034)
+
+Con Docker Compose, la aplicación y las dos bases se construyen y ejecutan en contenedores, sin instalar JDK ni Maven. Hay dos imágenes y dos bases:
+
+| Servicio | Imagen | Qué ejecuta |
+|---|---|---|
+| `rest` | `personapp-rest:local`, construida desde el `Dockerfile` | `rest-input-adapter-*-exec.jar` en `eclipse-temurin:25-jre`, publicado en el puerto 3000 |
+| `cli` | `personapp-cli:local`, construida desde el `Dockerfile` | `cli-input-adapter-*-exec.jar` en `eclipse-temurin:25-jre`, interactiva y con perfil `cli` |
+| `mariadb` | `mariadb:11.4` | Servidor con el volumen `mariadb-data` |
+| `mongo` | `mongo:6.0` | Servidor con el volumen `mongo-data` |
+
+El `Dockerfile` construye una sola vez el reactor de siete módulos con `./mvnw -B -ntp clean package` en `eclipse-temurin:25-jdk`, pruebas incluidas, y copia cada `-exec.jar` a su imagen. Los módulos Maven no se convierten en servicios: cada imagen empaqueta una entrada, y las dos usan los mismos adaptadores de salida. Las imágenes corren con el usuario `personapp`, sin privilegios.
+
+**Requisitos:** Git y Docker con Compose v2. El `.gitattributes` de HU-007 garantiza que `mvnw` llegue con finales de línea LF, también en Windows.
+
+### Configuración
+
+La configuración sale de `.env`, que no se versiona. La plantilla es `.env.example`:
+
+| Variable | Uso | Valor por defecto |
+|---|---|---|
+| `PERSONAPP_ROOT_PW` | Clave de root de MariaDB y MongoDB. Solo la usan los contenedores de las bases. | Obligatoria |
+| `PERSONAPP_DB_USER` / `PERSONAPP_DB_PASSWORD` | Usuario de la aplicación. Debe coincidir con el que crean los DDL. | `persona_db` / `persona_db` |
+| `PERSONAPP_REST_PORT` | Puerto publicado de REST | `3000` |
+| `PERSONAPP_TZ` | Zona horaria de la JVM (`-Duser.timezone`) | `America/Bogota` |
+
+REST y CLI reciben la conexión por entorno (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_MONGODB_URI`), que reemplaza los valores de `localhost` de los `application.properties`. Dentro de la red de Compose, las bases se alcanzan como `mariadb:3306` y `mongo:27017`, y sus puertos no se publican en la máquina.
+
+La zona horaria se fija porque Spring Data MongoDB lee y guarda las fechas con la zona de la JVM, y una imagen en UTC registraría otra fecha que una ejecución local en Bogotá. La corrección de fondo corresponde a HU-023.
+
+El usuario `persona_db` y su clave vienen fijos en los scripts DDL de la plantilla. Para cambiarlos hay que modificar esos scripts.
+
+### Carga de datos
+
+Las bases montan los cuatro scripts de `scripts/` en `/docker-entrypoint-initdb.d`, y cada imagen los ejecuta en orden (`01-` DDL, `02-` DML) **solo cuando su volumen está vacío**. Un reinicio o una recreación de los contenedores no borra datos ni vuelve a cargar los scripts. Para cargar de nuevo los datos iniciales hay que borrar los volúmenes (`docker compose down -v`). Como los scripts se montan y no se copian, los cambios de `scripts/` se aplican en la siguiente carga sin reconstruir nada.
+
+### Procedimiento
+
+```bash
+cp .env.example .env                 # y cambiar PERSONAPP_ROOT_PW
+docker compose up -d --build         # construye las imágenes y levanta mariadb, mongo y rest
+docker compose ps                    # las bases y rest deben quedar healthy
+curl http://localhost:3000/api/v1/persona/MARIA
+curl http://localhost:3000/api/v1/persona/MONGO
+docker compose run --rm cli          # CLI interactiva contra las mismas bases
+docker compose logs -f rest          # registros de REST
+docker compose down                  # detiene y elimina los contenedores; conserva los volúmenes
+docker compose down -v               # además borra los volúmenes y los datos
+```
+
+Swagger UI queda en `http://localhost:3000/swagger-ui.html`. REST espera a que las dos bases pasen su comprobación de salud: `healthcheck.sh` en MariaDB y `ping` en MongoDB. La comprobación de REST verifica que el puerto 3000 acepte conexiones.
+
+### Resultados
+
+El 12 de noviembre de 2026 se ejecutó el procedimiento en Windows 11 con Docker Compose v5.5.1, en la rama `feat/HU-034-contenedores`, sobre `main` con HU-007 (`723b6b7`, mismo árbol que el último commit revisado del #46, `866e165`). Se trabajó sobre un clon limpio con `core.autocrlf=true`, que gracias al `.gitattributes` trae `mvnw` en LF, y las imágenes se construyeron con `--no-cache`:
+
+| Prueba | Resultado |
+|---|---|
+| `docker compose --profile cli build --no-cache` | `./mvnw` construye el reactor con `Tests run: 6, Failures: 0` y `BUILD SUCCESS`, y se generan las dos imágenes |
+| `docker compose up -d` | MariaDB y MongoDB quedan `healthy` y cargan los DDL/DML, y REST queda `healthy` |
+| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 con las cinco personas de cada motor |
+| `/swagger-ui.html` y `/api-docs` | 200; OpenAPI 3.1.0 |
+| `POST` con `{"dni":"989","age":"31","sex":"F","database":"MARIA"}` y `{"dni":"988","age":"32","sex":"M","database":"MONGO"}` | 200. Cada persona queda solo en su motor |
+| `docker compose run --rm cli`: Persona → MariaDB → ver todo, y luego MongoDB → ver todo | En una sola sesión lista seis personas de MariaDB (con la 989) y seis de MongoDB (con la 988). Termina con código 0 |
+| `docker compose down` y luego `up -d --force-recreate` | Los volúmenes se conservan. Siguen seis personas por motor y los scripts no se vuelven a ejecutar |
+| Zona horaria de REST | La JVM informa `Picked up JAVA_TOOL_OPTIONS: -Duser.timezone=America/Bogota` |
+| `docker compose down -v` | Elimina contenedores, red y los dos volúmenes |
+
+Antes del `.gitattributes`, un checkout de Windows con `core.autocrlf=true` traía `mvnw` con CRLF, y `./mvnw` fallaba en el contenedor con `not found`.
+
+**Carga con teléfonos y estudios (#47).** El 13 de noviembre de 2026 se repitió el procedimiento en Windows 11 con Docker Compose v5.5.1 sobre `main` en `e7fe689`, que ya incluye HU-034 (#49) y la corrección de la recursión de los mappers (#48). Se usó un clon limpio con `core.autocrlf=true`, volúmenes vacíos e imágenes construidas con `--no-cache`:
+
+| Prueba | Resultado |
+|---|---|
+| `docker compose --profile cli build --no-cache` | `MapperRecursionMariaTest` 8/8, `MapperRecursionMongoTest` 7/7 y `PersonaMapperRestTest` 6/6; `BUILD SUCCESS` |
+| Carga inicial | Cada motor carga cinco personas, dos profesiones, tres teléfonos (dos de 123456789 y uno de 321654987) y dos estudios. En MongoDB las fechas de los estudios quedan a las 12:00 UTC (`2015-12-01T12:00:00Z` y `2018-06-15T12:00:00Z`) |
+| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 con las cinco personas de cada motor, sin `StackOverflowError` en el log de REST |
+| `POST` con `{"dni":"979","firstName":"Prueba","lastName":"Dml","age":"33","sex":"F","database":"MARIA"}` y `{"dni":"978",…,"database":"MONGO"}` | 200. Cada persona queda solo en su motor y los dos GET devuelven seis personas |
+| `docker compose run --rm cli`: Persona → MariaDB → ver todo, y luego MongoDB → ver todo | Lista seis personas por motor (con la 979 y la 978), sin excepciones, y termina con código 0 |
+| `docker compose down -v` | Elimina contenedores, red y los dos volúmenes |
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
