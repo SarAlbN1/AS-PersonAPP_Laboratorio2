@@ -27,6 +27,13 @@ public class ProfesionMapperMaria {
 		return profesionEntity;
 	}
 
+	/** Referencia a la profesión desde un estudio: solo la clave, que es lo que usa la FK (#47). */
+	public ProfesionEntity fromDomainToAdapterReference(Profession profession) {
+		ProfesionEntity profesionEntity = new ProfesionEntity();
+		profesionEntity.setId(profession.getIdentification());
+		return profesionEntity;
+	}
+
 	private String validateDes(String description) {
 		return description != null ? description : "";
 	}
@@ -38,11 +45,20 @@ public class ProfesionMapperMaria {
 	}
 
 	public Profession fromAdapterToDomain(ProfesionEntity profesionEntity) {
+		Profession profession = fromAdapterToDomainBasic(profesionEntity);
+		profession.setStudies(validateStudies(profesionEntity.getEstudios()));
+		return profession;
+	}
+
+	/**
+	 * Profesión sin estudios, para usarla dentro de un estudio. Evita la recursión
+	 * mutua con el mapper de Estudios (#47). La colección queda en null.
+	 */
+	public Profession fromAdapterToDomainBasic(ProfesionEntity profesionEntity) {
 		Profession profession = new Profession();
 		profession.setIdentification(profesionEntity.getId());
 		profession.setName(profesionEntity.getNom());
 		profession.setDescription(validateDescription(profesionEntity.getDes()));
-		profession.setStudies(validateStudies(profesionEntity.getEstudios()));
 		return profession;
 	}
 

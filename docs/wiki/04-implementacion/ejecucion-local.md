@@ -57,6 +57,7 @@ Procedimiento ejecutado el 2026-11-08 desde un clon limpio en Windows 11 (commit
 
 **Resultados observados:**
 - MariaDB: las cuatro tablas creadas y cinco personas; el usuario `persona_db` accede.
+- Desde #47 los dos DML cargan además dos profesiones, tres teléfonos (dos de 123456789 y uno de 321654987) y dos estudios (123456789 con la profesión 1 y 321654987 con la 2). Hay personas con cero, uno y varios teléfonos, y con y sin estudios.
 - MongoDB: en la línea base de HU-003, el usuario `persona_db` se creó en `admin`. El DML original cargaba cinco personas en `prueba_db`. Para comprobar el acceso a `persona_db`, se ajustó el nombre de la base en una copia temporal del script. La HU-004 corrigió el script del repositorio.
 - Build: `BUILD SUCCESS` en los ocho artefactos.
 

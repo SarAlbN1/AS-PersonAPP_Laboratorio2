@@ -37,6 +37,17 @@ public class PersonaMapperMaria {
 		return personaEntity;
 	}
 
+	/**
+	 * Referencia a la persona desde un teléfono o un estudio: solo la clave,
+	 * que es lo que usa la FK. No recorre sus colecciones, así que no
+	 * vuelve al teléfono o al estudio que la referencia (#47).
+	 */
+	public PersonaEntity fromDomainToAdapterReference(Person person) {
+		PersonaEntity personaEntity = new PersonaEntity();
+		personaEntity.setCc(person.getIdentification());
+		return personaEntity;
+	}
+
 	private Character validateGenero(@NonNull Gender gender) {
 		return gender == Gender.FEMALE ? 'F' : gender == Gender.MALE ? 'M' : ' ';
 	}
@@ -58,14 +69,24 @@ public class PersonaMapperMaria {
 	}
 
 	public Person fromAdapterToDomain(PersonaEntity personaEntity) {
+		Person person = fromAdapterToDomainBasic(personaEntity);
+		person.setStudies(validateStudies(personaEntity.getEstudios()));
+		person.setPhoneNumbers(validatePhones(personaEntity.getTelefonos()));
+		return person;
+	}
+
+	/**
+	 * Persona sin teléfonos ni estudios, para usarla como dueño de un teléfono o
+	 * persona de un estudio. Ese corte evita la recursión mutua con los mappers de
+	 * Teléfono y Estudios (#47). Las colecciones quedan en null porque no se cargan.
+	 */
+	public Person fromAdapterToDomainBasic(PersonaEntity personaEntity) {
 		Person person = new Person();
 		person.setIdentification(personaEntity.getCc());
 		person.setFirstName(personaEntity.getNombre());
 		person.setLastName(personaEntity.getApellido());
 		person.setGender(validateGender(personaEntity.getGenero()));
 		person.setAge(validateAge(personaEntity.getEdad()));
-		person.setStudies(validateStudies(personaEntity.getEstudios()));
-		person.setPhoneNumbers(validatePhones(personaEntity.getTelefonos()));
 		return person;
 	}
 
