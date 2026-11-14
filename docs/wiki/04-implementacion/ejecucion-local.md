@@ -236,7 +236,16 @@ El 12 de noviembre de 2026 se ejecutó el procedimiento en Windows 11 con Docker
 
 Antes del `.gitattributes`, un checkout de Windows con `core.autocrlf=true` traía `mvnw` con CRLF, y `./mvnw` fallaba en el contenedor con `not found`.
 
-**Pendiente:** repetir la carga y las lecturas con los DML que agregan teléfonos y estudios (#47).
+**Carga con teléfonos y estudios (#47).** El 13 de noviembre de 2026 se repitió el procedimiento en Windows 11 con Docker Compose v5.5.1 sobre `main` en `e7fe689`, que ya incluye HU-034 (#49) y la corrección de la recursión de los mappers (#48). Se usó un clon limpio con `core.autocrlf=true`, volúmenes vacíos e imágenes construidas con `--no-cache`:
+
+| Prueba | Resultado |
+|---|---|
+| `docker compose --profile cli build --no-cache` | `MapperRecursionMariaTest` 8/8, `MapperRecursionMongoTest` 7/7 y `PersonaMapperRestTest` 6/6; `BUILD SUCCESS` |
+| Carga inicial | Cada motor carga cinco personas, dos profesiones, tres teléfonos (dos de 123456789 y uno de 321654987) y dos estudios. En MongoDB las fechas de los estudios quedan a las 12:00 UTC (`2015-12-01T12:00:00Z` y `2018-06-15T12:00:00Z`) |
+| `GET /api/v1/persona/MARIA` y `/MONGO` | 200 con las cinco personas de cada motor, sin `StackOverflowError` en el log de REST |
+| `POST` con `{"dni":"979","firstName":"Prueba","lastName":"Dml","age":"33","sex":"F","database":"MARIA"}` y `{"dni":"978",…,"database":"MONGO"}` | 200. Cada persona queda solo en su motor y los dos GET devuelven seis personas |
+| `docker compose run --rm cli`: Persona → MariaDB → ver todo, y luego MongoDB → ver todo | Lista seis personas por motor (con la 979 y la 978), sin excepciones, y termina con código 0 |
+| `docker compose down -v` | Elimina contenedores, red y los dos volúmenes |
 
 ## Fase 2: funcionalidad faltante
 
