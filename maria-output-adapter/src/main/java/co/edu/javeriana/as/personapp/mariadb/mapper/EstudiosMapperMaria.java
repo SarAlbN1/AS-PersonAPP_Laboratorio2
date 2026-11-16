@@ -31,14 +31,14 @@ public class EstudiosMapperMaria {
 		return estudio;
 	}
 
+	/** java.sql.Date conserva el día de la columna DATE sin pasar por una zona horaria (HU-023). */
 	private Date validateFecha(LocalDate graduationDate) {
-		return graduationDate != null
-				? Date.from(graduationDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())
-				: null;
+		return graduationDate != null ? java.sql.Date.valueOf(graduationDate) : null;
 	}
 
+	/** univer es opcional (VARCHAR(50) NULL): la ausencia se guarda como NULL, no como texto vacío (HU-023). */
 	private String validateUniver(String universityName) {
-		return universityName != null ? universityName : "";
+		return universityName;
 	}
 
 	public Study fromAdapterToDomain(EstudiosEntity estudiosEntity) {
@@ -63,6 +63,6 @@ public class EstudiosMapperMaria {
 	}
 
 	private String validateUniversityName(String univer) {
-		return univer != null ? univer : "";
+		return univer;
 	}
 }
