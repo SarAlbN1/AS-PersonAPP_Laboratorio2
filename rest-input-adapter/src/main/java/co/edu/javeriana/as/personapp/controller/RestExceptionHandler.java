@@ -17,6 +17,7 @@ import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
+import co.edu.javeriana.as.personapp.common.exceptions.ReferenceNotFoundException;
 import co.edu.javeriana.as.personapp.model.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +26,13 @@ import lombok.extern.slf4j.Slf4j;
  * Traduce las excepciones al formato común de error (validaciones §2.2) con
  * los códigos del catálogo §3. No expone trazas, SQL ni credenciales.
  *
- * Por ahora solo atiende a {@link ProfesionControllerV1} (HU-018), para no
+ * Por ahora atiende a {@link ProfesionControllerV1} (HU-018) y
+ * {@link TelefonoControllerV1} (HU-021), para no
  * cambiar las respuestas de Persona antes de HU-014; los demás recursos se
  * agregan en {@code assignableTypes} al exponerlos.
  */
 @Slf4j
-@RestControllerAdvice(assignableTypes = ProfesionControllerV1.class)
+@RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, TelefonoControllerV1.class })
 public class RestExceptionHandler {
 
 	private static ResponseEntity<ErrorResponse> error(HttpStatus status, String code, String message) {
@@ -79,6 +81,12 @@ public class RestExceptionHandler {
 	ResponseEntity<ErrorResponse> duplicate(Exception e, HttpServletRequest request) {
 		String message = e instanceof DuplicateException ? e.getMessage() : "El registro ya existe";
 		return error(HttpStatus.CONFLICT, "ERR-04", enMotor(message, request));
+	}
+
+	/** ERR-05: el cuerpo referencia un registro que no existe en el motor elegido (C-03). */
+	@ExceptionHandler(ReferenceNotFoundException.class)
+	ResponseEntity<ErrorResponse> missingReference(ReferenceNotFoundException e, HttpServletRequest request) {
+		return error(HttpStatus.UNPROCESSABLE_CONTENT, "ERR-05", enMotor(e.getMessage(), request));
 	}
 
 	@ExceptionHandler(DependentRecordsException.class)

@@ -138,6 +138,15 @@ class PhoneUseCaseTest {
 	}
 
 	@Test
+	void unaClaveConFormatoInvalidoEsErr01AlConsultarYEliminar() {
+		for (String clave : new String[] { "abc", "300-123", "", "1".repeat(16) }) {
+			assertThrows(InvalidDataException.class, () -> useCase.findOne(clave), clave);
+			assertThrows(InvalidDataException.class, () -> useCase.drop(clave), clave);
+		}
+		assertThrows(InvalidDataException.class, () -> useCase.findOne(null));
+	}
+
+	@Test
 	void listaTodosEnOrdenDeTexto() throws Exception {
 		for (String number : new String[] { "9", "300", "1000", "0012" })
 			useCase.create(phone(number, "Claro", PEPE));

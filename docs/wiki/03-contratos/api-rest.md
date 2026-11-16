@@ -18,6 +18,19 @@ El módulo `rest-input-adapter` recibe HTTP, valida formato de entrada, mapea DT
 
 **Profesión (HU-018).** Implementa las siete rutas de §3.1 en `/api/v1/profesion` con el formato de error común. Las verificó HU-018 en Docker Compose con MariaDB y MongoDB; la evidencia está en el PR de HU-018 y la aceptación final corresponde a HU-026.
 
+**Teléfono (HU-021).** Implementa las siete rutas de §3.1 en `/api/v1/telefono` con el formato de error común. La clave `{num}` es texto y conserva los ceros iniciales. El cuerpo es `TelefonoRequest` (`number` texto, `company` texto, `ownerId` entero) y la respuesta tiene esos mismos campos. El dueño se comprueba en el motor elegido (C-03), así que un teléfono puede existir en un motor y no en el otro.
+
+| Caso | Respuesta |
+|---|---|
+| Alta o edición con un `ownerId` que no existe en el motor elegido | `422` `{"error":"ERR-05","message":"No existe una persona con cc 999 para ser dueña del teléfono en MARIA"}`. No se guarda nada |
+| Alta o edición sin `ownerId` | `400` ERR-01 «El dueño (cc) es obligatorio» |
+| `{num}` o `number` con algo distinto de 1 a 15 dígitos (por ejemplo `abc` o `300-123`) | `400` ERR-01 |
+| Número ya registrado en el motor | `409` ERR-04, sin sobrescribir |
+| `number` del cuerpo distinto del `{num}` de la ruta | `400` ERR-09 |
+| Número inexistente al consultar, editar o eliminar | `404` ERR-03 |
+
+Editar puede cambiar el operador y el dueño, siempre que el nuevo dueño exista (C-04). Eliminar no tiene restricción (C-05). Las verificó HU-021 en Docker Compose con MariaDB y MongoDB; la evidencia está en el PR de HU-021 y la aceptación final corresponde a HU-026.
+
 **DTO inicial referenciado:** `PersonaRequest` con `dni`, `firstName`, `lastName`, `age`, `sex`, `database`. Tipos, serialización, campos obligatorios y reglas de validación deben leerse del código del fork. La referencia del profesor sitúa Swagger UI en `http://localhost:3000/swagger-ui.html` con configuración original; no se garantiza la misma ruta tras migrar.
 
 Una operación declarada en `PersonInputPort` o `PersonUseCase` no puede contarse aquí como ruta HTTP hasta que aparezca en el controlador y en OpenAPI.

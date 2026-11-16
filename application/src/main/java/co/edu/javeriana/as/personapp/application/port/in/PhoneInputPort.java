@@ -18,14 +18,14 @@ public interface PhoneInputPort {
 	public Phone edit(String number, Phone phone)
 			throws InvalidDataException, KeyMismatchException, NoExistException, ReferenceNotFoundException;
 
-	public Boolean drop(String number) throws NoExistException;
+	public Boolean drop(String number) throws InvalidDataException, NoExistException;
 
 	public List<Phone> findAll();
 
 	/** Listado parcial (C-07): página desde 0 y tamaño de 1 a 100, con el orden de C-06. */
 	public List<Phone> findAll(Integer page, Integer size) throws InvalidDataException;
 
-	public Phone findOne(String number) throws NoExistException;
+	public Phone findOne(String number) throws InvalidDataException, NoExistException;
 
 	public Integer count();
 }
