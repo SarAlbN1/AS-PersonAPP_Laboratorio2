@@ -6,13 +6,17 @@
 #   ./mvnw -B -ntp -pl maria-output-adapter,mongo-output-adapter -am -Dmotores=arriba test
 #   docker compose -f compose.yaml -f compose.pruebas.yaml down
 #
+# Publica solo en 127.0.0.1, para no exponer las bases en la red local.
 # No usar en despliegue: expone las bases fuera de la red de Compose.
+#
+# Si los puertos ya están ocupados por los contenedores sueltos de HU-003,
+# detenerlos o usar otros: PERSONAPP_MARIA_PORT=3407 PERSONAPP_MONGO_PORT=27117.
 
 services:
   mariadb:
     ports:
-      - "${PERSONAPP_MARIA_PORT:-3307}:3306"
+      - "127.0.0.1:${PERSONAPP_MARIA_PORT:-3307}:3306"
 
   mongo:
     ports:
-      - "${PERSONAPP_MONGO_PORT:-27017}:27017"
+      - "127.0.0.1:${PERSONAPP_MONGO_PORT:-27017}:27017"

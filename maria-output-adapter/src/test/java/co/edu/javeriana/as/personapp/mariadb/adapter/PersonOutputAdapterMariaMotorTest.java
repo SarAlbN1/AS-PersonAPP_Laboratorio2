@@ -35,7 +35,7 @@ import co.edu.javeriana.as.personapp.mariadb.repository.PersonaRepositoryMaria;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
-		"spring.datasource.url=jdbc:mariadb://localhost:3307/persona_db",
+		"spring.datasource.url=jdbc:mariadb://localhost:${PERSONAPP_MARIA_PORT:3307}/persona_db",
 		"spring.datasource.username=persona_db",
 		"spring.datasource.password=persona_db",
 		"spring.jpa.hibernate.ddl-auto=none",
