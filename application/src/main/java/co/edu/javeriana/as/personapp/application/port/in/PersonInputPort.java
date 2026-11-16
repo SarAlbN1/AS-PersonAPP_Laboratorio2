@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Port;
+import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
@@ -22,7 +23,7 @@ public interface PersonInputPort {
 	public Person edit(Integer identification, Person person)
 			throws InvalidDataException, KeyMismatchException, NoExistException;
 
-	public Boolean drop(Integer identification) throws NoExistException;
+	public Boolean drop(Integer identification) throws NoExistException, DependentRecordsException;
 
 	public List<Person> findAll();
 

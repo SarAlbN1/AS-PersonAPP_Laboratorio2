@@ -18,6 +18,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
@@ -118,6 +119,16 @@ class PersonaMenuTest {
 		String salida = run("2\n6\n404\n2\n0\n0\n");
 		assertTrue(salida.contains("[ERR-03] No existe una persona con cc 404 en MONGO"), salida);
 		assertTrue(salida.contains("(sin registros)"), salida);
+	}
+
+	@Test
+	void eliminarConDependientesMuestraErr06YLaSesionSigue() throws Exception {
+		doThrow(new DependentRecordsException("La persona con cc 1 tiene teléfonos o estudios asociados"))
+				.when(adapter).eliminar(DatabaseOption.MARIA, 1);
+		when(adapter.contar(DatabaseOption.MARIA)).thenReturn(5);
+		String salida = run("1\n6\n1\n3\n0\n0\n");
+		assertTrue(salida.contains("[ERR-06] La persona con cc 1 tiene teléfonos o estudios asociados en MARIA"), salida);
+		assertTrue(salida.contains("Total en MARIA: 5"), salida);
 	}
 
 	@Test
