@@ -314,6 +314,37 @@ Comunes a los dos: un motor desconocido responde `400 ERR-02` y la falta del par
 
 La respuesta rotula el motor que se usó de verdad: antes el adaptador devolvía siempre `MariaDB`, incluso guardando en MongoDB. El adaptador tampoco guarda ya el motor en un campo compartido entre peticiones, que era el riesgo de concurrencia anotado en el SDD.
 
+## CRUD de Persona por CLI (HU-015)
+
+El menú de Persona aplica la numeración aprobada en HU-011, con las tres lecturas primero, las tres escrituras después y el listado parcial como adicional:
+
+```
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+```
+
+Con `0` se vuelve al menú de motor y se elige el otro sin reiniciar la aplicación. Los errores se muestran como `[ERR-xx] mensaje` con el `ErroresCli` que introdujo HU-018 y la sesión continúa.
+
+### Resultados
+
+El 16 de noviembre de 2026 se ejecutó una sola sesión del JAR ejecutable de la CLI, con las bases en contenedores y OpenJDK 25.0.4.1, recorriendo las siete operaciones en MariaDB y luego MongoDB sin reiniciar:
+
+| Paso | Resultado observado |
+|---|---|
+| Consultar `123456789` en MariaDB | `Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]` |
+| Listar todos | Las cinco personas, con `edad=sin dato` en la que no la tiene |
+| Contar | `Total en MARIA: 5` |
+| Crear `992001` | `Creada: Persona [cc=992001, …, edad=33]` |
+| Editar `992001` | Muestra el registro actual y luego `Editada: … Cli Editada, edad=34`, sin volver a pedir la cédula (C-04) |
+| Listar parcial página 0 tamaño 3 | `992001`, `123456789`, `147258369` y `Página 0 · 3 registros`: orden ascendente por clave, pedido al motor (C-06, C-07) |
+| Eliminar `992001` y volver a consultarlo | `Eliminada la persona con cc 992001 en MARIA` y después `[ERR-03] No existe una persona con cc 992001 en MARIA` |
+| Cambiar a MongoDB en la misma sesión | `Total en MONGO: 5`, alta de `992002` sin edad, `Total en MONGO: 6` y borrado correcto |
+
+El cambio de motor no reinicia la aplicación y cada operación usa el puerto del motor elegido, porque el adaptador ya no guarda el caso de uso en un campo compartido.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
