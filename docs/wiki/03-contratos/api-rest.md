@@ -16,6 +16,8 @@ El módulo `rest-input-adapter` recibe HTTP, valida formato de entrada, mapea DT
 | `GET` | `/api/v1/persona/{database}` | Listar personas en el motor indicado | HU-005: `MARIA` y `MONGO` devuelven 200 con las cinco personas de cada motor. Un motor desconocido devuelve 200 con `[]` ([evidencia](../04-implementacion/ejecucion-local.md#arranque-de-rest-y-cli-hu-005)). |
 | `POST` | `/api/v1/persona` | Crear persona | HU-005: devolvía 500 con `NullPointerException` en `PersonaMapperMaria.validateGenero`. HU-006: con `database` en el cuerpo, como en la plantilla, devuelve 200 y guarda en el motor indicado. La respuesta siempre indica `MariaDB`, y un `sex` o un `dni` inválido devuelve 500 ([evidencia](../04-implementacion/ejecucion-local.md#corrección-del-mapper-rest-hu-006)). El contrato aprobado (§3.1: `?database=`, `201` y ERR-01) llega con HU-014. |
 
+**Profesión (HU-018).** Implementa las siete rutas de §3.1 en `/api/v1/profesion` con el formato de error común. Las verificó HU-018 en Docker Compose con MariaDB y MongoDB; la evidencia está en el PR de HU-018 y la aceptación final corresponde a HU-026.
+
 **DTO inicial referenciado:** `PersonaRequest` con `dni`, `firstName`, `lastName`, `age`, `sex`, `database`. Tipos, serialización, campos obligatorios y reglas de validación deben leerse del código del fork. La referencia del profesor sitúa Swagger UI en `http://localhost:3000/swagger-ui.html` con configuración original; no se garantiza la misma ruta tras migrar.
 
 Una operación declarada en `PersonInputPort` o `PersonUseCase` no puede contarse aquí como ruta HTTP hasta que aparezca en el controlador y en OpenAPI.

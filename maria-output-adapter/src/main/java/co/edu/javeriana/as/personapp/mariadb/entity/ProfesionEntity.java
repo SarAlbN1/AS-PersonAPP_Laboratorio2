@@ -35,7 +35,10 @@ public class ProfesionEntity implements Serializable {
 	@Lob
 	@Column(length = 65535)
 	private String des;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "profesion")
+	// Sin REMOVE (D-02): JPA no borra los estudios; el caso de uso los comprueba
+	// antes de eliminar (C-05) y la FK de estudios queda como respaldo.
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.DETACH }, mappedBy = "profesion")
 	private List<EstudiosEntity> estudios;
 
 	public ProfesionEntity() {
