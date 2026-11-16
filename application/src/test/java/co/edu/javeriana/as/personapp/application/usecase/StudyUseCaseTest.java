@@ -306,6 +306,16 @@ class StudyUseCaseTest {
 		public List<Person> find(Integer page, Integer size) {
 			return data.values().stream().skip((long) page * size).limit(size).collect(Collectors.toList());
 		}
+
+		@Override
+		public Boolean hasPhones(Integer identification) {
+			return false;
+		}
+
+		@Override
+		public Boolean hasStudies(Integer identification) {
+			return false;
+		}
 	}
 
 	private static class InMemoryProfessionPort implements ProfessionOutputPort {

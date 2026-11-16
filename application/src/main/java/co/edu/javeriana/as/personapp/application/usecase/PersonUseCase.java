@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
+import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
@@ -66,10 +67,16 @@ public class PersonUseCase implements PersonInputPort {
 	}
 
 	@Override
-	public Boolean drop(Integer identification) throws NoExistException {
+	public Boolean drop(Integer identification) throws NoExistException, DependentRecordsException {
 		Person oldPerson = personPersintence.findById(identification);
-		if (oldPerson != null)
+		if (oldPerson != null) {
+			// C-05: borrado restrictivo. Se revisan los dependientes antes de llamar a delete,
+			// porque en MongoDB nada los protege y en MariaDB la FK solo es el respaldo.
+			if (personPersintence.hasPhones(identification) || personPersintence.hasStudies(identification))
+				throw new DependentRecordsException(
+						"La persona con cc " + identification + " tiene teléfonos o estudios asociados");
 			return personPersintence.delete(identification);
+		}
 		throw new NoExistException(
 				"No existe una persona con cc " + identification);
 	}

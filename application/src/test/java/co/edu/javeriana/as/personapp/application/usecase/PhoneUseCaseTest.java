@@ -227,6 +227,12 @@ class PhoneUseCaseTest {
 		}
 
 		@Override
+		public List<Phone> findByOwner(Integer identification) {
+			return data.values().stream().filter(p -> p.getOwner().getIdentification().equals(identification))
+					.collect(Collectors.toList());
+		}
+
+		@Override
 		public Integer count() {
 			return data.size();
 		}
@@ -264,6 +270,16 @@ class PhoneUseCaseTest {
 		@Override
 		public List<Person> find(Integer page, Integer size) {
 			return data.values().stream().skip((long) page * size).limit(size).collect(Collectors.toList());
+		}
+
+		@Override
+		public Boolean hasPhones(Integer identification) {
+			return false;
+		}
+
+		@Override
+		public Boolean hasStudies(Integer identification) {
+			return false;
 		}
 	}
 }

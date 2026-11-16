@@ -74,4 +74,16 @@ public class PersonOutputAdapterMaria implements PersonOutputPort {
 		return personaRepositoryMaria.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "cc"))).getContent().stream()
 				.map(personaMapperMaria::fromAdapterToDomain).collect(Collectors.toList());
 	}
+
+	@Override
+	public Boolean hasPhones(Integer identification) {
+		log.debug("Into hasPhones on Adapter MariaDB");
+		return personaRepositoryMaria.hasPhones(identification);
+	}
+
+	@Override
+	public Boolean hasStudies(Integer identification) {
+		log.debug("Into hasStudies on Adapter MariaDB");
+		return personaRepositoryMaria.hasStudies(identification);
+	}
 }
