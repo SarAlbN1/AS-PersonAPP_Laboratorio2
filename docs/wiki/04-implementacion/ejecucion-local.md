@@ -194,7 +194,7 @@ La configuración sale de `.env`, que no se versiona. La plantilla es `.env.exam
 
 REST y CLI reciben la conexión por entorno (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_MONGODB_URI`), que reemplaza los valores de `localhost` de los `application.properties`. Dentro de la red de Compose, las bases se alcanzan como `mariadb:3306` y `mongo:27017`, y sus puertos no se publican en la máquina.
 
-La zona horaria se fija porque Spring Data MongoDB lee y guarda las fechas con la zona de la JVM, y una imagen en UTC registraría otra fecha que una ejecución local en Bogotá. La corrección de fondo corresponde a HU-023.
+La zona horaria se fijó porque Spring Data MongoDB leía y guardaba las fechas con la zona de la JVM, y una imagen en UTC registraba otra fecha que una ejecución local en Bogotá. Desde HU-023 las fechas de MongoDB se guardan y se leen en UTC, así que ya no dependen de esta variable; se conserva para que los registros de la aplicación salgan en hora local.
 
 El usuario `persona_db` y su clave vienen fijos en los scripts DDL de la plantilla. Para cambiarlos hay que modificar esos scripts.
 
