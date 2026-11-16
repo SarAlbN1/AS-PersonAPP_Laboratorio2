@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import co.edu.javeriana.as.personapp.application.port.out.PhoneOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
@@ -32,6 +35,9 @@ public class PhoneOutputAdapterMongo implements PhoneOutputPort {
 
 	@Autowired
 	private TelefonoMapperMongo telefonoMapperMongo;
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public Phone save(Phone phone) {
@@ -73,5 +79,15 @@ public class PhoneOutputAdapterMongo implements PhoneOutputPort {
 	public Integer count() {
 		log.debug("Into count on Adapter MongoDB");
 		return Math.toIntExact(telefonoRepositoryMongo.count());
+	}
+
+	@Override
+	public List<Phone> findByOwner(Integer identification) {
+		log.debug("Into findByOwner on Adapter MongoDB");
+		// primaryDuenio guarda la cédula del dueño (@DocumentReference), así que el
+		// filtro y el orden los resuelve el motor sin cargar las personas.
+		Query query = Query.query(Criteria.where("primaryDuenio").is(identification)).with(BY_NUMBER);
+		return mongoTemplate.find(query, TelefonoDocument.class).stream().map(telefonoMapperMongo::fromAdapterToDomain)
+				.toList();
 	}
 }

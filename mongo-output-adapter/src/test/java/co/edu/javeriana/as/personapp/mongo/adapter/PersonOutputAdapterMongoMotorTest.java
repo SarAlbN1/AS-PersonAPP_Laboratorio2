@@ -33,7 +33,7 @@ import co.edu.javeriana.as.personapp.mongo.repository.PersonaRepositoryMongo;
  */
 @DataMongoTest
 @TestPropertySource(properties = {
-		"spring.mongodb.uri=mongodb://persona_db:persona_db@localhost:27017/persona_db?authSource=admin",
+		"spring.mongodb.uri=mongodb://persona_db:persona_db@localhost:${PERSONAPP_MONGO_PORT:27017}/persona_db?authSource=admin",
 		// los mappers de la plantilla se referencian en ciclo, igual que en la aplicación
 		"spring.main.allow-circular-references=true" })
 @EnabledIfSystemProperty(named = "motores", matches = "arriba")
