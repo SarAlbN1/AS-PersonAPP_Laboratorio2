@@ -9,6 +9,7 @@ import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.PersonUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
+import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
@@ -96,7 +97,8 @@ public class PersonaInputAdapterRest {
 				useCase.edit(cc, personaMapperRest.fromAdapterToDomain(request)), motor(database));
 	}
 
-	public void eliminar(String database, Integer cc) throws InvalidOptionException, NoExistException {
+	public void eliminar(String database, Integer cc)
+			throws InvalidOptionException, NoExistException, DependentRecordsException {
 		log.debug("Into eliminar Persona in Input Adapter");
 		useCase(database).drop(cc);
 	}
