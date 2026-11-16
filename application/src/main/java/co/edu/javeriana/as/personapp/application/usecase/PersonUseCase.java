@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
-import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Phone;
@@ -73,13 +73,13 @@ public class PersonUseCase implements PersonInputPort {
 	}
 
 	@Override
-	public List<Person> findAll(Integer page, Integer size) throws InvalidOptionException {
+	public List<Person> findAll(Integer page, Integer size) throws InvalidDataException {
 		if (page == null || size == null)
-			throw new InvalidOptionException("The page and the size are required to list partially");
+			throw new InvalidDataException("The page and the size are required to list partially");
 		if (page < PRIMERA_PAGINA)
-			throw new InvalidOptionException("The page " + page + " is invalid, it starts at " + PRIMERA_PAGINA);
+			throw new InvalidDataException("The page " + page + " is invalid, it starts at " + PRIMERA_PAGINA);
 		if (size < TAMANIO_MINIMO || size > TAMANIO_MAXIMO)
-			throw new InvalidOptionException(
+			throw new InvalidDataException(
 					"The size " + size + " is invalid, it goes from " + TAMANIO_MINIMO + " to " + TAMANIO_MAXIMO);
 		log.debug("Into findAll page " + page + " size " + size + " on Application Domain");
 		return personPersintence.find(page, size);

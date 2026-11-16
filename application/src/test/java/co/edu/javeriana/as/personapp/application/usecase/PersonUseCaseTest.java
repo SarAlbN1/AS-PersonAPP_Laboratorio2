@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
-import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Gender;
 import co.edu.javeriana.as.personapp.domain.Person;
@@ -87,7 +87,7 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void listarParcialPideLaPaginaAlPuertoDeSalida() throws InvalidOptionException {
+	void listarParcialPideLaPaginaAlPuertoDeSalida() throws InvalidDataException {
 		puerto.guardar(persona(1, "Ana"));
 		puerto.guardar(persona(2, "Beatriz"));
 		puerto.guardar(persona(3, "Carmen"));
@@ -98,18 +98,18 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void unaPaginaFueraDeRangoDevuelveUnaListaVacia() throws InvalidOptionException {
+	void unaPaginaFueraDeRangoDevuelveUnaListaVacia() throws InvalidDataException {
 		puerto.guardar(persona(1, "Ana"));
 		assertTrue(caso.findAll(5, 10).isEmpty());
 	}
 
 	@Test
 	void losParametrosInvalidosDeLaPaginaSeRechazan() {
-		assertThrows(InvalidOptionException.class, () -> caso.findAll(-1, 10));
-		assertThrows(InvalidOptionException.class, () -> caso.findAll(0, 0));
-		assertThrows(InvalidOptionException.class, () -> caso.findAll(0, 101));
-		assertThrows(InvalidOptionException.class, () -> caso.findAll(null, 10));
-		assertThrows(InvalidOptionException.class, () -> caso.findAll(0, null));
+		assertThrows(InvalidDataException.class, () -> caso.findAll(-1, 10));
+		assertThrows(InvalidDataException.class, () -> caso.findAll(0, 0));
+		assertThrows(InvalidDataException.class, () -> caso.findAll(0, 101));
+		assertThrows(InvalidDataException.class, () -> caso.findAll(null, 10));
+		assertThrows(InvalidDataException.class, () -> caso.findAll(0, null));
 		assertTrue(puerto.llamadas.isEmpty());
 	}
 

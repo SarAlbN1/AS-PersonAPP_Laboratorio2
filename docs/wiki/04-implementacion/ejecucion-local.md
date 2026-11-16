@@ -247,6 +247,37 @@ Antes del `.gitattributes`, un checkout de Windows con `core.autocrlf=true` tra�
 | `docker compose run --rm cli`: Persona → MariaDB → ver todo, y luego MongoDB → ver todo | Lista seis personas por motor (con la 979 y la 978), sin excepciones, y termina con código 0 |
 | `docker compose down -v` | Elimina contenedores, red y los dos volúmenes |
 
+## Pruebas de los adaptadores contra motores reales (HU-013)
+
+Los adaptadores de salida de Persona tienen pruebas que ejercitan las seis operaciones contra MariaDB y MongoDB de verdad, no contra un motor simulado: `PersonOutputAdapterMariaMotorTest` y `PersonOutputAdapterMongoMotorTest`. Cada una cubre alta y consulta por identificador conservando los cinco campos, identificador ausente, conteo calculado por el motor, listado ordenado por clave, paginación que recorre todo sin repetir ni omitir, página fuera de rango y la pareja editar y eliminar. Usan cédulas `99000x` y las borran al terminar cada caso.
+
+Solo corren con `-Dmotores=arriba`, así que una compilación sin bases no falla:
+
+```bash
+docker compose -f compose.yaml -f compose.pruebas.yaml up -d mariadb mongo
+./mvnw -B -ntp -pl maria-output-adapter,mongo-output-adapter -am -Dmotores=arriba test
+docker compose -f compose.yaml -f compose.pruebas.yaml down
+```
+
+`compose.pruebas.yaml` es una sobrecarga **solo para pruebas**: publica `3307` para MariaDB y `27017` para MongoDB, porque `compose.yaml` los deja cerrados a propósito y estas pruebas corren desde la máquina, no dentro de la red de Compose. Los puertos se pueden cambiar con `PERSONAPP_MARIA_PORT` y `PERSONAPP_MONGO_PORT`. No usar esa sobrecarga para desplegar.
+
+### Resultados
+
+El 14 de noviembre de 2026, con `mariadb:11.4` y `mongo:6.0` cargados con los scripts del repositorio, sobre OpenJDK 25.0.4.1 y Maven 3.10.0:
+
+| Prueba | Resultado |
+|---|---|
+| `PersonOutputAdapterMariaMotorTest` | `Tests run: 7, Failures: 0, Errors: 0` |
+| `PersonOutputAdapterMongoMotorTest` | `Tests run: 7, Failures: 0, Errors: 0` |
+| `MapperRecursionMariaTest` y `MapperRecursionMongoTest` | `8` y `7` casos, sin fallos |
+| `PersonUseCaseTest` | `Tests run: 14, Failures: 0, Errors: 0` |
+
+Tres detalles del entorno de pruebas que salieron de esta HU y sirven para los demás recursos:
+
+- Las porciones de prueba de Spring Boot 4 cambiaron de artefacto y de paquete. `@DataJpaTest` está en `spring-boot-data-jpa-test`, paquete `org.springframework.boot.data.jpa.test.autoconfigure`; `@AutoConfigureTestDatabase` en `spring-boot-jdbc-test`; y `@DataMongoTest` en `spring-boot-data-mongodb-test`.
+- Los módulos de adaptador son librerías sin clase de arranque, así que las pruebas necesitan una `@SpringBootConfiguration` propia: `ConfiguracionDePruebas`, solo en `src/test`.
+- `common` excluye Spring AOP y Spring Expression de su dependencia de Spring Context. El contexto de prueba sí los necesita, así que se declaran en alcance `test` en los dos adaptadores. El runtime no cambia.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
