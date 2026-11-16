@@ -4,7 +4,7 @@ import java.util.List;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Port;
-import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Phone;
@@ -23,7 +23,7 @@ public interface PersonInputPort {
 
 	public List<Person> findAll();
 
-	public List<Person> findAll(Integer page, Integer size) throws InvalidOptionException;
+	public List<Person> findAll(Integer page, Integer size) throws InvalidDataException;
 
 	public Person findOne(Integer identification) throws NoExistException;
 

@@ -47,7 +47,8 @@ public class PersonOutputAdapterMaria implements PersonOutputPort {
 	@Override
 	public List<Person> find() {
 		log.debug("Into find on Adapter MariaDB");
-		return personaRepositoryMaria.findAll().stream().map(personaMapperMaria::fromAdapterToDomain)
+		// C-06: el orden por clave ascendente lo pide el motor, no se ordena en memoria.
+		return personaRepositoryMaria.findAll(Sort.by(Sort.Direction.ASC, "cc")).stream().map(personaMapperMaria::fromAdapterToDomain)
 				.collect(Collectors.toList());
 	}
 
