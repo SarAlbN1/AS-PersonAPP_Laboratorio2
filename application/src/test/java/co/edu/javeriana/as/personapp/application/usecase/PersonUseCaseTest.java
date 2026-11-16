@@ -1,6 +1,7 @@
 package co.edu.javeriana.as.personapp.application.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,7 +16,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
+import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
+import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Gender;
 import co.edu.javeriana.as.personapp.domain.Person;
@@ -46,15 +49,16 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void crearDelegaEnElPuertoDeSalida() {
+	void crearDelegaEnElPuertoDeSalida() throws Exception {
 		Person nueva = persona(1, "Ana");
 		assertSame(nueva, caso.create(nueva));
-		assertEquals(List.of("save"), puerto.llamadas);
+		// C-02: antes de guardar consulta la clave para rechazar el duplicado.
+		assertEquals(List.of("findById", "save"), puerto.llamadas);
 		assertEquals(1, puerto.almacen.size());
 	}
 
 	@Test
-	void consultarPorIdentificadorDevuelveElRegistro() throws NoExistException {
+	void consultarPorIdentificadorDevuelveElRegistro() throws Exception {
 		puerto.guardar(persona(1, "Ana"));
 		assertEquals("Ana", caso.findOne(1).getFirstName());
 	}
@@ -65,7 +69,7 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void listarTodosDelegaEnElPuertoDeSalida() {
+	void listarTodosDelegaEnElPuertoDeSalida() throws Exception {
 		puerto.guardar(persona(2, "Beatriz"));
 		puerto.guardar(persona(1, "Ana"));
 		assertEquals(2, caso.findAll().size());
@@ -73,7 +77,7 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void contarUsaElConteoDelMotorYNoElTamanioDeLaLista() {
+	void contarUsaElConteoDelMotorYNoElTamanioDeLaLista() throws Exception {
 		puerto.guardar(persona(1, "Ana"));
 		puerto.guardar(persona(2, "Beatriz"));
 		assertEquals(2, caso.count());
@@ -114,10 +118,56 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void editarUnRegistroExistenteLoGuarda() throws NoExistException {
+	void editarUnRegistroExistenteLoGuarda() throws Exception {
 		puerto.guardar(persona(1, "Ana"));
 		Person editada = persona(1, "Ana Maria");
 		assertEquals("Ana Maria", caso.edit(1, editada).getFirstName());
+	}
+
+	@Test
+	void rechazaElAltaDuplicadaSinSobrescribir() throws Exception {
+		caso.create(persona(1, "Ana"));
+		Person repetida = persona(1, "Otra");
+		assertThrows(DuplicateException.class, () -> caso.create(repetida));
+		assertEquals("Ana", caso.findOne(1).getFirstName());
+	}
+
+	@Test
+	void rechazaLosDatosInvalidosDelContrato() {
+		assertThrows(InvalidDataException.class, () -> caso.create(null));
+		assertThrows(InvalidDataException.class, () -> caso.create(persona(0, "Ana")));
+		assertThrows(InvalidDataException.class, () -> caso.create(persona(1, "   ")));
+		assertThrows(InvalidDataException.class, () -> caso.create(persona(1, "A".repeat(46))));
+		Person sinGenero = persona(1, "Ana");
+		sinGenero.setGender(Gender.OTHER);
+		assertThrows(InvalidDataException.class, () -> caso.create(sinGenero));
+		Person edadNegativa = persona(1, "Ana");
+		edadNegativa.setAge(-1);
+		assertThrows(InvalidDataException.class, () -> caso.create(edadNegativa));
+		assertTrue(puerto.almacen.isEmpty());
+	}
+
+	@Test
+	void recortaLosNombresYAceptaElLimiteDelEsquema() throws Exception {
+		Person conEspacios = persona(1, "  Ana  ");
+		assertEquals("Ana", caso.create(conEspacios).getFirstName());
+		Person alLimite = persona(2, "A".repeat(45));
+		assertEquals(45, caso.create(alLimite).getFirstName().length());
+	}
+
+	@Test
+	void aceptaLaEdadAusente() throws Exception {
+		Person sinEdad = persona(1, "Ana");
+		sinEdad.setAge(null);
+		assertNull(caso.create(sinEdad).getAge());
+	}
+
+	@Test
+	void editarConOtraClaveEnElCuerpoSeRechaza() throws Exception {
+		caso.create(persona(1, "Ana"));
+		Person otraClave = persona(2, "Ana");
+		assertThrows(KeyMismatchException.class, () -> caso.edit(1, otraClave));
+		assertEquals("Ana", caso.findOne(1).getFirstName());
 	}
 
 	@Test
@@ -126,7 +176,7 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void eliminarUnRegistroExistenteLoRetira() throws NoExistException {
+	void eliminarUnRegistroExistenteLoRetira() throws Exception {
 		puerto.guardar(persona(1, "Ana"));
 		assertTrue(caso.drop(1));
 		assertEquals(0, caso.count());
@@ -138,7 +188,7 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void cambiarDePersistenciaUsaElNuevoPuerto() {
+	void cambiarDePersistenciaUsaElNuevoPuerto() throws Exception {
 		PuertoDePrueba otro = new PuertoDePrueba();
 		otro.guardar(persona(7, "Otra"));
 		caso.setPersintence(otro);

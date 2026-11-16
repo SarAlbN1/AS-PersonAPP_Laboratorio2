@@ -278,6 +278,42 @@ Tres detalles del entorno de pruebas que salieron de esta HU y sirven para los d
 - Los módulos de adaptador son librerías sin clase de arranque, así que las pruebas necesitan una `@SpringBootConfiguration` propia: `ConfiguracionDePruebas`, solo en `src/test`.
 - `common` excluye Spring AOP y Spring Expression de su dependencia de Spring Context. El contexto de prueba sí los necesita, así que se declaran en alcance `test` en los dos adaptadores. El runtime no cambia.
 
+## CRUD de Persona por REST (HU-014)
+
+Las siete rutas de Persona viven en `/api/v1/persona` y todas exigen `database=MARIA|MONGO` como parámetro de consulta (decisión D-04), que sustituye la ruta `GET /api/v1/persona/{database}` de la plantilla y deja `/{cc}` libre para consultar, editar y eliminar.
+
+| Operación | Ruta | Éxito |
+|---|---|---|
+| Consultar por identificador | `GET /api/v1/persona/{cc}?database=` | `200` |
+| Listar todos | `GET /api/v1/persona?database=` | `200` |
+| Contar | `GET /api/v1/persona/conteo?database=` | `200` con un entero |
+| Listar parcial (adicional) | `GET /api/v1/persona/pagina?database=&page=0&size=10` | `200` |
+| Crear | `POST /api/v1/persona?database=` | `201` con `Location` |
+| Editar | `PUT /api/v1/persona/{cc}?database=` | `200` |
+| Eliminar | `DELETE /api/v1/persona/{cc}?database=` | `204` |
+
+Los errores usan el formato común `{ "error": "ERR-xx", "message": "..." }` del `RestExceptionHandler` que introdujo HU-018.
+
+### Resultados
+
+El 16 de noviembre de 2026, con las bases en contenedores y el JAR ejecutable de REST sobre OpenJDK 25.0.4.1, se ejecutaron las trece comprobaciones **en cada motor**, más dos comunes:
+
+| Comprobación | MariaDB | MongoDB |
+|---|---|---|
+| Listar, contar y página | `200`, cinco personas, conteo `5` | igual |
+| Crear `991001` | `201` | `201` |
+| Consultar y editar `991001` | `200` | `200` |
+| Alta duplicada | `409` `ERR-04` | `409` `ERR-04` |
+| Clave del cuerpo distinta de la ruta | `400` `ERR-09` | `400` `ERR-09` |
+| Consultar un cc inexistente | `404` `ERR-03` | `404` `ERR-03` |
+| `cc` no numérico | `400` `ERR-01` | `400` `ERR-01` |
+| Página negativa | `400` `ERR-01` | `400` `ERR-01` |
+| Eliminar y repetir el borrado | `204` y luego `404` `ERR-03` | `204` y luego `404` `ERR-03` |
+
+Comunes a los dos: un motor desconocido responde `400 ERR-02` y la falta del parámetro `database` también, sin elegir motor por defecto. `/api-docs` publica `/api/v1/persona`, `/api/v1/persona/{cc}`, `/api/v1/persona/conteo` y `/api/v1/persona/pagina`.
+
+La respuesta rotula el motor que se usó de verdad: antes el adaptador devolvía siempre `MariaDB`, incluso guardando en MongoDB. El adaptador tampoco guarda ya el motor en un campo compartido entre peticiones, que era el riesgo de concurrencia anotado en el SDD.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
