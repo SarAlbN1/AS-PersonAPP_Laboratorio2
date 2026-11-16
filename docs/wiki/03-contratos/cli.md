@@ -118,6 +118,8 @@ Prueba, commit, PR:
 
 **Teléfono (HU-021).** La opción 3 del menú principal abre el menú común completo para Teléfono, con los mismos textos que Profesión. El número se lee como texto para conservar los ceros iniciales; la cédula del dueño se lee como entero y se vuelve a pedir si no es numérica. Un dueño inexistente en el motor elegido muestra `[ERR-05] No existe una persona con cc N para ser dueña del teléfono en <motor>` y no guarda nada. Editar muestra el teléfono actual y pide el nuevo operador y el nuevo dueño.
 
+**Estudios (HU-024).** La opción 4 del menú principal abre el menú común completo para Estudios, con los mismos textos que Profesión y Teléfono. La clave se pide en dos partes, `Id de la profesión` y luego `Cédula de la persona`, y cada una se vuelve a pedir si no es numérica. La fecha (`yyyy-MM-dd`) y la universidad son opcionales: con Enter quedan vacías. Una fecha inválida se descarta con `[ERR-01] La fecha '…' no es válida; use el formato yyyy-MM-dd` y se vuelve a pedir. Una profesión o una persona inexistentes en el motor elegido muestran `[ERR-05] … en <motor>` y no guardan nada. Editar muestra el estudio actual y pide la nueva fecha y la nueva universidad; la clave no cambia.
+
 **Pendientes de confirmar:** árbol exacto de `PersonaMenu`, DTO y Mapper CLI reales, política de errores, navegación de vuelta y comportamiento de cierre. Cerrar estas decisiones antes de declarar el contrato final.
 
 ## 8. Árbol real por inspección

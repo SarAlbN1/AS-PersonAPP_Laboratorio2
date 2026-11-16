@@ -1,5 +1,7 @@
 package co.edu.javeriana.as.personapp.controller;
 
+import java.time.format.DateTimeParseException;
+
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -27,12 +29,13 @@ import lombok.extern.slf4j.Slf4j;
  * los códigos del catálogo §3. No expone trazas, SQL ni credenciales.
  *
  * Por ahora atiende a {@link ProfesionControllerV1} (HU-018) y
- * {@link TelefonoControllerV1} (HU-021), para no
+ * {@link TelefonoControllerV1} (HU-021) y {@link EstudioControllerV1} (HU-024), para no
  * cambiar las respuestas de Persona antes de HU-014; los demás recursos se
  * agregan en {@code assignableTypes} al exponerlos.
  */
 @Slf4j
-@RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, TelefonoControllerV1.class })
+@RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, TelefonoControllerV1.class,
+		EstudioControllerV1.class })
 public class RestExceptionHandler {
 
 	private static ResponseEntity<ErrorResponse> error(HttpStatus status, String code, String message) {
@@ -55,8 +58,17 @@ public class RestExceptionHandler {
 		return error(HttpStatus.BAD_REQUEST, "ERR-01", "El valor '" + e.getValue() + "' no es válido para " + e.getName());
 	}
 
+	/**
+	 * ERR-01 con un cuerpo que no se puede convertir. Una fecha mal formada (Estudios)
+	 * llega aquí, porque el DTO usa {@link java.time.LocalDate}: se informa el formato
+	 * esperado en lugar del mensaje genérico (HU-024).
+	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	ResponseEntity<ErrorResponse> unreadable(HttpMessageNotReadableException e) {
+		for (Throwable cause = e; cause != null; cause = cause.getCause())
+			if (cause instanceof DateTimeParseException parse)
+				return error(HttpStatus.BAD_REQUEST, "ERR-01",
+						"La fecha '" + parse.getParsedString() + "' no es válida; use el formato yyyy-MM-dd");
 		return error(HttpStatus.BAD_REQUEST, "ERR-01", "El cuerpo no es un JSON válido o tiene tipos incorrectos");
 	}
 
