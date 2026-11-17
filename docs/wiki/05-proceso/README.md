@@ -2,7 +2,6 @@
 
 - [Ramas y commits](git-ramas-y-commits.md)
 - [Issues y tablero](issues-etiquetas-y-milestones.md)
-- [PR y releases](../../../CONTRIBUTING.md#pull-requests-y-releases)
 - [DoR/DoD](dor-y-dod.md)
 - [Trabajo con IA](trabajo-con-ia.md)
 - [Documentación](documentacion.md)

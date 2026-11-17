@@ -7,7 +7,6 @@ Inspección estática: 2026-11-08. Referencia Git: `9d440668133747cf840fea708547
 ```text
 pom.xml                         Agregador Maven original
 README.md                       Instrucciones originales + orientación
-CLAUDE.md / CONTRIBUTING.md
 common/
 domain/
 application/

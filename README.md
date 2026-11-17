@@ -14,7 +14,7 @@ El [repositorio del docente](https://github.com/andres-karoll/personapp-hexa-spr
 
 Todo el trabajo del laboratorio, incluidas las ramas, issues y revisiones, se realiza exclusivamente en el [repositorio del equipo](https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2). Clona ese repositorio para contribuir.
 
-Crea tu rama desde `main` con el formato `<tipo>/HU-###-descripcion` y abre el PR hacia `main` del fork. Incluye la evidencia de verificación y solicita la revisión de otro integrante. Sigue la [política de integración](CONTRIBUTING.md#pull-requests-y-releases).
+Crea tu rama desde `main` con el formato `<tipo>/HU-###-descripcion` y abre el PR hacia `main` del fork. Incluye la evidencia de verificación y solicita la revisión de otro integrante.
 
 ## Explorar la wiki
 
@@ -26,7 +26,7 @@ Empieza por el [índice de la wiki](docs/wiki/Home.md). Desde allí puedes segui
 | Cómo se conectan el dominio, REST, CLI y los motores | [Arquitectura](docs/wiki/02-arquitectura/README.md) |
 | Qué operaciones, entradas y errores se esperan | [Contratos](docs/wiki/03-contratos/README.md) |
 | Cómo está organizado el código y cómo probarlo | [Implementación y pruebas](docs/wiki/04-implementacion/README.md) |
-| Cómo colaborar y preparar la entrega | [Proceso](docs/wiki/05-proceso/README.md) y [CONTRIBUTING](CONTRIBUTING.md) |
+| Cómo colaborar y preparar la entrega | [Proceso](docs/wiki/05-proceso/README.md) |
 | Qué trabajo sigue y qué lo desbloquea | [Backlog](docs/wiki/06-backlog/README.md) |
 
 ## Requisitos y versiones
@@ -139,7 +139,6 @@ Más detalle en [pruebas](docs/wiki/04-implementacion/pruebas.md).
 ## Informe y asistentes
 
 - [Informe académico](docs/informe/main.tex) y [lista de entrega](docs/wiki/05-proceso/entrega.md).
-- [CLAUDE.md](CLAUDE.md) para instrucciones de trabajo con asistentes.
 
 ## Referencias
 
