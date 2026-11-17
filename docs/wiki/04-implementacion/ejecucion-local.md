@@ -372,7 +372,26 @@ Comprobaciones puntuales del documento generado:
 - **`PersonaRequest`**: obligatorios `dni`, `firstName`, `lastName` y `sex`; `age` opcional; ejemplos en los cinco campos; género con los valores admitidos `M`, `F`, `MALE` y `FEMALE`; y el campo `database` del cuerpo marcado como obsoleto, porque desde D-04 el motor va en el parámetro de consulta.
 - Swagger UI responde `200`.
 
-**Pendiente.** Profesión, Teléfono y Estudios se documentan igual cuando entren HU-018, HU-021 y HU-024: el patrón de anotaciones de `PersonaControllerV1` sirve tal cual.
+### Resultados de Profesión y de la persona con sus teléfonos
+
+El 17 de noviembre de 2026, con el JAR ejecutable de REST y las bases en contenedores, `/api-docs` publicó OpenAPI **3.1.0** con 17 rutas en total y estos códigos:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/profesion` | GET · POST | `200,400,503` · `201,400,409,503` |
+| `/api/v1/profesion/conteo` | GET | `200,400,503` |
+| `/api/v1/profesion/pagina` | GET | `200,400,503` |
+| `/api/v1/profesion/{id}` | GET · PUT · DELETE | `200,400,404,503` · `200,400,404,503` · `204,400,404,409,503` |
+| `/api/v1/persona/{cc}/telefonos` | GET | `200,400,404,503` |
+
+Con el mismo patrón de Persona: cada error referencia `ErrorResponse`, el motor se documenta una sola vez como parámetro obligatorio con `MARIA` y `MONGO` como valores admitidos, y el `409 ERR-06` del borrado explica que una profesión con estudios no se elimina.
+
+- **Conteo**: `{"type": "integer", "format": "int32", "example": 2}`.
+- **Listado parcial**: `page` con `0` y `size` con `10` por defecto (D-05).
+- **`ProfesionRequest`**: obligatorios `id` y `name`, `description` opcional, y ejemplos que existen en los datos iniciales (`1`, *Ingeniero de Sistemas*), así que «Try it out» responde `200`. Las cinco consultas de ejemplo (`profesion/1`, el listado, el conteo, la página y `persona/123456789/telefonos`) dieron `200`.
+- Swagger UI responde `200`.
+
+**Pendiente.** Teléfono y Estudios, que documenta el #80; el patrón es el mismo.
 
 ## Selección dinámica del motor (HU-025, Persona)
 
