@@ -233,7 +233,7 @@ bash scripts/verificacion/hu026-rest.sh     # 162 comprobaciones REST, unos 2 s
 bash scripts/verificacion/hu026-cli.sh      # 123 comprobaciones CLI, unos 17 s
 ```
 
-Resultado ensayado: **162 de 162** y **123 de 123** correctas, sin fallas, y después de correrlos las bases siguen con 5 personas en cada motor. Imprimen una tabla Markdown con el comando, el resultado esperado y el observado de cada caso, y terminan con código 1 si algo falla. Se invocan con `bash` porque en el repositorio no tienen el permiso de ejecución. Cubren las seis operaciones por recurso, el listado parcial, la persona con sus teléfonos y los casos negativos, en MariaDB y MongoDB.
+Resultado ensayado: **162 de 162** y **123 de 123** correctas, sin fallas, y después de correrlos las bases siguen con 5 personas en cada motor. Imprimen una tabla Markdown con el comando, el resultado esperado y el observado de cada caso, y terminan con código 1 si algo falla. Se invocan con `bash` porque en el repositorio no tienen el permiso de ejecución. El de la CLI deja su salida completa en `hu026-cli-salida.txt` en la carpeta desde la que se ejecute: borrarlo después con `rm hu026-cli-salida.txt` para no dejar el árbol sucio. Cubren las seis operaciones por recurso, el listado parcial, la persona con sus teléfonos y los casos negativos, en MariaDB y MongoDB.
 
 > Si alguien pregunta «¿y los otros recursos y los otros errores?»: aquí están, 285 comprobaciones en total, y cada una dice qué se pidió, qué se esperaba y qué se obtuvo.
 
