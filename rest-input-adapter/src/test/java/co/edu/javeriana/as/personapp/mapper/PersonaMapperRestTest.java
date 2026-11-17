@@ -65,6 +65,16 @@ class PersonaMapperRestTest {
 	}
 
 	@Test
+	void rechazaNombreYApellidoAusentesOEnBlanco() {
+		assertThrows(InvalidDataException.class,
+				() -> mapper.fromAdapterToDomain(new PersonaRequest("1", null, "B", "1", "M", "MARIA")));
+		assertThrows(InvalidDataException.class,
+				() -> mapper.fromAdapterToDomain(new PersonaRequest("1", "A", null, "1", "M", "MARIA")));
+		assertThrows(InvalidDataException.class,
+				() -> mapper.fromAdapterToDomain(new PersonaRequest("1", "  ", "B", "1", "M", "MARIA")));
+	}
+
+	@Test
 	void rechazaEdadNoNumericaYCuerpoAusente() throws Exception {
 		assertThrows(InvalidDataException.class,
 				() -> mapper.fromAdapterToDomain(new PersonaRequest("1", "A", "B", "veinte", "M", "MARIA")));

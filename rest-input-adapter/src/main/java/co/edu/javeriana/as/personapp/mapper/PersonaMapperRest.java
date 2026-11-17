@@ -37,8 +37,9 @@ public class PersonaMapperRest {
 			throw new InvalidDataException("El cuerpo de la solicitud es obligatorio");
 		Person person = new Person();
 		person.setIdentification(toIdentification(request.getDni()));
-		person.setFirstName(request.getFirstName());
-		person.setLastName(request.getLastName());
+		// Person no acepta null: sin nombre o apellido el setter lanzaría NPE y REST respondería 500.
+		person.setFirstName(required(request.getFirstName(), "firstName"));
+		person.setLastName(required(request.getLastName(), "lastName"));
 		person.setGender(toGender(request.getSex()));
 		person.setAge(toAge(request.getAge()));
 		return person;
@@ -49,6 +50,12 @@ public class PersonaMapperRest {
 			throw new InvalidDataException("El dni es obligatorio");
 		}
 		return toInteger(dni, "dni");
+	}
+
+	private String required(String valor, String campo) throws InvalidDataException {
+		if (valor == null || valor.isBlank())
+			throw new InvalidDataException("El " + campo + " es obligatorio");
+		return valor;
 	}
 
 	private Integer toInteger(String valor, String campo) throws InvalidDataException {
