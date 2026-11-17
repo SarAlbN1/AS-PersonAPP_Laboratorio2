@@ -400,7 +400,21 @@ Después, **200 solicitudes concurrentes alternadas** sobre `994001`: las 100 de
 
 La CLI ya quedó verificada en [HU-015](#crud-de-persona-por-cli-hu-015): una sola sesión alterna MariaDB y MongoDB sin reiniciar.
 
-**Pendiente.** Repetir el guion con Profesión, Teléfono y Estudios cuando entren HU-021 y HU-024 a `main`; usan el mismo patrón sin estado.
+### Profesión y Teléfono
+
+`SeleccionDinamicaProfesionTelefonoRestTest` aplica el mismo caso a `ProfesionInputAdapterRest` y `TelefonoInputAdapterRest`, con ocho pruebas: alternar de motor en un mismo proceso, motor inválido o ausente con ERR-02 sin motor por defecto, 3200 solicitudes de 16 hilos sin cruzar datos entre motores, y que escribir en uno no toque al otro.
+
+Reintroduciendo el campo compartido de la plantilla en cada adaptador, las dos pruebas concurrentes fallaron: **1407 de 3200** respuestas cruzadas en Profesión y **1287 de 3200** en Teléfono. Con los adaptadores sin estado, cero.
+
+Con el JAR ejecutable y las bases en contenedores, la profesión `9101` solo en MariaDB y la `9102` solo en MongoDB, y el teléfono `3109990001` solo en MariaDB y el `3109990002` solo en MongoDB:
+
+| Recurso | Solicitudes sucesivas en un mismo proceso | 200 concurrentes alternadas |
+|---|---|---|
+| Profesión | `200` en el motor donde existe y `404 ERR-03` en el otro, en los dos sentidos | 100 de 100 `200` en `MARIA` y 100 de 100 `404` en `MONGO`, sin otros códigos |
+| Teléfono | igual | igual |
+
+**Pendiente.** Estudios, cuando entre el #67. Usa el mismo patrón sin estado.
+
 
 ## Fase 2: funcionalidad faltante
 
