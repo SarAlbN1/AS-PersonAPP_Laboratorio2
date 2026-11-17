@@ -67,6 +67,21 @@ docker compose ps
 
 **Mostrar una operación.** Abrir `POST /api/v1/persona`: el cuerpo de ejemplo, el `201` con `Location` y los errores `400`, `409` y `503`.
 
+**Probar desde la propia documentación (*Try it out*).** Los ejemplos de los cuatro recursos existen en los datos iniciales, así que se pueden ejecutar sin escribir nada y responden `200`. Sugeridos, en este orden:
+
+| Recurso | Operación | Valores | Resultado |
+|---|---|---|---|
+| Persona | `GET /persona/{cc}` | `database=MARIA`, `cc=123456789` | `200` con Pepe |
+| Profesión | `GET /profesion/{id}` | `database=MONGO`, `id=1` | `200` con *Ingeniero de Sistemas* |
+| Teléfono | `GET /telefono/{num}` | `database=MARIA`, `num=3001234567` | `200` con su dueño |
+| Estudios | `GET /estudio/{idProfesion}/{ccPersona}` | `database=MARIA`, `idProfesion=1`, `ccPersona=123456789` | `200` |
+| Persona con teléfonos | `GET /persona/{cc}/telefonos` | `database=MARIA`, `cc=123456789` | `200` con la lista `phones` |
+
+Al repetir cualquiera cambiando `database` por `ORACLE` se ve el `400 ERR-02` con el cuerpo común de error, que Swagger muestra porque cada error referencia `ErrorResponse`.
+
+**Qué decir de la documentación.**
+> Cada operación declara sus códigos con el mismo catálogo. Por ejemplo, el borrado de una persona o una profesión anuncia el `409` y el de un teléfono o un estudio no, porque esos se eliminan sin restricción. El conteo se documenta como entero y el número de teléfono como texto, para no perder los ceros iniciales.
+
 ## 3. Un CRUD por entidad en REST (4 minutos)
 
 Se usa una persona nueva que **no** existe en los datos iniciales, así que no depende del estado de la base.
@@ -211,6 +226,17 @@ docker compose -f compose.yaml -f compose.pruebas.yaml down -v
 **Qué decir.**
 > Las pruebas de los adaptadores se ejecutan contra las bases de verdad, no contra simuladores. Las que necesitan bases solo corren cuando se piden, así que compilar sin ellas no falla. Además de las funcionales, hay pruebas de concurrencia para la selección del motor y de recursión de los mappers, un defecto que traía la plantilla y que reventaba la API en cuanto una persona tenía estudios.
 
+**Cobertura completa en dos minutos (HU-026).** Para mostrar que se verificó todo sin escribir comandos, hay dos guiones que parten de los datos iniciales, crean sus propios registros, los borran al final y dejan las bases como estaban. Con la API ya arriba:
+
+```bash
+bash scripts/verificacion/hu026-rest.sh     # 162 comprobaciones REST, unos 2 s
+bash scripts/verificacion/hu026-cli.sh      # 123 comprobaciones CLI, unos 17 s
+```
+
+Resultado ensayado: **162 de 162** y **123 de 123** correctas, sin fallas, y después de correrlos las bases siguen con 5 personas en cada motor. Imprimen una tabla Markdown con el comando, el resultado esperado y el observado de cada caso, y terminan con código 1 si algo falla. Se invocan con `bash` porque en el repositorio no tienen el permiso de ejecución. El de la CLI deja su salida completa en `hu026-cli-salida.txt` en la carpeta desde la que se ejecute: borrarlo después con `rm hu026-cli-salida.txt` para no dejar el árbol sucio. Cubren las seis operaciones por recurso, el listado parcial, la persona con sus teléfonos y los casos negativos, en MariaDB y MongoDB.
+
+> Si alguien pregunta «¿y los otros recursos y los otros errores?»: aquí están, 285 comprobaciones en total, y cada una dice qué se pidió, qué se esperaba y qué se obtuvo.
+
 **La arquitectura se puede auditar.** La sección *Revisión de HU-027* de `docs/wiki/02-arquitectura/reglas-arquitectonicas.md` trae cinco comandos que deben dar cero líneas: el dominio sin dependencias de Spring ni de motores, `application` sin Spring, JPA ni Mongo, y los adaptadores sin importarse entre sí.
 
 ## 8. Las cuatro fases del profesor (1,5 minutos)
@@ -256,8 +282,11 @@ Cada fila se ensayó el 17 de noviembre de 2026 salvo las marcadas como *no ensa
 | Un servicio no queda `healthy` | `docker compose logs <servicio>`, luego `docker compose down -v && docker compose up -d` | no ensayado |
 | Docker no arranca o no hay red | Plan B sin contenedores: bases locales y `java -jar rest-input-adapter/target/rest-input-adapter-*-exec.jar` (README, sección *Sin contenedores para la aplicación*). Por eso los JAR deben estar compilados desde antes | no ensayado |
 | La CLI no acepta la entrada | `docker compose run --rm --build cli`; si el terminal no es interactivo, usar `-T` y pasar las teclas por entrada estándar | **ensayado** con `-T` |
-| Un `curl` falla en directo | Repetirlo desde Swagger UI con *Try it out*, que usa los mismos datos | no ensayado |
+| Un `curl` falla en directo | Repetirlo desde Swagger UI con *Try it out*, que usa los mismos datos (los cinco ejemplos del paso 2 responden `200`) | **ensayado** |
+| Ya no hay tiempo de escribir comandos | Correr `bash scripts/verificacion/hu026-rest.sh` y mostrar la tabla: 162 comprobaciones en unos 2 s | **ensayado** |
 | Falla todo | Mostrar las capturas o el video de respaldo y el informe con las evidencias | no ensayado |
+
+**Para esperar a la API.** `docker compose up -d --build --wait` no devuelve hasta que los servicios estén `healthy`: ensayado, 12 s con la caché de capas de Docker. Evita lanzar el primer `curl` antes de tiempo.
 
 **Regla de oro.** Si algo falla, no depurar en público: nombrar el problema en una frase, aplicar la fila de la tabla y continuar. Los datos de la demostración son desechables.
 
@@ -274,5 +303,7 @@ Cada fila se ensayó el 17 de noviembre de 2026 salvo las marcadas como *no ensa
 | Paso 6 | Sesión de CLI con el cambio de MariaDB a MongoDB sin reiniciar y el `ERR-03` esperado |
 | Paso 7 | `BUILD SUCCESS` sin bases con 177 pruebas y con `-Dmotores=arriba` con 223, sin fallos |
 | Recuperación | `down -v && up -d` restauró los datos en 12 s; con el puerto cambiado a `3001` responde `200` |
+| Guiones de HU-026 | Sobre `main` en `66d151c`, tras `docker compose up -d --build --wait` (12 s): `hu026-rest.sh` dio **162 de 162** en 2 s y `hu026-cli.sh` **123 de 123** en 17 s; las bases quedaron en 5 personas por motor |
+| *Try it out* | Los cinco ejemplos del paso 2 responden `200` con las bases cargadas |
 
-**Pendiente.** Un ensayo cronometrado con los tres presentando, para ajustar el reparto de tiempos de la tabla inicial.
+**Pendiente.** Un ensayo cronometrado con los tres presentando, sobre el `main` final, para ajustar el reparto de tiempos de la tabla inicial. Cuando se haga, se agrega aquí su fila de registro con fecha, quién presentó cada parte y los tiempos reales, y se cierra la HU-031.
