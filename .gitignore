@@ -85,3 +85,8 @@ build/
 
 # Configuración local de Docker Compose (HU-034)
 .env
+
+# Instrucciones locales de trabajo (no se entregan)
+CLAUDE.md
+CONTRIBUTING.md
+.claude/
