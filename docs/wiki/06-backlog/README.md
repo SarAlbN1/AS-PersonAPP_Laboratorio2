@@ -268,14 +268,14 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-026 · Verificar las seis operaciones desde REST y CLI en ambos motores
 
-**Estado:** Pendiente. **Dependencias:** HU-018, HU-021, HU-024, HU-025, HU-033, HU-034. **Trazabilidad:** RF-01, RF-02, RF-03, RF-04. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
+**Estado:** Verificada el 2026-11-17 sobre `92b1454`; [evidencia](../04-implementacion/pruebas/README.md#verificación-final-de-las-seis-operaciones-hu-026). **Dependencias:** HU-018, HU-021, HU-024, HU-025, HU-033, HU-034. **Trazabilidad:** RF-01, RF-02, RF-03, RF-04. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
 
-- [ ] Ejecutar las seis operaciones por recurso desde REST y CLI sobre MariaDB y MongoDB. Adjuntar evidencia reproducible de cada flujo.
-- [ ] Verificar 4 entidades × 6 operaciones × 2 interfaces × 2 motores (96 escenarios básicos), más paginación y consulta Persona–Teléfonos en ambos canales/motores. La consulta por identificador usa la clave completa, compuesta en Estudios.
-- [ ] Se prueban casos negativos: invalidez, duplicados, relaciones, inexistentes.
-- [ ] Repetir la aceptación sobre el despliegue en contenedores con las versiones finales de HU-007 y registrar los resultados.
-- [ ] Cada resultado tiene comando/petición, esperado, obtenido y evidencia fechada.
-- [ ] Con tres registros, un tamaño de página de dos devuelve dos registros en la primera página y uno en la segunda sin duplicarlos. El conteo devuelve tres. Tras borrar uno devuelve dos y el otro motor permanece intacto.
+- [x] Ejecutar las seis operaciones por recurso desde REST y CLI sobre MariaDB y MongoDB. Adjuntar evidencia reproducible de cada flujo.
+- [x] Verificar 4 entidades × 6 operaciones × 2 interfaces × 2 motores (96 escenarios básicos), más paginación y consulta Persona–Teléfonos en ambos canales/motores. La consulta por identificador usa la clave completa, compuesta en Estudios.
+- [x] Se prueban casos negativos: invalidez, duplicados, relaciones, inexistentes.
+- [x] Repetir la aceptación sobre el despliegue en contenedores con las versiones finales de HU-007 y registrar los resultados.
+- [x] Cada resultado tiene comando/petición, esperado, obtenido y evidencia fechada.
+- [x] Con tres registros, un tamaño de página de dos devuelve dos registros en la primera página y uno en la segunda sin duplicarlos. El conteo devuelve tres. Tras borrar uno devuelve dos y el otro motor permanece intacto.
 
 #### HU-027 · Auditar dependencias hexagonales y mappers
 

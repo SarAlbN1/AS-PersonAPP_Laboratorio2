@@ -1,6 +1,8 @@
 # Plan de pruebas del Laboratorio 2
 
-## Matriz objetivo (no son pruebas ejecutadas)
+## Matriz objetivo
+
+La verificó HU-026 el 2026-11-17 en REST y CLI, sobre los dos motores: [resultados](pruebas/README.md#verificación-final-de-las-seis-operaciones-hu-026).
 
 | Entidad | Operaciones | Clientes | Motores |
 |---|---|---|---|
