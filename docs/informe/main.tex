@@ -20,7 +20,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{url}
-\usetikzlibrary{arrows.meta,positioning,fit,calc}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
 
 \geometry{left=2.6cm,right=2.6cm,top=2.6cm,bottom=2.5cm}
 \setlength{\parindent}{0pt}
@@ -360,6 +360,171 @@ puerto de persistencia y deben depender de abstracciones definidas en
 \texttt{application}; las entidades de \texttt{domain} deben mantenerse
 independientes de esos detalles externos. Las dos clases de arranque de
 Spring se ubican en los adaptadores de entrada.
+
+\subsection{Modelo C4 de la arquitectura}
+El modelo C4 describe un sistema en niveles de detalle creciente: contexto,
+contenedores, componentes y código. Las figuras siguientes recorren los tres
+primeros niveles sobre el código entregado. El cuarto nivel corresponde a las
+clases de cada módulo (Tabla~\ref{tab:modulos} y sección de las seis
+operaciones). Se usa la notación habitual de C4: personas en azul oscuro, el
+sistema en azul, los contenedores en azul medio, los componentes en azul claro
+y los límites con línea discontinua. Cada flecha indica quién usa a quién y,
+entre corchetes, la tecnología.
+
+\definecolor{c4per}{HTML}{08427B}
+\definecolor{c4sys}{HTML}{1168BD}
+\definecolor{c4cont}{HTML}{438DD5}
+\definecolor{c4comp}{HTML}{85BBF0}
+\tikzset{
+ c4base/.style={rounded corners=4pt,align=center,font=\scriptsize,inner sep=5pt},
+ c4per/.style={c4base,draw=c4per!80!black,fill=c4per,text=white,text width=#1},
+ c4sys/.style={c4base,draw=c4sys!80!black,fill=c4sys,text=white,text width=#1},
+ c4cont/.style={c4base,draw=c4cont!80!black,fill=c4cont,text=white,text width=#1},
+ c4comp/.style={c4base,draw=c4comp!70!black,fill=c4comp,text=black,text width=#1},
+ c4db/.style={cylinder,shape border rotate=90,aspect=0.18,draw=c4cont!80!black,fill=c4cont,
+   text=white,align=center,font=\scriptsize,inner sep=3pt,text width=#1},
+ c4rel/.style={-{Latex[length=2mm]},draw=black!65,line width=.6pt},
+ c4lbl/.style={font=\tiny,align=center,fill=white,inner sep=1.5pt,text=black!80},
+ c4lim/.style={draw=black!55,dashed,rounded corners=6pt,inner sep=10pt},
+ c4limlbl/.style={font=\scriptsize,anchor=south west,align=left,text=black!75}
+}
+\newcommand{\cuatroCabeza}[1]{\fill[fill=c4per] ($(#1.north)+(0,0.32)$) circle (0.3);}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=4.2cm] (cons) at (-4,2.4) {\textbf{Consumidor de la API}\\[1pt][Persona]\\[2pt]
+  Cliente HTTP o Swagger UI que consulta y modifica personas, profesiones,
+  teléfonos y estudios.};
+\node[c4per=4.2cm] (op) at (4,2.4) {\textbf{Operador de consola}\\[1pt][Persona]\\[2pt]
+  Usa los menús de la terminal para las mismas operaciones.};
+\cuatroCabeza{cons}\cuatroCabeza{op}
+\node[c4sys=7.4cm] (sys) at (0,-1.3) {\textbf{PersonAPP}\\[1pt][Sistema de software]\\[2pt]
+  Gestiona personas, profesiones, teléfonos y estudios con las seis operaciones,
+  el listado parcial y la consulta de persona con teléfonos. Cada operación se
+  guarda en MariaDB o en MongoDB, según el motor que se pida.};
+\draw[c4rel] (cons.south) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (sys.north -| cons.south);
+\draw[c4rel] (op.south) -- node[c4lbl]{Usa\\{[terminal]}} (sys.north -| op.south);
+\end{tikzpicture}
+\caption{C4, nivel 1: contexto. PersonAPP no depende de sistemas externos. Las dos
+bases se despliegan con la aplicación, por eso aparecen dentro del sistema en el nivel 2.}
+\label{fig:c4-contexto}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=3.6cm] (cons) at (-4,5.3) {\textbf{Consumidor de la API}\\[1pt][Persona]};
+\node[c4per=3.6cm] (op) at (4,5.3) {\textbf{Operador de consola}\\[1pt][Persona]};
+\cuatroCabeza{cons}\cuatroCabeza{op}
+\node[c4cont=4.6cm] (rest) at (-4,1.6) {\textbf{API REST}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]\\[2pt]
+  Rutas \texttt{/api/v1} y Swagger UI en el puerto 3000. El motor llega en el
+  parámetro \texttt{database} de cada petición.};
+\node[c4cont=4.6cm] (cli) at (4,1.6) {\textbf{Aplicación CLI}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]\\[2pt]
+  Menús de terminal. El motor se elige en el menú de cada recurso, sin
+  reiniciar.};
+\node[c4db=4.0cm] (maria) at (-4,-2.3) {\textbf{MariaDB}\\[1pt][Contenedor: MariaDB 11.4]\\[2pt]
+  Base \texttt{persona\_db}: tablas persona, profesion, telefono y estudios.};
+\node[c4db=4.0cm] (mongo) at (4,-2.3) {\textbf{MongoDB}\\[1pt][Contenedor: MongoDB 6.0]\\[2pt]
+  Base \texttt{persona\_db}: colecciones persona, profesion, telefono y estudios.};
+\draw[c4rel] (cons) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (rest);
+\draw[c4rel] (op) -- node[c4lbl]{Usa\\{[terminal, stdin/stdout]}} (cli);
+\draw[c4rel] (rest) -- node[c4lbl,pos=.4]{Lee y escribe\\{[JDBC, Spring Data JPA]}} (maria);
+\draw[c4rel] (cli) -- node[c4lbl,pos=.4]{Lee y escribe\\{[Spring Data MongoDB]}} (mongo);
+\draw[c4rel] (rest.south east) -- (mongo.north west);
+\draw[c4rel] (cli.south west) -- (maria.north east);
+\node[c4lim,fit=(rest)(cli)(maria)(mongo)] (lim) {};
+\node[c4limlbl] at (lim.south west) {\textbf{PersonAPP} [Sistema de software, Docker Compose]};
+\end{tikzpicture}
+\caption{C4, nivel 2: contenedores. \texttt{compose.yaml} levanta los cuatro. REST y CLI
+salen del mismo \texttt{Dockerfile} multietapa (destinos \texttt{rest} y \texttt{cli}) y las
+dos usan las dos bases. La tecnología depende de la base: JDBC con Spring Data JPA para
+MariaDB y Spring Data MongoDB para MongoDB. Los scripts DDL/DML inicializan cada base
+cuando su volumen está vacío.}
+\label{fig:c4-contenedores}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=3.6cm] (cons) at (-3.2,8.7) {\textbf{Consumidor de la API}\\[1pt][Persona]};
+\cuatroCabeza{cons}
+\node[c4comp=4.6cm] (ctrl) at (-3.2,4.6) {\textbf{Controladores REST}\\[1pt][Componente: Spring MVC, \texttt{@RestController}]\\[2pt]
+  \texttt{PersonaControllerV1}, \texttt{ProfesionControllerV1},
+  \texttt{TelefonoControllerV1}, \texttt{EstudioControllerV1} y
+  \texttt{PersonaTelefonosControllerV1}. Rutas y validación del cuerpo.};
+\node[c4comp=3.6cm] (err) at (3.6,4.3) {\textbf{RestExceptionHandler}\\[1pt][Componente: \texttt{@RestControllerAdvice}]\\[2pt]
+  Traduce cada excepción a \texttt{ErrorResponse} (ERR-01 a ERR-10).};
+\node[c4comp=3.6cm] (oapi) at (3.6,6.7) {\textbf{OpenApiConfig}\\[1pt][Componente: springdoc]\\[2pt]
+  Documento OpenAPI 3.1 y Swagger UI.};
+\node[c4comp=4.6cm] (inad) at (-3.2,0.9) {\textbf{Adaptadores de entrada REST}\\[1pt][Componente: \texttt{@Adapter}]\\[2pt]
+  \texttt{*InputAdapterRest}. Validan el motor (ERR-02) y crean el caso de uso
+  con el puerto de salida pedido en cada operación (ADR-002).};
+\node[c4comp=3.6cm] (map) at (3.6,0.9) {\textbf{Mappers REST}\\[1pt][Componente: \texttt{@Mapper}]\\[2pt]
+  \texttt{*MapperRest}: DTO de petición y respuesta $\leftrightarrow$ dominio.};
+\node[c4comp=6.4cm] (uc) at (0,-2.5) {\textbf{Casos de uso}\\[1pt][Componente: módulo \texttt{application}]\\[2pt]
+  \texttt{PersonUseCase}, \texttt{ProfessionUseCase}, \texttt{PhoneUseCase},
+  \texttt{StudyUseCase} y \texttt{PersonPhonesUseCase}. Implementan los
+  \texttt{InputPort} y aplican las reglas de negocio sobre \texttt{domain}.};
+\node[c4comp=4.6cm] (oma) at (-3.6,-5.6) {\textbf{Adaptadores MariaDB}\\[1pt][Componente: \texttt{maria-output-adapter}, JPA]\\[2pt]
+  \texttt{*OutputAdapterMaria}, entidades, mappers y repositorios.};
+\node[c4comp=4.6cm] (omo) at (3.6,-5.6) {\textbf{Adaptadores MongoDB}\\[1pt][Componente: \texttt{mongo-output-adapter}]\\[2pt]
+  \texttt{*OutputAdapterMongo}, documentos, mappers y repositorios.};
+\node[c4lim,fit=(ctrl)(err)(oapi)(inad)(map)(uc)(oma)(omo)] (lim) {};
+\node[c4limlbl] at (lim.south west) {\textbf{API REST} [Contenedor]};
+\node[c4db=3.0cm] (maria) at (-3.6,-9.1) {\textbf{MariaDB}\\[1pt][Contenedor]};
+\node[c4db=3.0cm] (mongo) at (3.6,-9.1) {\textbf{MongoDB}\\[1pt][Contenedor]};
+\draw[c4rel] (cons) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (ctrl);
+\draw[c4rel] (cons.east) -- node[c4lbl]{Consulta Swagger UI\\{[HTTP]}} (oapi.west);
+\draw[c4rel,dashed] (ctrl.east |- err.west) -- node[c4lbl]{Excepciones} (err.west);
+\draw[c4rel] (ctrl) -- node[c4lbl]{Invoca} (inad);
+\draw[c4rel] (inad) -- node[c4lbl]{Convierte} (map);
+\draw[c4rel] (inad.south) -- node[c4lbl]{Llama\\{[InputPort]}} (uc.north -| inad.south);
+\draw[c4rel] (uc.south -| oma.north) -- node[c4lbl]{{[OutputPort]}} (oma.north);
+\draw[c4rel] (uc.south -| omo.north) -- node[c4lbl]{{[OutputPort]}} (omo.north);
+\draw[c4rel] (oma) -- node[c4lbl]{Lee y escribe\\{[JDBC]}} (maria);
+\draw[c4rel] (omo) -- node[c4lbl]{Lee y escribe\\{[Mongo]}} (mongo);
+\end{tikzpicture}
+\caption{C4, nivel 3: componentes de la API REST. Los casos de uso y los adaptadores de
+salida pertenecen a otros módulos Maven y llegan como dependencias. El adaptador de
+entrada recibe los dos puertos de salida y le pasa al caso de uso solo el del motor pedido.}
+\label{fig:c4-rest}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=3.6cm] (op) at (0,6.9) {\textbf{Operador de consola}\\[1pt][Persona]};
+\cuatroCabeza{op}
+\node[c4comp=3.3cm] (main) at (-4.8,3.4) {\textbf{PersonAppCli}\\[1pt][Componente: \texttt{CommandLineRunner}]\\[2pt]
+  Arranca Spring sin servidor web y abre el menú principal.};
+\node[c4comp=3.3cm] (menu) at (0,3.4) {\textbf{MenuPrincipal}\\[1pt][Componente: menú]\\[2pt]
+  Opciones 1 a 4 para cada recurso y 0 para salir.};
+\node[c4comp=3.6cm] (menus) at (4.8,3.4) {\textbf{Menús por recurso}\\[1pt][Componente: menú]\\[2pt]
+  \texttt{PersonaMenu}, \texttt{ProfesionMenu}, \texttt{TelefonoMenu} y
+  \texttt{EstudioMenu}. Piden el motor y la operación; \texttt{ErroresCli}
+  muestra el error y vuelve al menú.};
+\node[c4comp=3.6cm] (inad) at (4.8,-0.4) {\textbf{Adaptadores de entrada CLI}\\[1pt][Componente: \texttt{@Adapter}]\\[2pt]
+  \texttt{*InputAdapterCli} con \texttt{*MapperCli}. Crean el caso de uso con el
+  puerto del motor elegido (ADR-002).};
+\node[c4comp=5.2cm] (core) at (-3.9,-0.4) {\textbf{Casos de uso y adaptadores de salida}\\[1pt][Componentes: \texttt{application}, \texttt{maria-} y \texttt{mongo-output-adapter}]\\[2pt]
+  Los mismos de la Figura~\ref{fig:c4-rest}.};
+\node[c4lim,fit=(main)(menu)(menus)(inad)(core)] (lim) {};
+\node[c4limlbl] at (lim.south west) {\textbf{Aplicación CLI} [Contenedor]};
+\node[c4db=2.6cm] (maria) at (-5.4,-4.3) {\textbf{MariaDB}\\[1pt][Contenedor]};
+\node[c4db=2.6cm] (mongo) at (-2.4,-4.3) {\textbf{MongoDB}\\[1pt][Contenedor]};
+\draw[c4rel] (op) -- node[c4lbl]{Usa\\{[terminal]}} (menu);
+\draw[c4rel] (main) -- node[c4lbl]{Inicia} (menu);
+\draw[c4rel] (menu) -- node[c4lbl]{Abre} (menus);
+\draw[c4rel] (menus) -- node[c4lbl]{Invoca} (inad);
+\draw[c4rel] (inad) -- node[c4lbl]{Llama\\{[InputPort]}} (core);
+\draw[c4rel] (core.south -| maria.north) -- node[c4lbl,pos=.75]{{[JDBC]}} (maria.north);
+\draw[c4rel] (core.south -| mongo.north) -- node[c4lbl,pos=.75]{{[Mongo]}} (mongo.north);
+\end{tikzpicture}
+\caption{C4, nivel 3: componentes de la aplicación CLI. Cambia la entrada respecto a REST;
+el núcleo y la persistencia son los mismos.}
+\label{fig:c4-cli}
+\end{figure}
 
 \subsection{Flujo de una petición y selección de persistencia}
 Como ejemplo, en la plantilla la consulta de personas por REST sigue este
