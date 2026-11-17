@@ -73,4 +73,11 @@ public class PhoneOutputAdapterMaria implements PhoneOutputPort {
 		log.debug("Into count on Adapter MariaDB");
 		return Math.toIntExact(telefonoRepositoryMaria.count());
 	}
+
+	@Override
+	public List<Phone> findByOwner(Integer identification) {
+		log.debug("Into findByOwner on Adapter MariaDB");
+		return telefonoRepositoryMaria.findByDuenioCc(identification, BY_NUMBER).stream()
+				.map(telefonoMapperMaria::fromAdapterToDomain).toList();
+	}
 }
