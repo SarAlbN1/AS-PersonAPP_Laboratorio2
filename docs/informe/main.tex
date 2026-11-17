@@ -704,13 +704,13 @@ Criterio de salida: desde un clon limpio se construyen las imágenes, se levanta
 REST, CLI, MariaDB y MongoDB, y la aplicación actualizada funciona con ambos
 motores.
 
-HU-034 versiona los Dockerfile de las entradas REST y CLI y un Docker Compose con
-ambos motores. Externaliza la configuración y las credenciales, define volúmenes
+HU-034 versiona un \texttt{Dockerfile} multietapa con un destino para REST y otro
+para la CLI, y un Docker Compose con ambos motores. Externaliza la configuración y las credenciales, define volúmenes
 persistentes y documenta la carga de los scripts DDL/DML. Los contenedores
 empaquetan las entradas y las bases existentes; ningún módulo Maven se convierte
 en un servicio aparte.
 
-\textbf{Resultado (HU-034, PR \#49 y \#52, 2026-11-12 y 13).} Un
+\textbf{Resultado (HU-034, verificado el 12 y el 13 de noviembre; PR \#49 y \#52).} Un
 \texttt{Dockerfile} multietapa compila una sola vez el reactor con
 \texttt{./mvnw} en \texttt{eclipse-temurin:25-jdk}, con las pruebas incluidas.
 Copia el JAR ejecutable de REST y el de CLI a dos imágenes \texttt{eclipse-temurin:25-jre}
@@ -861,10 +861,24 @@ cambiarle el motor a un caso de uso ya creado. Se quitaron los tres, así que
 
 \subsubsection*{Swagger 3 (HU-028)}
 Springdoc publica OpenAPI 3.1.0 en \path{/api-docs} y Swagger UI en
-\path{/swagger-ui.html}, con las rutas de los cuatro recursos y la consulta de
-persona con teléfonos. En Persona están documentados los códigos de respuesta de
-cada operación, el esquema común de error y los ejemplos de los cuerpos (PR
-\#66). La consolidación de los otros tres recursos sigue en HU-028.
+\path{/swagger-ui.html}, con 17 rutas: las de los cuatro recursos y la consulta de
+persona con teléfonos. Las cuatro entradas siguen el patrón que fijó Persona (PR
+\#66): cada operación declara sus códigos de respuesta, cada error referencia el
+esquema común \texttt{ErrorResponse}, el motor es un parámetro obligatorio con
+\texttt{MARIA} y \texttt{MONGO} como valores admitidos, \texttt{page} y
+\texttt{size} valen 0 y 10 por defecto, y el conteo se publica como entero.
+Teléfono y Estudios se documentaron en el PR \#80, y Profesión y la persona con
+sus teléfonos en el PR \#81.
+
+Los códigos publicados siguen las reglas de los casos de uso. Los
+\texttt{POST} de Teléfono y Estudios y el \texttt{PUT} de Teléfono declaran
+\texttt{422} (ERR-05), porque comprueban referencias; el \texttt{PUT} de
+Estudios no, porque al editar no cambia la clave. Solo los \texttt{DELETE} de
+Persona y Profesión declaran \texttt{409} (ERR-06). El número de teléfono se
+publica como texto para no perder los ceros iniciales. Los ejemplos existen en
+los datos iniciales, así que «Try it out» responde 200 en los dos motores. Las
+anotaciones no cambiaron el comportamiento: con los dos PR, la verificación REST
+de HU-026 volvió a dar 162 de 162.
 
 \subsubsection*{README, publicación y etiqueta final}
 La entrega técnica deberá incluir un README que explique requisitos,
