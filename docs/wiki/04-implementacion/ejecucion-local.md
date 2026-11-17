@@ -208,9 +208,9 @@ Las bases montan los cuatro scripts de `scripts/` en `/docker-entrypoint-initdb.
 cp .env.example .env                 # y cambiar PERSONAPP_ROOT_PW
 docker compose up -d --build         # construye las imágenes y levanta mariadb, mongo y rest
 docker compose ps                    # las bases y rest deben quedar healthy
-curl http://localhost:3000/api/v1/persona/MARIA
-curl http://localhost:3000/api/v1/persona/MONGO
-docker compose run --rm cli          # CLI interactiva contra las mismas bases
+curl "http://localhost:3000/api/v1/persona?database=MARIA"
+curl "http://localhost:3000/api/v1/persona?database=MONGO"
+docker compose run --rm --build cli  # CLI interactiva contra las mismas bases
 docker compose logs -f rest          # registros de REST
 docker compose down                  # detiene y elimina los contenedores; conserva los volúmenes
 docker compose down -v               # además borra los volúmenes y los datos
