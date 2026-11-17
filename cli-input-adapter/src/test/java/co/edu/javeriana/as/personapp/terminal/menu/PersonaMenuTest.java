@@ -20,10 +20,13 @@ import org.junit.jupiter.api.Test;
 
 import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
+import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.terminal.adapter.PersonaInputAdapterCli;
 import co.edu.javeriana.as.personapp.terminal.model.PersonaModelCli;
+import co.edu.javeriana.as.personapp.terminal.model.PersonaTelefonosModelCli;
+import co.edu.javeriana.as.personapp.terminal.model.TelefonoModelCli;
 
 /**
  * HU-015: el menú de Persona sigue el menú común aprobado en HU-011, alterna
@@ -134,5 +137,41 @@ class PersonaMenuTest {
 	@Test
 	void motorInvalidoEsErr02() {
 		assertTrue(run("5\n0\n").contains("[ERR-02]"));
+	}
+
+	private static final PersonaModelCli PEPE = new PersonaModelCli(123456789, "Pepe", "Perez", "MALE", 30);
+
+	@Test
+	void consultaConTelefonosEsLaOpcionOchoYMuestraTodos() throws Exception {
+		when(adapter.consultarConTelefonos(DatabaseOption.MONGO, 123456789))
+				.thenReturn(new PersonaTelefonosModelCli(PEPE, List.of(new TelefonoModelCli("0012345", "Tigo", 123456789),
+						new TelefonoModelCli("3001234567", "Claro", 123456789))));
+		String salida = run("2\n8\n123456789\n0\n0\n");
+		assertTrue(salida.contains("8 Consultar con sus teléfonos"), salida);
+		assertTrue(salida.contains("Persona [cc=123456789, nombre=Pepe"), salida);
+		assertTrue(salida.indexOf("número=0012345") < salida.indexOf("número=3001234567"), salida);
+		assertTrue(salida.contains("Teléfonos en MONGO: 2"), salida);
+	}
+
+	@Test
+	void personaSinTelefonosMuestraLaListaVacia() throws Exception {
+		when(adapter.consultarConTelefonos(DatabaseOption.MARIA, 147258369)).thenReturn(new PersonaTelefonosModelCli(
+				new PersonaModelCli(147258369, "Pepita", "Juarez", "FEMALE", 10), List.of()));
+		String salida = run("1\n8\n147258369\n0\n0\n");
+		assertTrue(salida.contains("(sin teléfonos)"), salida);
+		assertTrue(salida.contains("Teléfonos en MARIA: 0"), salida);
+	}
+
+	@Test
+	void conTelefonosInexistenteOInvalidaMuestraElErrorSinCerrarLaSesion() throws Exception {
+		when(adapter.consultarConTelefonos(DatabaseOption.MARIA, 999))
+				.thenThrow(new NoExistException("No existe una persona con cc 999"));
+		when(adapter.consultarConTelefonos(DatabaseOption.MARIA, 0))
+				.thenThrow(new InvalidDataException("La cédula debe ser un entero mayor o igual a 1"));
+		when(adapter.contar(DatabaseOption.MARIA)).thenReturn(5);
+		String salida = run("1\n8\n999\n8\n0\n3\n0\n0\n");
+		assertTrue(salida.contains("[ERR-03] No existe una persona con cc 999 en MARIA"), salida);
+		assertTrue(salida.contains("[ERR-01] La cédula debe ser un entero mayor o igual a 1"), salida);
+		assertTrue(salida.contains("Total en MARIA: 5"), salida);
 	}
 }

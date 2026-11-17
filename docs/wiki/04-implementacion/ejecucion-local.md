@@ -374,6 +374,34 @@ Comprobaciones puntuales del documento generado:
 
 **Pendiente.** Profesión, Teléfono y Estudios se documentan igual cuando entren HU-018, HU-021 y HU-024: el patrón de anotaciones de `PersonaControllerV1` sirve tal cual.
 
+## Selección dinámica del motor (HU-025, Persona)
+
+El motor se elige **por petición** en REST y **por menú** en la CLI, sin estado compartido entre solicitudes: cada operación crea su caso de uso con el puerto del motor pedido (C-09, ADR-002). La plantilla guardaba el caso de uso en un campo del adaptador, así que dos solicitudes concurrentes podían cambiarse el motor entre ellas.
+
+### Prueba automática
+
+`SeleccionDinamicaRestTest` usa un puerto de salida por motor que devuelve a la persona marcada con su nombre, y comprueba cinco cosas: solicitudes sucesivas que alternan de motor, el motor insensible a mayúsculas, un motor inválido que no deja seleccionado al anterior (ERR-02), una escritura en un motor que no toca al otro, y **3200 solicitudes de 16 hilos alternadas** sin ninguna respuesta con datos del otro motor.
+
+Para comprobar que la prueba detecta el defecto, se reintrodujo el campo compartido de la plantilla: con él, **1178 de 3200 respuestas** salieron con datos del otro motor y la prueba falló. Con el adaptador sin estado, cero.
+
+### Verificación con los motores reales
+
+El 16 de noviembre de 2026, con el JAR ejecutable de REST y las bases en contenedores, se creó la persona `994001` solo en MariaDB y la `994002` solo en MongoDB:
+
+| Solicitud, en un mismo proceso y en este orden | Resultado |
+|---|---|
+| `GET /persona/994001?database=MARIA` | `200` con `SoloMaria` |
+| `GET /persona/994001?database=MONGO` | `404 ERR-03` |
+| `GET /persona/994002?database=MONGO` | `200` con `SoloMongo` |
+| `GET /persona/994002?database=MARIA` | `404 ERR-03` |
+| `GET /persona/994001?database=MARIA` otra vez | `200` |
+
+Después, **200 solicitudes concurrentes alternadas** sobre `994001`: las 100 de `MARIA` respondieron `200` y las 100 de `MONGO` respondieron `404`, sin ningún otro código. Ninguna cambió el motor de las demás.
+
+La CLI ya quedó verificada en [HU-015](#crud-de-persona-por-cli-hu-015): una sola sesión alterna MariaDB y MongoDB sin reiniciar.
+
+**Pendiente.** Repetir el guion con Profesión, Teléfono y Estudios cuando entren HU-021 y HU-024 a `main`; usan el mismo patrón sin estado.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
