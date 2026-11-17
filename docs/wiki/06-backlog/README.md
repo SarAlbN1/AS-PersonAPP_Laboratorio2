@@ -50,11 +50,11 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-002 · Inventariar módulos, dependencias y capacidades de la plantilla
 
-**Estado:** Entregable documental listo para revisión. **Dependencias:** HU-001. **Trazabilidad:** RA-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Estado:** Cerrada (issue #2, PR #31). **Dependencias:** HU-001. **Trazabilidad:** RA-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
-- [ ] Se registran siete módulos Maven y sus dependencias.
-- [ ] Se distingue entre operaciones declaradas, implementadas y expuestas por REST/CLI.
-- [ ] Se registran rutas, menús y clases observadas con referencias al código.
+- [x] Se registran siete módulos Maven y sus dependencias.
+- [x] Se distingue entre operaciones declaradas, implementadas y expuestas por REST/CLI.
+- [x] Se registran rutas, menús y clases observadas con referencias al código.
 
 #### HU-003 · Preparar y documentar ambiente Java y bases de datos originales
 
@@ -74,12 +74,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-005 · Compilar y ejecutar REST y CLI de la plantilla original
 
-**Estado:** Pendiente. **Dependencias:** HU-002, HU-004. **Trazabilidad:** RT-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Estado:** Cerrada (issue #5, PR #35). **Dependencias:** HU-002, HU-004. **Trazabilidad:** RT-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
-- [ ] mvn clean install termina o se documentan los bloqueos reproducibles.
-- [ ] Arranca PersonAppRestApi y se comprueban endpoints iniciales y Swagger.
-- [ ] Arranca PersonAppCli y se comprueba menú/listado inicial.
-- [ ] Se guardan comandos, resultados y capturas/logs reales.
+- [x] mvn clean install termina o se documentan los bloqueos reproducibles.
+- [x] Arranca PersonAppRestApi y se comprueban endpoints iniciales y Swagger.
+- [x] Arranca PersonAppCli y se comprueba menú/listado inicial.
+- [x] Se guardan comandos, resultados y capturas/logs reales.
 
 #### HU-006 · Hacer funcionar la plantilla y corregir mappers, anotaciones y dependencias
 
@@ -165,30 +165,30 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-016 · Implementar dominio, puertos y casos de uso de Profesión
 
-**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #12, PR #53). **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Modelo y puertos de profesión implementados.
-- [ ] Casos de uso CRUD y validaciones probados.
-- [ ] Sin referencias a controladores ni clases de persistencia en dominio.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] Modelo y puertos de profesión implementados.
+- [x] Casos de uso CRUD y validaciones probados.
+- [x] Sin referencias a controladores ni clases de persistencia en dominio.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-017 · Implementar persistencia de Profesión en MariaDB y MongoDB
 
-**Estado:** Parcial. **Dependencias:** HU-016. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #13, PR #54). **Dependencias:** HU-016. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Entidades/documentos, repositorios y mappers disponibles.
-- [ ] CRUD verificado en MariaDB y MongoDB reales.
-- [ ] Pruebas contemplan clave duplicada y relaciones pertinentes.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] Entidades/documentos, repositorios y mappers disponibles.
+- [x] CRUD verificado en MariaDB y MongoDB reales.
+- [x] Pruebas contemplan clave duplicada y relaciones pertinentes.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-018 · Exponer CRUD de Profesión por REST y CLI
 
-**Estado:** Pendiente. **Dependencias:** HU-017. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #14, PR #55). **Dependencias:** HU-017. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] REST permite CRUD con contrato documentado.
-- [ ] CLI permite CRUD de profesión.
-- [ ] Ambos funcionan con MariaDB y MongoDB y registran casos negativos.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] REST permite CRUD con contrato documentado.
+- [x] CLI permite CRUD de profesión.
+- [x] Ambos funcionan con MariaDB y MongoDB y registran casos negativos.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-019 · Implementar dominio, puertos y casos de uso de Teléfono
 
@@ -228,12 +228,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-023 · Implementar persistencia de Estudios en ambos motores
 
-**Estado:** Parcial. **Dependencias:** HU-022, HU-013, HU-017. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #19, PR #59). **Dependencias:** HU-022, HU-013, HU-017. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] CRUD persiste en ambos motores reales.
-- [ ] El Mapper respeta el par identificador y sus referencias.
-- [ ] Se prueba persistencia y validación de dependencias.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] CRUD persiste en ambos motores reales.
+- [x] El Mapper respeta el par identificador y sus referencias.
+- [x] Se prueba persistencia y validación de dependencias.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-024 · Exponer CRUD de Estudios por REST y CLI
 
@@ -246,13 +246,13 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-033 · Consultar una persona con todos sus teléfonos asociados
 
-**Issue:** #42. **Responsable:** @Juandi48. **Estado:** Pendiente. **Dependencias:** HU-013, HU-014, HU-015, HU-020, HU-021. **Trazabilidad:** RF-09, RF-02, RF-03, RF-04, RF-07. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Issue:** #42. **Responsable:** @Juandi48. **Estado:** Cerrada (issue #42, PR #61, #68 y #70; Swagger en el PR #81). **Dependencias:** HU-013, HU-014, HU-015, HU-020, HU-021. **Trazabilidad:** RF-09, RF-02, RF-03, RF-04, RF-07. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Definir e implementar consulta por identificador que entregue la persona y todos sus teléfonos asociados desde REST y CLI, mediante puertos y casos de uso existentes.
-- [ ] Devolver una colección vacía cuando la persona exista sin teléfonos; definir y probar error controlado para persona inexistente.
-- [ ] Probar personas con cero, uno y varios teléfonos; excluir teléfonos de otras personas y preservar asociaciones en MariaDB y MongoDB reales.
-- [ ] Permitir selección dinámica del motor y documentar contrato REST, opciones CLI y ejemplos en Swagger.
-- [ ] Registrar evidencia de ambos canales y motores; esta consulta no sustituye ninguna de las seis operaciones básicas.
+- [x] Definir e implementar consulta por identificador que entregue la persona y todos sus teléfonos asociados desde REST y CLI, mediante puertos y casos de uso existentes.
+- [x] Devolver una colección vacía cuando la persona exista sin teléfonos; definir y probar error controlado para persona inexistente.
+- [x] Probar personas con cero, uno y varios teléfonos; excluir teléfonos de otras personas y preservar asociaciones en MariaDB y MongoDB reales.
+- [x] Permitir selección dinámica del motor y documentar contrato REST, opciones CLI y ejemplos en Swagger.
+- [x] Registrar evidencia de ambos canales y motores; esta consulta no sustituye ninguna de las seis operaciones básicas.
 
 ## M3 · Verificación y entrega
 
@@ -268,7 +268,7 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-026 · Verificar las seis operaciones desde REST y CLI en ambos motores
 
-**Estado:** Verificada el 2026-11-17 sobre `92b1454`; [evidencia](../04-implementacion/pruebas/README.md#verificación-final-de-las-seis-operaciones-hu-026). **Dependencias:** HU-018, HU-021, HU-024, HU-025, HU-033, HU-034. **Trazabilidad:** RF-01, RF-02, RF-03, RF-04. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
+**Estado:** Cerrada (issue #22, PR #78); verificada el 2026-11-17 sobre `92b1454`; [evidencia](../04-implementacion/pruebas/README.md#verificación-final-de-las-seis-operaciones-hu-026). **Dependencias:** HU-018, HU-021, HU-024, HU-025, HU-033, HU-034. **Trazabilidad:** RF-01, RF-02, RF-03, RF-04. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
 
 - [x] Ejecutar las seis operaciones por recurso desde REST y CLI sobre MariaDB y MongoDB. Adjuntar evidencia reproducible de cada flujo.
 - [x] Verificar 4 entidades × 6 operaciones × 2 interfaces × 2 motores (96 escenarios básicos), más paginación y consulta Persona–Teléfonos en ambos canales/motores. La consulta por identificador usa la clave completa, compuesta en Estudios.
@@ -307,12 +307,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-030 · Consolidar informe académico y evidencias del procedimiento
 
-**Estado:** Parcial. El informe sigue en elaboración y la HU permanece abierta hasta incorporar las evidencias finales y verificar sus criterios. **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
+**Estado:** En revisión: el informe está completo en `main` (PR #79 y #82) y falta registrar el commit y la URL del tag de entrega (HU-032). **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
 
-- [ ] Informe incluye portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.
-- [ ] Evidencias distinguen línea base JDK 11, versiones finales actualizadas y funcionalidades finales.
-- [ ] Se comprueba coherencia entre SRS, SAD, SDD, código y resultados.
-- [ ] El informe identifica JDK 11 como línea base, registra las versiones finales validadas y enumera las seis operaciones, la paginación adicional y la consulta Persona–Teléfonos.
+- [x] Informe incluye portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.
+- [x] Evidencias distinguen línea base JDK 11, versiones finales actualizadas y funcionalidades finales.
+- [x] Se comprueba coherencia entre SRS, SAD, SDD, código y resultados.
+- [x] El informe identifica JDK 11 como línea base, registra las versiones finales validadas y enumera las seis operaciones, la paginación adicional y la consulta Persona–Teléfonos.
 - [ ] Se actualizan rutas, opciones CLI, resultados y referencias al commit según lo efectivamente entregado.
 
 #### HU-031 · Preparar demostración de REST/CLI y dos motores
