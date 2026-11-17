@@ -345,7 +345,7 @@ El 16 de noviembre de 2026 se ejecutó una sola sesión del JAR ejecutable de la
 
 El cambio de motor no reinicia la aplicación y cada operación usa el puerto del motor elegido, porque el adaptador ya no guarda el caso de uso en un campo compartido.
 
-## Swagger y OpenAPI (HU-028, parcial)
+## Swagger y OpenAPI (HU-028)
 
 `springdoc-openapi-starter-webmvc-ui` 3.2.0 publica el documento en `/api-docs` y la interfaz en `/swagger-ui.html`. La ficha de la API la define `OpenApiConfig` en `rest-input-adapter`: título, versión, el aviso de que `database` es obligatorio y sin valor por defecto, la definición de las seis operaciones con el listado parcial como adicional, el formato común de error y un enlace al [contrato de la API REST](../03-contratos/api-rest.md) en lugar de repetirlo.
 
@@ -391,7 +391,40 @@ Con el mismo patrón de Persona: cada error referencia `ErrorResponse`, el motor
 - **`ProfesionRequest`**: obligatorios `id` y `name`, `description` opcional, y ejemplos que existen en los datos iniciales (`1`, *Ingeniero de Sistemas*), así que «Try it out» responde `200`. Las cinco consultas de ejemplo (`profesion/1`, el listado, el conteo, la página y `persona/123456789/telefonos`) dieron `200`.
 - Swagger UI responde `200`.
 
-**Pendiente.** Teléfono y Estudios, que documenta el #80; el patrón es el mismo.
+### Resultados de Teléfono y Estudios
+
+`TelefonoControllerV1` y `EstudioControllerV1` siguen el patrón de `PersonaControllerV1`. `TelefonoRequest`, `TelefonoResponse`, `EstudioRequest` y `EstudioResponse` llevan `@Schema` con descripción y ejemplo en cada campo. El 17 de noviembre de 2026, con REST en Docker Compose y volúmenes nuevos, `/api-docs` publicó:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/telefono` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono` | POST | `201`, `400`, `409`, `422`, `503` |
+| `/api/v1/telefono/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono/{num}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/telefono/{num}` | PUT | `200`, `400`, `404`, `422`, `503` |
+| `/api/v1/telefono/{num}` | DELETE | `204`, `400`, `404`, `503` |
+| `/api/v1/estudio` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio` | POST | `201`, `400`, `409`, `422`, `503` |
+| `/api/v1/estudio/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | PUT | `200`, `400`, `404`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | DELETE | `204`, `400`, `404`, `503` |
+
+Todos los códigos de error referencian `ErrorResponse`. Comprobaciones puntuales:
+
+- **`422` ERR-05** aparece donde se comprueban referencias: en Teléfono, al crear y al editar (el dueño); en Estudios, solo al crear, porque al editar la clave no cambia.
+- **Conteo:** `{"type": "integer", "format": "int32"}`, con ejemplo `3` en Teléfono y `2` en Estudios, que son los totales del DML.
+- **`{num}`:** el esquema es `string` con el ejemplo `"3001234567"` como texto. Con `@Parameter(example = …)` springdoc lo publicaba como número, y un número pierde los ceros iniciales. Por eso el ejemplo va dentro de `@Schema(type = "string")`.
+- **`TelefonoRequest`:** obligatorios `number`, `company` y `ownerId`.
+- **`EstudioRequest`:** obligatorios `professionId` y `personId`; `graduationDate` con `format: date` y ejemplo `2020-11-30`; `universityName` opcional.
+- **Listado parcial:** `page` con valor por defecto `0` y `size` con `10`, igual que Persona.
+- Los ejemplos de las rutas existen en el DML (`3001234567`, y el par `1` y `123456789`), así que «Try it out» en Swagger UI responde `200`.
+
+Las anotaciones no cambian el comportamiento: los guiones REST de HU-021 y HU-024 dieron los mismos códigos que en sus PR, en MARIA y en MONGO.
+
+Con esto los cuatro recursos y la consulta de una persona con sus teléfonos quedan documentados con el mismo patrón: `/api-docs` publica OpenAPI 3.1.0 con 17 rutas y cada operación declara sus códigos con `ErrorResponse`, el motor obligatorio, el conteo como entero y ejemplos que existen en los datos iniciales, de modo que «Try it out» responde `200`. Es el cierre de la HU-028.
 
 ## Selección dinámica del motor (HU-025, Persona)
 
