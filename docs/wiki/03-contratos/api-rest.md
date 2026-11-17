@@ -99,6 +99,27 @@ Las respuestas devuelven esos mismos campos. Los DTO usan tipos JSON reales (nú
 
 **Cambios frente a la plantilla (decisión D-04):** la ruta `GET /api/v1/persona/{database}` se sustituye por `GET /api/v1/persona?database=`. El campo `database` del cuerpo del `POST` pasa a ser parámetro de consulta. Así las seis operaciones eligen el motor del mismo modo, y `/{clave}` queda libre para consultar, editar y eliminar. Los ejemplos de Swagger se actualizan para usar `?database=` (HU-014 y HU-028).
 
+### 3.2 Persona con sus teléfonos (HU-033)
+
+Es una consulta adicional y no sustituye ninguna de las seis operaciones: `GET /api/v1/persona/{cc}` sigue sin teléfonos ni estudios (C-10).
+
+`GET /api/v1/persona/{cc}/telefonos?database=MARIA|MONGO` devuelve `200` con la persona y todos sus teléfonos del motor elegido. Los teléfonos van en `phones`, ordenados por número como texto (C-06). Los campos de la persona son los de `PersonaResponse` (`dni`, `firstName`, `lastName`, `age`, `sex`), y cada teléfono tiene los campos de `TelefonoResponse`. La persona y sus teléfonos se leen del mismo motor (C-03).
+
+```json
+{"dni":"123456789","firstName":"Pepe","lastName":"Perez","age":"30","sex":"MALE",
+ "phones":[{"number":"0099001","company":"Tigo","ownerId":123456789},
+           {"number":"3001234567","company":"Claro","ownerId":123456789}]}
+```
+
+| Caso | Respuesta |
+|---|---|
+| Persona sin teléfonos | `200` con `"phones":[]` |
+| `{cc}` no numérico o menor que 1 | `400` ERR-01 |
+| `database` ausente o distinto de `MARIA` y `MONGO` | `400` ERR-02 |
+| Persona inexistente en el motor elegido | `404` ERR-03 «No existe una persona con cc 999 en MARIA» |
+
+La CLI ofrece la misma consulta en el menú de Persona (HU-033, cuando entre HU-015).
+
 ## 4. Ficha obligatoria por endpoint
 
 Usar esta tabla para **cada una de las operaciones reales** al desarrollarla:

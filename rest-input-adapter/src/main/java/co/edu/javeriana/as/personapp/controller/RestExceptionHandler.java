@@ -29,12 +29,13 @@ import lombok.extern.slf4j.Slf4j;
  * los códigos del catálogo §3. No expone trazas, SQL ni credenciales.
  *
  * Atiende a {@link ProfesionControllerV1} (HU-018), {@link PersonaControllerV1}
- * (HU-014), {@link TelefonoControllerV1} (HU-021) y {@link EstudioControllerV1}
- * (HU-024); los demás recursos se agregan en {@code assignableTypes} al exponerlos.
+ * (HU-014), {@link TelefonoControllerV1} (HU-021), {@link EstudioControllerV1}
+ * (HU-024) y {@link PersonaTelefonosControllerV1} (HU-033); los demás recursos se
+ * agregan en {@code assignableTypes} al exponerlos.
  */
 @Slf4j
 @RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, PersonaControllerV1.class,
-		TelefonoControllerV1.class, EstudioControllerV1.class })
+		TelefonoControllerV1.class, EstudioControllerV1.class, PersonaTelefonosControllerV1.class })
 public class RestExceptionHandler {
 
 	private static ResponseEntity<ErrorResponse> error(HttpStatus status, String code, String message) {
