@@ -413,7 +413,24 @@ Con el JAR ejecutable y las bases en contenedores, la profesión `9101` solo en 
 | Profesión | `200` en el motor donde existe y `404 ERR-03` en el otro, en los dos sentidos | 100 de 100 `200` en `MARIA` y 100 de 100 `404` en `MONGO`, sin otros códigos |
 | Teléfono | igual | igual |
 
-**Pendiente.** Estudios, cuando entre el #67. Usa el mismo patrón sin estado.
+### Estudios (HU-025)
+
+`SeleccionDinamicaEstudioRestTest` aplica el mismo caso a `EstudioInputAdapterRest`, que tiene clave compuesta y comprueba persona y profesión en el mismo motor. Son cuatro pruebas: alternar de motor en un mismo proceso, motor inválido o ausente con ERR-02 sin motor por defecto, 3200 solicitudes de 16 hilos sin cruzar datos entre motores, y que escribir en uno no toque al otro.
+
+Reintroduciendo el campo compartido de la plantilla en el adaptador, la prueba concurrente falló con **1107 de 3200** respuestas cruzadas. Con el adaptador sin estado, cero.
+
+Con el JAR ejecutable y las bases en contenedores, el estudio `(1, 987654321)` solo en MariaDB y el `(1, 963852741)` solo en MongoDB:
+
+| Solicitud, en un mismo proceso y en este orden | Resultado |
+|---|---|
+| `GET /estudio/1/987654321?database=MARIA` | `200` |
+| `GET /estudio/1/987654321?database=MONGO` | `404 ERR-03` |
+| `GET /estudio/1/963852741?database=MONGO` | `200` |
+| `GET /estudio/1/963852741?database=MARIA` | `404 ERR-03` |
+
+Y **200 solicitudes concurrentes alternadas** sobre `(1, 987654321)`: 100 de 100 en `MARIA` dieron `200` y 100 de 100 en `MONGO` dieron `404`, sin otros códigos.
+
+Con esto la selección dinámica queda verificada en los cuatro recursos por REST, y en la CLI con una sola sesión que alterna los dos motores.
 
 
 ## Fase 2: funcionalidad faltante
