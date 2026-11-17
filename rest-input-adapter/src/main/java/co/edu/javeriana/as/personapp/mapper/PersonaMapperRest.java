@@ -24,7 +24,8 @@ public class PersonaMapperRest {
 				person.getIdentification()+"", 
 				person.getFirstName(), 
 				person.getLastName(), 
-				person.getAge()+"", 
+				// Edad opcional: sin dato se devuelve null, no el texto "null".
+				person.getAge() == null ? null : person.getAge().toString(), 
 				person.getGender().toString(), 
 				database,
 				"OK");
