@@ -61,7 +61,8 @@ public class PhoneUseCase implements PhoneInputPort {
 	}
 
 	@Override
-	public Boolean drop(String number) throws NoExistException {
+	public Boolean drop(String number) throws InvalidDataException, NoExistException {
+		validateKey(number);
 		// C-05: un teléfono no tiene dependientes, se elimina sin restricción.
 		if (phonePersistence.findById(number) == null)
 			throw new NoExistException("No existe un teléfono con número " + number);
@@ -85,7 +86,8 @@ public class PhoneUseCase implements PhoneInputPort {
 	}
 
 	@Override
-	public Phone findOne(String number) throws NoExistException {
+	public Phone findOne(String number) throws InvalidDataException, NoExistException {
+		validateKey(number);
 		Phone phone = phonePersistence.findById(number);
 		if (phone != null)
 			return phone;
@@ -103,6 +105,12 @@ public class PhoneUseCase implements PhoneInputPort {
 		if (owner == null)
 			throw new ReferenceNotFoundException("No existe una persona con cc " + cc + " para ser dueña del teléfono");
 		return owner;
+	}
+
+	/** Una clave con formato inválido es ERR-01, no ERR-03 (API REST §3.1). */
+	private static void validateKey(String number) throws InvalidDataException {
+		if (number == null || !NUMBER.matcher(number).matches())
+			throw new InvalidDataException("El número debe tener entre 1 y 15 dígitos");
 	}
 
 	private void validate(Phone phone) throws InvalidDataException {

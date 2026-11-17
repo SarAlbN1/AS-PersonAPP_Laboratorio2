@@ -10,6 +10,7 @@ import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
+import co.edu.javeriana.as.personapp.common.exceptions.ReferenceNotFoundException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 
 /**
@@ -33,6 +34,8 @@ final class ErroresCli {
 			return "[ERR-04] " + e.getMessage() + motor;
 		if (e instanceof DuplicateKeyException)
 			return "[ERR-04] El registro ya existe" + motor;
+		if (e instanceof ReferenceNotFoundException)
+			return "[ERR-05] " + e.getMessage() + motor;
 		if (e instanceof DependentRecordsException)
 			return "[ERR-06] " + e.getMessage() + motor;
 		if (e instanceof KeyMismatchException)
