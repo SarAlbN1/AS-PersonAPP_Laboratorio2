@@ -100,6 +100,8 @@ class PersonPhonesUseCaseTest {
 		public Person findById(Integer id) { return people.get(id); }
 		public Integer count() { return people.size(); }
 		public List<Person> find(Integer page, Integer size) { return find(); }
+		public Boolean hasPhones(Integer identification) { return false; }
+		public Boolean hasStudies(Integer identification) { return false; }
 	}
 
 	private class PhonePort implements PhoneOutputPort {

@@ -194,7 +194,7 @@ La configuración sale de `.env`, que no se versiona. La plantilla es `.env.exam
 
 REST y CLI reciben la conexión por entorno (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` y `SPRING_MONGODB_URI`), que reemplaza los valores de `localhost` de los `application.properties`. Dentro de la red de Compose, las bases se alcanzan como `mariadb:3306` y `mongo:27017`, y sus puertos no se publican en la máquina.
 
-La zona horaria se fija porque Spring Data MongoDB lee y guarda las fechas con la zona de la JVM, y una imagen en UTC registraría otra fecha que una ejecución local en Bogotá. La corrección de fondo corresponde a HU-023.
+La zona horaria se fijó porque Spring Data MongoDB leía y guardaba las fechas con la zona de la JVM, y una imagen en UTC registraba otra fecha que una ejecución local en Bogotá. Desde HU-023 las fechas de MongoDB se guardan y se leen en UTC, así que ya no dependen de esta variable; se conserva para que los registros de la aplicación salgan en hora local.
 
 El usuario `persona_db` y su clave vienen fijos en los scripts DDL de la plantilla. Para cambiarlos hay que modificar esos scripts.
 
@@ -277,6 +277,102 @@ Tres detalles del entorno de pruebas que salieron de esta HU y sirven para los d
 - Las porciones de prueba de Spring Boot 4 cambiaron de artefacto y de paquete. `@DataJpaTest` está en `spring-boot-data-jpa-test`, paquete `org.springframework.boot.data.jpa.test.autoconfigure`; `@AutoConfigureTestDatabase` en `spring-boot-jdbc-test`; y `@DataMongoTest` en `spring-boot-data-mongodb-test`.
 - Los módulos de adaptador son librerías sin clase de arranque, así que las pruebas necesitan una `@SpringBootConfiguration` propia: `ConfiguracionDePruebas`, solo en `src/test`.
 - `common` excluye Spring AOP y Spring Expression de su dependencia de Spring Context. El contexto de prueba sí los necesita, así que se declaran en alcance `test` en los dos adaptadores. El runtime no cambia.
+
+## CRUD de Persona por REST (HU-014)
+
+Las siete rutas de Persona viven en `/api/v1/persona` y todas exigen `database=MARIA|MONGO` como parámetro de consulta (decisión D-04), que sustituye la ruta `GET /api/v1/persona/{database}` de la plantilla y deja `/{cc}` libre para consultar, editar y eliminar.
+
+| Operación | Ruta | Éxito |
+|---|---|---|
+| Consultar por identificador | `GET /api/v1/persona/{cc}?database=` | `200` |
+| Listar todos | `GET /api/v1/persona?database=` | `200` |
+| Contar | `GET /api/v1/persona/conteo?database=` | `200` con un entero |
+| Listar parcial (adicional) | `GET /api/v1/persona/pagina?database=&page=0&size=10` | `200` |
+| Crear | `POST /api/v1/persona?database=` | `201` con `Location` |
+| Editar | `PUT /api/v1/persona/{cc}?database=` | `200` |
+| Eliminar | `DELETE /api/v1/persona/{cc}?database=` | `204` |
+
+Los errores usan el formato común `{ "error": "ERR-xx", "message": "..." }` del `RestExceptionHandler` que introdujo HU-018.
+
+### Resultados
+
+El 16 de noviembre de 2026, con las bases en contenedores y el JAR ejecutable de REST sobre OpenJDK 25.0.4.1, se ejecutaron las trece comprobaciones **en cada motor**, más dos comunes:
+
+| Comprobación | MariaDB | MongoDB |
+|---|---|---|
+| Listar, contar y página | `200`, cinco personas, conteo `5` | igual |
+| Crear `991001` | `201` | `201` |
+| Consultar y editar `991001` | `200` | `200` |
+| Alta duplicada | `409` `ERR-04` | `409` `ERR-04` |
+| Clave del cuerpo distinta de la ruta | `400` `ERR-09` | `400` `ERR-09` |
+| Consultar un cc inexistente | `404` `ERR-03` | `404` `ERR-03` |
+| `cc` no numérico | `400` `ERR-01` | `400` `ERR-01` |
+| Página negativa | `400` `ERR-01` | `400` `ERR-01` |
+| Eliminar y repetir el borrado | `204` y luego `404` `ERR-03` | `204` y luego `404` `ERR-03` |
+
+Comunes a los dos: un motor desconocido responde `400 ERR-02` y la falta del parámetro `database` también, sin elegir motor por defecto. `/api-docs` publica `/api/v1/persona`, `/api/v1/persona/{cc}`, `/api/v1/persona/conteo` y `/api/v1/persona/pagina`.
+
+La respuesta rotula el motor que se usó de verdad: antes el adaptador devolvía siempre `MariaDB`, incluso guardando en MongoDB. El adaptador tampoco guarda ya el motor en un campo compartido entre peticiones, que era el riesgo de concurrencia anotado en el SDD.
+
+## CRUD de Persona por CLI (HU-015)
+
+El menú de Persona aplica la numeración aprobada en HU-011, con las tres lecturas primero, las tres escrituras después y el listado parcial como adicional:
+
+```
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+```
+
+Con `0` se vuelve al menú de motor y se elige el otro sin reiniciar la aplicación. Los errores se muestran como `[ERR-xx] mensaje` con el `ErroresCli` que introdujo HU-018 y la sesión continúa.
+
+### Resultados
+
+El 16 de noviembre de 2026 se ejecutó una sola sesión del JAR ejecutable de la CLI, con las bases en contenedores y OpenJDK 25.0.4.1, recorriendo las siete operaciones en MariaDB y luego MongoDB sin reiniciar:
+
+| Paso | Resultado observado |
+|---|---|
+| Consultar `123456789` en MariaDB | `Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]` |
+| Listar todos | Las cinco personas, con `edad=sin dato` en la que no la tiene |
+| Contar | `Total en MARIA: 5` |
+| Crear `992001` | `Creada: Persona [cc=992001, …, edad=33]` |
+| Editar `992001` | Muestra el registro actual y luego `Editada: … Cli Editada, edad=34`, sin volver a pedir la cédula (C-04) |
+| Listar parcial página 0 tamaño 3 | `992001`, `123456789`, `147258369` y `Página 0 · 3 registros`: orden ascendente por clave, pedido al motor (C-06, C-07) |
+| Eliminar `992001` y volver a consultarlo | `Eliminada la persona con cc 992001 en MARIA` y después `[ERR-03] No existe una persona con cc 992001 en MARIA` |
+| Cambiar a MongoDB en la misma sesión | `Total en MONGO: 5`, alta de `992002` sin edad, `Total en MONGO: 6` y borrado correcto |
+
+El cambio de motor no reinicia la aplicación y cada operación usa el puerto del motor elegido, porque el adaptador ya no guarda el caso de uso en un campo compartido.
+
+## Swagger y OpenAPI (HU-028, parcial)
+
+`springdoc-openapi-starter-webmvc-ui` 3.2.0 publica el documento en `/api-docs` y la interfaz en `/swagger-ui.html`. La ficha de la API la define `OpenApiConfig` en `rest-input-adapter`: título, versión, el aviso de que `database` es obligatorio y sin valor por defecto, la definición de las seis operaciones con el listado parcial como adicional, el formato común de error y un enlace al [contrato de la API REST](../03-contratos/api-rest.md) en lugar de repetirlo.
+
+### Resultados de Persona
+
+El 16 de noviembre de 2026, con el JAR ejecutable de REST y las bases en contenedores, `/api-docs` publicó OpenAPI **3.1.0** con los códigos de cada operación:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/persona` | GET | `200`, `400`, `503` |
+| `/api/v1/persona` | POST | `201`, `400`, `409`, `503` |
+| `/api/v1/persona/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/persona/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/persona/{cc}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/persona/{cc}` | PUT | `200`, `400`, `404`, `503` |
+| `/api/v1/persona/{cc}` | DELETE | `204`, `400`, `404`, `409`, `503` |
+
+Cada código de error referencia el esquema `ErrorResponse`, así que la interfaz muestra el cuerpo `{ "error": "ERR-xx", "message": "..." }` del formato común.
+
+Comprobaciones puntuales del documento generado:
+
+- **Conteo**: `{"type": "integer", "format": "int32", "example": 5}`, el esquema entero que pide el criterio de la historia.
+- **Listado parcial**: parámetros `database`, `page` con valor por defecto `0` y `size` con `10`, según la decisión D-05.
+- **`PersonaRequest`**: obligatorios `dni`, `firstName`, `lastName` y `sex`; `age` opcional; ejemplos en los cinco campos; género con los valores admitidos `M`, `F`, `MALE` y `FEMALE`; y el campo `database` del cuerpo marcado como obsoleto, porque desde D-04 el motor va en el parámetro de consulta.
+- Swagger UI responde `200`.
+
+**Pendiente.** Profesión, Teléfono y Estudios se documentan igual cuando entren HU-018, HU-021 y HU-024: el patrón de anotaciones de `PersonaControllerV1` sirve tal cual.
 
 ## Fase 2: funcionalidad faltante
 

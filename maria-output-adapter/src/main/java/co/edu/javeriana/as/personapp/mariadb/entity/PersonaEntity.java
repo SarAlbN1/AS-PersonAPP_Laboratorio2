@@ -42,9 +42,12 @@ public class PersonaEntity implements Serializable {
 	@Column(nullable = false)
 	private Character genero;
 	private Integer edad;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "duenio")
+	// Sin REMOVE: el caso de uso revisa los dependientes antes de eliminar (C-05) y la FK queda de respaldo (D-02).
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.DETACH }, mappedBy = "duenio")
 	private List<TelefonoEntity> telefonos;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "persona")
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.DETACH }, mappedBy = "persona")
 	private List<EstudiosEntity> estudios;
 
 	public PersonaEntity() {

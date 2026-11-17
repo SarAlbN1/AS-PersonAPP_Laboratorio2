@@ -2,6 +2,9 @@ package co.edu.javeriana.as.personapp.mongo.adapter;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import java.util.stream.Collectors;
@@ -14,6 +17,8 @@ import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.mongo.document.PersonaDocument;
+import co.edu.javeriana.as.personapp.mongo.document.EstudiosDocument;
+import co.edu.javeriana.as.personapp.mongo.document.TelefonoDocument;
 import co.edu.javeriana.as.personapp.mongo.mapper.PersonaMapperMongo;
 import co.edu.javeriana.as.personapp.mongo.repository.PersonaRepositoryMongo;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +32,9 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 	
 	@Autowired
 	private PersonaMapperMongo personaMapperMongo;
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
 	
 	@Override
 	public Person save(Person person) {
@@ -76,5 +84,20 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 		log.debug("Into find page on Adapter MongoDB");
 		return personaRepositoryMongo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"))).getContent().stream()
 				.map(personaMapperMongo::fromAdapterToDomain).collect(Collectors.toList());
+	}
+
+	@Override
+	public Boolean hasPhones(Integer identification) {
+		log.debug("Into hasPhones on Adapter MongoDB");
+		// primaryDuenio guarda solo la cédula del dueño (@DocumentReference).
+		return mongoTemplate.exists(Query.query(Criteria.where("primaryDuenio").is(identification)),
+				TelefonoDocument.class);
+	}
+
+	@Override
+	public Boolean hasStudies(Integer identification) {
+		log.debug("Into hasStudies on Adapter MongoDB");
+		return mongoTemplate.exists(Query.query(Criteria.where("primaryPersona").is(identification)),
+				EstudiosDocument.class);
 	}
 }

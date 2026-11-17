@@ -13,4 +13,8 @@ public interface PersonOutputPort {
 	public Person findById(Integer identification);
 	public Integer count();
 	public List<Person> find(Integer page, Integer size);
+	/** Indica si la persona tiene algún teléfono asociado (C-05). */
+	public Boolean hasPhones(Integer identification);
+	/** Indica si la persona tiene algún estudio asociado (C-05). */
+	public Boolean hasStudies(Integer identification);
 }

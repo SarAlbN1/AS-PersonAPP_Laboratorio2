@@ -26,15 +26,13 @@ import lombok.extern.slf4j.Slf4j;
  * Traduce las excepciones al formato común de error (validaciones §2.2) con
  * los códigos del catálogo §3. No expone trazas, SQL ni credenciales.
  *
- * Por ahora atiende a {@link ProfesionControllerV1} (HU-018),
- * {@link TelefonoControllerV1} (HU-021) y {@link PersonaTelefonosControllerV1}
- * (HU-033), para no
- * cambiar las respuestas de Persona antes de HU-014; los demás recursos se
- * agregan en {@code assignableTypes} al exponerlos.
+ * Atiende a {@link ProfesionControllerV1} (HU-018), {@link PersonaControllerV1}
+ * (HU-014), {@link TelefonoControllerV1} (HU-021) y {@link PersonaTelefonosControllerV1}
+ * (HU-033); los demás recursos se agregan en {@code assignableTypes} al exponerlos.
  */
 @Slf4j
-@RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, TelefonoControllerV1.class,
-		PersonaTelefonosControllerV1.class })
+@RestControllerAdvice(assignableTypes = { ProfesionControllerV1.class, PersonaControllerV1.class,
+		TelefonoControllerV1.class, PersonaTelefonosControllerV1.class })
 public class RestExceptionHandler {
 
 	private static ResponseEntity<ErrorResponse> error(HttpStatus status, String code, String message) {
