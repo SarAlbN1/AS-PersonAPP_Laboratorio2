@@ -53,6 +53,18 @@ class PersonaMapperRestTest {
 	}
 
 	@Test
+	void laRespuestaSinEdadDevuelveNuloYNoElTextoNull() {
+		Person sinEdad = new Person();
+		sinEdad.setIdentification(1);
+		sinEdad.setFirstName("Ana");
+		sinEdad.setLastName("Perez");
+		sinEdad.setGender(Gender.FEMALE);
+		assertNull(mapper.fromDomainToAdapterRest(sinEdad, "MARIA").getAge());
+		sinEdad.setAge(30);
+		assertEquals("30", mapper.fromDomainToAdapterRest(sinEdad, "MARIA").getAge());
+	}
+
+	@Test
 	void rechazaEdadNoNumericaYCuerpoAusente() throws Exception {
 		assertThrows(InvalidDataException.class,
 				() -> mapper.fromAdapterToDomain(new PersonaRequest("1", "A", "B", "veinte", "M", "MARIA")));
