@@ -58,11 +58,11 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-003 · Preparar y documentar ambiente Java y bases de datos originales
 
-**Estado:** Pendiente. **Dependencias:** HU-001. **Trazabilidad:** RT-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Estado:** Cerrada (issue #3, PR #33). **Dependencias:** HU-001. **Trazabilidad:** RT-01. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
-- [ ] Se registran java -version, mvn -version y versiones reales de MariaDB/MongoDB.
-- [ ] Se configuran variables/credenciales locales sin subir secretos.
-- [ ] Se documenta el procedimiento desde un clon limpio.
+- [x] Se registran java -version, mvn -version y versiones reales de MariaDB/MongoDB.
+- [x] Se configuran variables/credenciales locales sin subir secretos.
+- [x] Se documenta el procedimiento desde un clon limpio.
 
 #### HU-004 · Ejecutar DDL/DML inicial en MariaDB y MongoDB
 
@@ -83,11 +83,11 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-006 · Hacer funcionar la plantilla y corregir mappers, anotaciones y dependencias
 
-**Estado:** Pendiente. **Dependencias:** HU-005. **Trazabilidad:** RF-08. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Estado:** Cerrada (issue #6, PR #38). **Dependencias:** HU-005. **Trazabilidad:** RF-08. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
-- [ ] La falla se reproduce y se registra entrada, salida y error.
-- [ ] Se corrigen únicamente los defectos reproducidos de mapeo, anotaciones, librerías o dependencias que impiden ejecutar la plantilla, manteniendo los siete módulos, puertos y adaptadores. REST y CLI arrancan y se verifica el flujo reparado.
-- [ ] Una prueba de regresión demuestra transformación correcta y no se afecta el flujo base.
+- [x] La falla se reproduce y se registra entrada, salida y error.
+- [x] Se corrigen únicamente los defectos reproducidos de mapeo, anotaciones, librerías o dependencias que impiden ejecutar la plantilla, manteniendo los siete módulos, puertos y adaptadores. REST y CLI arrancan y se verifica el flujo reparado.
+- [x] Una prueba de regresión demuestra transformación correcta y no se afecta el flujo base.
 
 #### HU-007 · Actualizar Java, Spring Boot, librerías y plugins compatibles
 
@@ -101,14 +101,14 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-034 · Contenerizar aplicación y ambos motores conservando los módulos
 
-**Issue:** #41. **Responsable:** @ma-sarmiento. **Estado:** Pendiente. **Dependencias:** HU-007, HU-004. **Trazabilidad:** RT-04, RE-01, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
+**Issue:** #41. **Responsable:** @ma-sarmiento. **Estado:** Cerrada (issue #41, PR #49, integrado como `2e0a05d`, y PR #52). **Dependencias:** HU-007, HU-004. **Trazabilidad:** RT-04, RE-01, RA-01, RA-02. **Milestone:** M1. **Épica:** EP-01. **Prioridad:** P0.
 
-- [ ] Versionar Dockerfile(s) reproducibles para las entradas REST y CLI, construyendo el reactor de siete módulos sin cambiar su estructura ni responsabilidades.
-- [ ] Versionar Docker Compose para REST, CLI interactiva y MariaDB/MongoDB, con versiones compatibles con HU-007, conectividad y comprobaciones de disponibilidad.
-- [ ] Externalizar configuración y credenciales; definir volúmenes persistentes y ejecución documentada de DDL/DML sin borrar datos durante reinicios ordinarios.
-- [ ] Desde un clon limpio construir imágenes, levantar los servicios, ejecutar CLI, acceder a REST/Swagger y verificar las operaciones disponibles en la plantilla reparada con ambos motores y alternar sin reiniciar la aplicación. La cobertura funcional completa se verifica en HU-026.
-- [ ] Verificar persistencia después de recrear contenedores conservando volúmenes; registrar comandos, resultados y procedimiento de parada/limpieza.
-- [ ] Conservar arquitectura modular y hexagonal: los contenedores empaquetan las entradas y bases existentes, sin convertir cada módulo Maven en un servicio.
+- [x] Versionar Dockerfile(s) reproducibles para las entradas REST y CLI, construyendo el reactor de siete módulos sin cambiar su estructura ni responsabilidades.
+- [x] Versionar Docker Compose para REST, CLI interactiva y MariaDB/MongoDB, con versiones compatibles con HU-007, conectividad y comprobaciones de disponibilidad.
+- [x] Externalizar configuración y credenciales; definir volúmenes persistentes y ejecución documentada de DDL/DML sin borrar datos durante reinicios ordinarios.
+- [x] Desde un clon limpio construir imágenes, levantar los servicios, ejecutar CLI, acceder a REST/Swagger y verificar las operaciones disponibles en la plantilla reparada con ambos motores y alternar sin reiniciar la aplicación. La cobertura funcional completa se verifica en HU-026.
+- [x] Verificar persistencia después de recrear contenedores conservando volúmenes; registrar comandos, resultados y procedimiento de parada/limpieza.
+- [x] Conservar arquitectura modular y hexagonal: los contenedores empaquetan las entradas y bases existentes, sin convertir cada módulo Maven en un servicio.
 
 ## M2 · Operaciones de los cuatro recursos
 
@@ -192,39 +192,39 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-019 · Implementar dominio, puertos y casos de uso de Teléfono
 
-**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #15, PR #57). **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Modelo, identificador y referencia a persona validados.
-- [ ] Puertos y casos de uso realizan CRUD.
-- [ ] Se prueba rechazo de dueño inexistente y conflictos de identificador según reglas acordadas.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] Modelo, identificador y referencia a persona validados.
+- [x] Puertos y casos de uso realizan CRUD.
+- [x] Se prueba rechazo de dueño inexistente y conflictos de identificador según reglas acordadas.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-020 · Implementar persistencia de Teléfono en ambos motores
 
-**Estado:** Parcial. **Dependencias:** HU-019, HU-013. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #16, PR #60). **Dependencias:** HU-019, HU-013. **Trazabilidad:** RF-04. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] CRUD funciona sobre tablas/colecciones reales.
-- [ ] Relación dueño-persona conserva integridad según cada motor.
-- [ ] Pruebas verifican lectura posterior y restricciones.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] CRUD funciona sobre tablas/colecciones reales.
+- [x] Relación dueño-persona conserva integridad según cada motor.
+- [x] Pruebas verifican lectura posterior y restricciones.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-021 · Exponer CRUD de Teléfono por REST y CLI
 
-**Estado:** Pendiente. **Dependencias:** HU-020. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #17, PR #62). **Dependencias:** HU-020. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] REST y CLI ejecutan CRUD completo.
-- [ ] Se documentan respuestas y errores de dueño inexistente.
-- [ ] Se demuestra en MariaDB y MongoDB.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] REST y CLI ejecutan CRUD completo.
+- [x] Se documentan respuestas y errores de dueño inexistente.
+- [x] Se demuestra en MariaDB y MongoDB.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-022 · Implementar dominio, puertos y casos de uso de Estudios
 
-**Estado:** Parcial. **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #18, PR #58). **Dependencias:** HU-011, HU-034 (#41). **Trazabilidad:** RF-01. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] Se usa identidad compuesta (id_prof, cc_per) del modelo base, salvo decisión documentada.
-- [ ] Casos de uso CRUD e integridad de dos referencias.
-- [ ] Pruebas cubren duplicados y referencias inválidas.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] Se usa identidad compuesta (id_prof, cc_per) del modelo base, salvo decisión documentada.
+- [x] Casos de uso CRUD e integridad de dos referencias.
+- [x] Pruebas cubren duplicados y referencias inválidas.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-023 · Implementar persistencia de Estudios en ambos motores
 
@@ -237,12 +237,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-024 · Exponer CRUD de Estudios por REST y CLI
 
-**Estado:** Pendiente. **Dependencias:** HU-023. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
+**Estado:** Cerrada (issue #20, PR #67). **Dependencias:** HU-023. **Trazabilidad:** RF-02, RF-03. **Milestone:** M2. **Épica:** EP-03. **Prioridad:** P0.
 
-- [ ] API y menú CLI permiten los CRUD previstos.
-- [ ] El contrato representa los dos campos de la clave compuesta.
-- [ ] Funcionamiento comprobado en ambos motores y con errores.
-- [ ] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
+- [x] API y menú CLI permiten los CRUD previstos.
+- [x] El contrato representa los dos campos de la clave compuesta.
+- [x] Funcionamiento comprobado en ambos motores y con errores.
+- [x] Se verifican las seis operaciones en la capa que cubre la historia: crear, consultar por identificador, listar todos, editar, eliminar y contar; adicionalmente, listar parcialmente. Listar parcial aplica el orden y límite acordados. Contar devuelve el total del motor seleccionado, incluido cero para una colección vacía.
 
 #### HU-033 · Consultar una persona con todos sus teléfonos asociados
 
@@ -279,12 +279,12 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-027 · Auditar dependencias hexagonales y mappers
 
-**Estado:** Parcial. **Dependencias:** HU-018, HU-021, HU-024. **Trazabilidad:** RA-01. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
+**Estado:** Cerrada (issue #23, PR #73). **Dependencias:** HU-018, HU-021, HU-024. **Trazabilidad:** RA-01. **Milestone:** M3. **Épica:** EP-04. **Prioridad:** P0.
 
-- [ ] Dominio sin dependencias de Spring, controladores o motores concretos.
-- [ ] Application usa puertos y los adaptadores los implementan.
-- [ ] Se documenta revisión por módulo y defectos corregidos.
-- [ ] Comparar con la plantilla y verificar los siete módulos originales, sus nombres, responsabilidades y dirección de dependencias; no aceptar adiciones, eliminaciones, fusiones ni redistribuciones arquitectónicas.
+- [x] Dominio sin dependencias de Spring, controladores o motores concretos.
+- [x] Application usa puertos y los adaptadores los implementan.
+- [x] Se documenta revisión por módulo y defectos corregidos.
+- [x] Comparar con la plantilla y verificar los siete módulos originales, sus nombres, responsabilidades y dirección de dependencias; no aceptar adiciones, eliminaciones, fusiones ni redistribuciones arquitectónicas.
 
 #### HU-028 · Consolidar Swagger/OpenAPI y ejemplos de API final
 
@@ -299,11 +299,11 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-029 · Completar README de instalación y operación reproducible
 
-**Estado:** Parcial. **Dependencias:** HU-005, HU-007, HU-026, HU-028, HU-034. **Trazabilidad:** RE-01. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
+**Estado:** Cerrada (issue #25, PR #74). **Dependencias:** HU-005, HU-007, HU-026, HU-028, HU-034. **Trazabilidad:** RE-01. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
 
-- [ ] El README documenta los requisitos y las versiones verificadas, la configuración del ambiente, la ejecución de los scripts DDL/DML y los pasos de compilación, despliegue y arranque de REST y CLI.
-- [ ] El README indica cómo acceder a Swagger y cómo reproducir las comprobaciones de ambas entradas.
-- [ ] Desde un clon limpio, otro integrante sigue el README para preparar el ambiente, compilar, desplegar y arrancar REST y CLI. Registra los comandos y el resultado de cada paso.
+- [x] El README documenta los requisitos y las versiones verificadas, la configuración del ambiente, la ejecución de los scripts DDL/DML y los pasos de compilación, despliegue y arranque de REST y CLI.
+- [x] El README indica cómo acceder a Swagger y cómo reproducir las comprobaciones de ambas entradas.
+- [x] Desde un clon limpio, otro integrante sigue el README para preparar el ambiente, compilar, desplegar y arrancar REST y CLI. Registra los comandos y el resultado de cada paso.
 
 #### HU-030 · Consolidar informe académico y evidencias del procedimiento
 
