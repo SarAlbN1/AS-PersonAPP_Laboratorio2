@@ -345,7 +345,7 @@ El 16 de noviembre de 2026 se ejecutó una sola sesión del JAR ejecutable de la
 
 El cambio de motor no reinicia la aplicación y cada operación usa el puerto del motor elegido, porque el adaptador ya no guarda el caso de uso en un campo compartido.
 
-## Swagger y OpenAPI (HU-028, parcial)
+## Swagger y OpenAPI (HU-028)
 
 `springdoc-openapi-starter-webmvc-ui` 3.2.0 publica el documento en `/api-docs` y la interfaz en `/swagger-ui.html`. La ficha de la API la define `OpenApiConfig` en `rest-input-adapter`: título, versión, el aviso de que `database` es obligatorio y sin valor por defecto, la definición de las seis operaciones con el listado parcial como adicional, el formato común de error y un enlace al [contrato de la API REST](../03-contratos/api-rest.md) en lugar de repetirlo.
 
@@ -370,6 +370,25 @@ Comprobaciones puntuales del documento generado:
 - **Conteo**: `{"type": "integer", "format": "int32", "example": 5}`, el esquema entero que pide el criterio de la historia.
 - **Listado parcial**: parámetros `database`, `page` con valor por defecto `0` y `size` con `10`, según la decisión D-05.
 - **`PersonaRequest`**: obligatorios `dni`, `firstName`, `lastName` y `sex`; `age` opcional; ejemplos en los cinco campos; género con los valores admitidos `M`, `F`, `MALE` y `FEMALE`; y el campo `database` del cuerpo marcado como obsoleto, porque desde D-04 el motor va en el parámetro de consulta.
+- Swagger UI responde `200`.
+
+### Resultados de Profesión y de la persona con sus teléfonos
+
+El 17 de noviembre de 2026, con el JAR ejecutable de REST y las bases en contenedores, `/api-docs` publicó OpenAPI **3.1.0** con 17 rutas en total y estos códigos:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/profesion` | GET · POST | `200,400,503` · `201,400,409,503` |
+| `/api/v1/profesion/conteo` | GET | `200,400,503` |
+| `/api/v1/profesion/pagina` | GET | `200,400,503` |
+| `/api/v1/profesion/{id}` | GET · PUT · DELETE | `200,400,404,503` · `200,400,404,503` · `204,400,404,409,503` |
+| `/api/v1/persona/{cc}/telefonos` | GET | `200,400,404,503` |
+
+Con el mismo patrón de Persona: cada error referencia `ErrorResponse`, el motor se documenta una sola vez como parámetro obligatorio con `MARIA` y `MONGO` como valores admitidos, y el `409 ERR-06` del borrado explica que una profesión con estudios no se elimina.
+
+- **Conteo**: `{"type": "integer", "format": "int32", "example": 2}`.
+- **Listado parcial**: `page` con `0` y `size` con `10` por defecto (D-05).
+- **`ProfesionRequest`**: obligatorios `id` y `name`, `description` opcional, y ejemplos que existen en los datos iniciales (`1`, *Ingeniero de Sistemas*), así que «Try it out» responde `200`. Las cinco consultas de ejemplo (`profesion/1`, el listado, el conteo, la página y `persona/123456789/telefonos`) dieron `200`.
 - Swagger UI responde `200`.
 
 ### Resultados de Teléfono y Estudios
@@ -405,7 +424,7 @@ Todos los códigos de error referencian `ErrorResponse`. Comprobaciones puntuale
 
 Las anotaciones no cambian el comportamiento: los guiones REST de HU-021 y HU-024 dieron los mismos códigos que en sus PR, en MARIA y en MONGO.
 
-**Pendiente.** Profesión y la consulta de persona con sus teléfonos (HU-033), que documenta Sara con el mismo patrón.
+Con esto los cuatro recursos y la consulta de una persona con sus teléfonos quedan documentados con el mismo patrón: `/api-docs` publica OpenAPI 3.1.0 con 17 rutas y cada operación declara sus códigos con `ErrorResponse`, el motor obligatorio, el conteo como entero y ejemplos que existen en los datos iniciales, de modo que «Try it out» responde `200`. Es el cierre de la HU-028.
 
 ## Selección dinámica del motor (HU-025, Persona)
 
