@@ -53,11 +53,12 @@ git clone https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2.git
 cd AS-PersonAPP_Laboratorio2
 cp .env.example .env              # cambiar PERSONAPP_ROOT_PW antes de seguir
 docker compose up -d --build      # MariaDB, MongoDB y REST en http://localhost:3000
-docker compose run --rm cli       # CLI interactiva, contra las mismas bases
+docker compose run --rm --build cli   # CLI interactiva, contra las mismas bases
 docker compose down               # detiene y conserva los datos; down -v los borra
 ```
 
 - **Scripts DDL y DML.** Las bases ejecutan los de `scripts/` solo la primera vez, cuando sus volúmenes están vacíos. Para volver a los datos iniciales: `docker compose down -v` y `docker compose up -d`.
+- **`--build` en la CLI.** La CLI está en el perfil `cli`, así que `up --build` no la reconstruye. Sin `--build`, `run` usa la imagen `personapp-cli:local` que ya exista, aunque sea de una versión anterior del código.
 - **Puertos.** Solo se publica REST (`PERSONAPP_REST_PORT`, 3000 por defecto). Las bases quedan dentro de la red de Compose.
 - La configuración, los resultados y la limpieza están en [Ejecución con Docker Compose](docs/wiki/04-implementacion/ejecucion-local.md#ejecución-con-docker-compose-hu-034).
 
