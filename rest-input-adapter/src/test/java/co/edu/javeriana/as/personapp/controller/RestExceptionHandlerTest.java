@@ -16,6 +16,7 @@ import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
+import co.edu.javeriana.as.personapp.common.exceptions.ReferenceNotFoundException;
 import co.edu.javeriana.as.personapp.model.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,6 +60,13 @@ class RestExceptionHandlerTest {
 				"Ya existe una profesión con id 1 en MONGO");
 		check(handler.dependents(new DependentRecordsException("Tiene estudios"), request), 409, "ERR-06",
 				"Tiene estudios en MONGO");
+	}
+
+	@Test
+	void referenciaInexistenteEsErr05ConElMotor() {
+		check(handler.missingReference(
+				new ReferenceNotFoundException("No existe una persona con cc 999 para ser dueña del teléfono"), request),
+				422, "ERR-05", "No existe una persona con cc 999 para ser dueña del teléfono en MONGO");
 	}
 
 	@Test
