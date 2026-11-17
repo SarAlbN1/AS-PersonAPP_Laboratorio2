@@ -6,6 +6,7 @@ import java.util.Scanner;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.terminal.adapter.PersonaInputAdapterCli;
 import co.edu.javeriana.as.personapp.terminal.model.PersonaModelCli;
+import co.edu.javeriana.as.personapp.terminal.model.PersonaTelefonosModelCli;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,6 +30,7 @@ public class PersonaMenu {
 	private static final int EDITAR = 5;
 	private static final int ELIMINAR = 6;
 	private static final int LISTAR_PARCIAL = 7;
+	private static final int CON_TELEFONOS = 8;
 
 	@FunctionalInterface
 	private interface Operacion {
@@ -85,6 +87,15 @@ public class PersonaMenu {
 					imprimir(pagina);
 					System.out.println("Página " + page + " · " + pagina.size() + " registros");
 				}
+				case CON_TELEFONOS -> {
+					PersonaTelefonosModelCli resultado = adapter.consultarConTelefonos(db,
+							ProfesionMenu.leerEntero(keyboard, "Cédula: "));
+					System.out.println(resultado.persona());
+					if (resultado.telefonos().isEmpty())
+						System.out.println("(sin teléfonos)");
+					resultado.telefonos().forEach(telefono -> System.out.println("  " + telefono));
+					System.out.println("Teléfonos en " + db + ": " + resultado.telefonos().size());
+				}
 				default -> System.out.println("La opción elegida no es válida.");
 				}
 			});
@@ -124,7 +135,7 @@ public class PersonaMenu {
 		System.out.println("---------------------- Persona · " + db);
 		System.out.println(CONSULTAR + " Consultar por identificador · " + LISTAR + " Listar todos · " + CONTAR + " Contar");
 		System.out.println(CREAR + " Crear · " + EDITAR + " Editar · " + ELIMINAR + " Eliminar");
-		System.out.println(LISTAR_PARCIAL + " Listar parcial");
+		System.out.println(LISTAR_PARCIAL + " Listar parcial · " + CON_TELEFONOS + " Consultar con sus teléfonos");
 		System.out.println(REGRESAR + " Regresar al menú de motor");
 	}
 }
