@@ -31,6 +31,20 @@ El módulo `rest-input-adapter` recibe HTTP, valida formato de entrada, mapea DT
 
 Editar puede cambiar el operador y el dueño, siempre que el nuevo dueño exista (C-04). Eliminar no tiene restricción (C-05). Las verificó HU-021 en Docker Compose con MariaDB y MongoDB; la evidencia está en el PR de HU-021 y la aceptación final corresponde a HU-026.
 
+**Estudios (HU-024).** Implementa las siete rutas de §3.1 en `/api/v1/estudio` con el formato de error común. La clave son dos segmentos enteros, `/{idProfesion}/{ccPersona}`, y se necesitan los dos: no hay consulta por una sola parte. El cuerpo es `EstudioRequest` (`professionId` entero, `personId` entero, `graduationDate` texto `yyyy-MM-dd` y `universityName` texto); la fecha y la universidad son opcionales y, si faltan, la respuesta las devuelve como `null`. La persona y la profesión se comprueban en el motor elegido (C-03). El listado y la página se ordenan por profesión y luego por persona (C-06).
+
+| Caso | Respuesta |
+|---|---|
+| Alta con una profesión o una persona que no existen en el motor elegido | `422` `{"error":"ERR-05","message":"No existe una profesión con id 99 en MARIA"}` o «No existe una persona con cc 999 en MARIA». No se guarda nada |
+| Alta del mismo par (profesión, persona) | `409` ERR-04, sin sobrescribir. El duplicado se revisa antes que las referencias |
+| `graduationDate` que no es una fecha `yyyy-MM-dd` válida (por ejemplo `2015-13-45`, `2021-02-30` o `01/12/2015`) | `400` `{"error":"ERR-01","message":"La fecha '2015-13-45' no es válida; use el formato yyyy-MM-dd"}` |
+| Alta sin `professionId` o sin `personId`, o `universityName` de más de 50 caracteres | `400` ERR-01 |
+| `{idProfesion}` o `{ccPersona}` no numérico | `400` ERR-01 |
+| Clave del cuerpo distinta de la de la ruta al editar | `400` ERR-09 |
+| Par inexistente al consultar, editar o eliminar | `404` ERR-03 |
+
+Editar solo cambia la fecha y la universidad; la clave no cambia (C-04). Eliminar no tiene restricción (C-05). Borrar una profesión que tiene estudios sigue respondiendo `409` ERR-06 desde `/api/v1/profesion`. Las verificó HU-024 en Docker Compose con MariaDB y MongoDB; la evidencia está en el PR de HU-024 y la aceptación final corresponde a HU-026.
+
 **DTO inicial referenciado:** `PersonaRequest` con `dni`, `firstName`, `lastName`, `age`, `sex`, `database`. Tipos, serialización, campos obligatorios y reglas de validación deben leerse del código del fork. La referencia del profesor sitúa Swagger UI en `http://localhost:3000/swagger-ui.html` con configuración original; no se garantiza la misma ruta tras migrar.
 
 Una operación declarada en `PersonInputPort` o `PersonUseCase` no puede contarse aquí como ruta HTTP hasta que aparezca en el controlador y en OpenAPI.

@@ -4,10 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.time.format.DateTimeParseException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 
 import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
@@ -84,5 +88,16 @@ class RestExceptionHandlerTest {
 	void errorNoClasificadoEsErr10SinTraza() {
 		check(handler.unexpected(new IllegalStateException("SQL interno")), 500, "ERR-10",
 				"Error interno; la operación no se completó");
+	}
+
+	@Test
+	void fechaMalFormadaEsErr01ConElFormatoEsperado() {
+		HttpInputMessage input = mock(HttpInputMessage.class);
+		RuntimeException jackson = new RuntimeException("no se pudo convertir",
+				new DateTimeParseException("Text '2015-13-45' could not be parsed", "2015-13-45", 5));
+		check(handler.unreadable(new HttpMessageNotReadableException("JSON parse error", jackson, input)), 400,
+				"ERR-01", "La fecha '2015-13-45' no es válida; use el formato yyyy-MM-dd");
+		check(handler.unreadable(new HttpMessageNotReadableException("JSON parse error", input)), 400, "ERR-01",
+				"El cuerpo no es un JSON válido o tiene tipos incorrectos");
 	}
 }
