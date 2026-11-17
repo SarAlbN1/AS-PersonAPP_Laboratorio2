@@ -12,6 +12,6 @@ Cada casilla marcada cita su evidencia. Solo se marca lo comprobado sobre `main`
 - [ ] Informe académico: portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias. Está completo en `main` (PR #79 y #82); falta registrar el commit y la URL del tag (HU-030).
 - [x] Evidencias de compilación: JDK 11 de la plantilla ([HU-003 y HU-005](../04-implementacion/versiones.md)) y Java 25 con Spring Boot 4.1.2 de la entrega ([HU-007](../04-implementacion/versiones.md#migración-ejecutada-hu-007)).
 - [ ] Diagnóstico de mapeos y pruebas en ambos motores: las pruebas están en `main`; falta confirmar contra el enunciado qué diagnóstico de mapeos exige.
-- [ ] Tag final y URL de la versión entregada: se crea tras el ensayo de la demostración (HU-031).
+- [ ] Tag final y URL de la versión entregada: se crea sobre el `main` final, antes del ensayo de la demostración (HU-031), que se hace sobre el commit etiquetado.
 
 **Estado actual:** 8 de 11 casillas verificadas con evidencia. Quedan el informe (a la espera del tag), el diagnóstico de mapeos y el tag (HU-032).
