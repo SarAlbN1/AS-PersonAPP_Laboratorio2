@@ -60,7 +60,7 @@ docker compose ps
 
 **Qué hacer.** Abrir en el navegador `http://localhost:3000/swagger-ui.html`.
 
-**Qué debe verse.** Los grupos Persona, Profesión, Teléfono y Estudios, cada uno con sus siete operaciones; en Persona, además, la consulta con sus teléfonos. `/api-docs` publica OpenAPI 3.1.0.
+**Qué debe verse.** **Cinco** grupos: Persona, Profesión, Teléfono y Estudios, cada uno con sus siete operaciones, y uno propio, *Persona con teléfonos*, con la consulta de una persona con todos sus teléfonos. Esa consulta no aparece dentro de Persona. `/api-docs` publica OpenAPI 3.1.0.
 
 **Qué decir.**
 > La documentación es la de la API real, generada del código. Cada operación declara sus códigos de respuesta con el catálogo de errores del equipo y el parámetro `database`, que es obligatorio y no tiene valor por defecto: la API nunca elige un motor por su cuenta.
@@ -75,7 +75,7 @@ docker compose ps
 | Profesión | `GET /profesion/{id}` | `database=MONGO`, `id=1` | `200` con *Ingeniero de Sistemas* |
 | Teléfono | `GET /telefono/{num}` | `database=MARIA`, `num=3001234567` | `200` con su dueño |
 | Estudios | `GET /estudio/{idProfesion}/{ccPersona}` | `database=MARIA`, `idProfesion=1`, `ccPersona=123456789` | `200` |
-| Persona con teléfonos | `GET /persona/{cc}/telefonos` | `database=MARIA`, `cc=123456789` | `200` con la lista `phones` |
+| Persona con teléfonos (quinto grupo) | `GET /persona/{cc}/telefonos` | `database=MARIA`, `cc=123456789` | `200` con la lista `phones` |
 
 Al repetir cualquiera cambiando `database` por `ORACLE` se ve el `400 ERR-02` con el cuerpo común de error, que Swagger muestra porque cada error referencia `ErrorResponse`.
 
