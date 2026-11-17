@@ -345,6 +345,35 @@ El 16 de noviembre de 2026 se ejecutó una sola sesión del JAR ejecutable de la
 
 El cambio de motor no reinicia la aplicación y cada operación usa el puerto del motor elegido, porque el adaptador ya no guarda el caso de uso en un campo compartido.
 
+## Swagger y OpenAPI (HU-028, parcial)
+
+`springdoc-openapi-starter-webmvc-ui` 3.2.0 publica el documento en `/api-docs` y la interfaz en `/swagger-ui.html`. La ficha de la API la define `OpenApiConfig` en `rest-input-adapter`: título, versión, el aviso de que `database` es obligatorio y sin valor por defecto, la definición de las seis operaciones con el listado parcial como adicional, el formato común de error y un enlace al [contrato de la API REST](../03-contratos/api-rest.md) en lugar de repetirlo.
+
+### Resultados de Persona
+
+El 16 de noviembre de 2026, con el JAR ejecutable de REST y las bases en contenedores, `/api-docs` publicó OpenAPI **3.1.0** con los códigos de cada operación:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/persona` | GET | `200`, `400`, `503` |
+| `/api/v1/persona` | POST | `201`, `400`, `409`, `503` |
+| `/api/v1/persona/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/persona/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/persona/{cc}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/persona/{cc}` | PUT | `200`, `400`, `404`, `503` |
+| `/api/v1/persona/{cc}` | DELETE | `204`, `400`, `404`, `409`, `503` |
+
+Cada código de error referencia el esquema `ErrorResponse`, así que la interfaz muestra el cuerpo `{ "error": "ERR-xx", "message": "..." }` del formato común.
+
+Comprobaciones puntuales del documento generado:
+
+- **Conteo**: `{"type": "integer", "format": "int32", "example": 5}`, el esquema entero que pide el criterio de la historia.
+- **Listado parcial**: parámetros `database`, `page` con valor por defecto `0` y `size` con `10`, según la decisión D-05.
+- **`PersonaRequest`**: obligatorios `dni`, `firstName`, `lastName` y `sex`; `age` opcional; ejemplos en los cinco campos; género con los valores admitidos `M`, `F`, `MALE` y `FEMALE`; y el campo `database` del cuerpo marcado como obsoleto, porque desde D-04 el motor va en el parámetro de consulta.
+- Swagger UI responde `200`.
+
+**Pendiente.** Profesión, Teléfono y Estudios se documentan igual cuando entren HU-018, HU-021 y HU-024: el patrón de anotaciones de `PersonaControllerV1` sirve tal cual.
+
 ## Fase 2: funcionalidad faltante
 
 Completar CRUD y exposición REST/CLI para Persona, Profesión, Estudios y Teléfono en MariaDB y MongoDB.
