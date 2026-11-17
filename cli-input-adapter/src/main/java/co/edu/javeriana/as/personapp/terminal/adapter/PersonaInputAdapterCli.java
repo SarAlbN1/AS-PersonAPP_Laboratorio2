@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
+import co.edu.javeriana.as.personapp.application.port.in.PersonPhonesInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
+import co.edu.javeriana.as.personapp.application.port.out.PhoneOutputPort;
+import co.edu.javeriana.as.personapp.application.usecase.PersonPhonesUseCase;
 import co.edu.javeriana.as.personapp.application.usecase.PersonUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
@@ -17,7 +20,9 @@ import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.terminal.mapper.PersonaMapperCli;
+import co.edu.javeriana.as.personapp.terminal.mapper.TelefonoMapperCli;
 import co.edu.javeriana.as.personapp.terminal.model.PersonaModelCli;
+import co.edu.javeriana.as.personapp.terminal.model.PersonaTelefonosModelCli;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -40,6 +45,17 @@ public class PersonaInputAdapterCli {
 
 	@Autowired
 	private PersonaMapperCli personaMapperCli;
+
+	@Autowired
+	@Qualifier("phoneOutputAdapterMaria")
+	private PhoneOutputPort phoneOutputPortMaria;
+
+	@Autowired
+	@Qualifier("phoneOutputAdapterMongo")
+	private PhoneOutputPort phoneOutputPortMongo;
+
+	@Autowired
+	private TelefonoMapperCli telefonoMapperCli;
 
 	/** ERR-02 si el motor no es MARIA ni MONGO; no se usa uno por defecto. */
 	private PersonInputPort useCase(DatabaseOption database) throws InvalidOptionException {
@@ -92,5 +108,24 @@ public class PersonaInputAdapterCli {
 			throws InvalidOptionException, NoExistException, DependentRecordsException {
 		log.debug("Into eliminar Persona in Input Adapter CLI");
 		useCase(database).drop(cc);
+	}
+
+	/**
+	 * HU-033: la persona con todos sus teléfonos, leídos del mismo motor (C-03). Es una
+	 * consulta adicional; {@link #consultar} sigue sin colecciones (C-10).
+	 */
+	public PersonaTelefonosModelCli consultarConTelefonos(DatabaseOption database, Integer cc)
+			throws InvalidOptionException, InvalidDataException, NoExistException {
+		log.debug("Into consultarConTelefonos Persona in Input Adapter CLI");
+		PersonPhonesInputPort port;
+		if (DatabaseOption.MARIA == database)
+			port = new PersonPhonesUseCase(personOutputPortMaria, phoneOutputPortMaria);
+		else if (DatabaseOption.MONGO == database)
+			port = new PersonPhonesUseCase(personOutputPortMongo, phoneOutputPortMongo);
+		else
+			throw new InvalidOptionException("El motor " + database + " no es válido; use MARIA o MONGO");
+		var person = port.findWithPhones(cc);
+		return new PersonaTelefonosModelCli(personaMapperCli.fromDomainToAdapterCli(person),
+				person.getPhoneNumbers().stream().map(telefonoMapperCli::fromDomainToAdapterCli).toList());
 	}
 }

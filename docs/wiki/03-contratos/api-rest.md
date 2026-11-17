@@ -118,7 +118,7 @@ Es una consulta adicional y no sustituye ninguna de las seis operaciones: `GET /
 | `database` ausente o distinto de `MARIA` y `MONGO` | `400` ERR-02 |
 | Persona inexistente en el motor elegido | `404` ERR-03 «No existe una persona con cc 999 en MARIA» |
 
-La CLI ofrece la misma consulta en el menú de Persona (HU-033, cuando entre HU-015).
+La CLI ofrece la misma consulta en la opción 8 del menú de Persona ([CLI §3](cli.md#menú-común--aprobado-hu-011)).
 
 ## 4. Ficha obligatoria por endpoint
 

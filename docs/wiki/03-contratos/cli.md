@@ -59,11 +59,13 @@ Menú de operaciones (igual para los cuatro recursos):
   Escrituras: 4 Crear · 5 Editar · 6 Eliminar
   Adicional:  7 Listar parcial
   0 Regresar al menú de motor
+Solo en Persona (HU-033):  8 Consultar con sus teléfonos
 ```
 
 - **Cambio de motor:** con 0 se vuelve al menú de motor y se elige el otro sin reiniciar la aplicación.
 - **Consultar por identificador:** pide la clave completa; en Estudios, la profesión y luego la persona. Muestra el registro con todos sus campos, sin teléfonos ni estudios asociados (esa consulta es HU-033). Si la clave no existe en el motor elegido, muestra `[ERR-03] No existe <recurso> con <clave> en <motor>` y vuelve al menú de operaciones. Una clave con tipo incorrecto se vuelve a pedir (ERR-01).
 - **Listar parcial:** pide la página (desde 0) y el tamaño (1 a 100). Muestra los registros y una línea `Página N · M registros`.
+- **Consultar con sus teléfonos (Persona, HU-033):** es una consulta adicional y no cambia las seis operaciones. Pide la cédula y muestra la persona, debajo sus teléfonos del mismo motor ordenados por número como texto, y una línea `Teléfonos en <motor>: N`. Si no tiene teléfonos muestra `(sin teléfonos)`. Una persona inexistente da `[ERR-03]` y una cédula menor que 1 da `[ERR-01]`, sin cerrar la sesión. Es la misma consulta que `GET /api/v1/persona/{cc}/telefonos` ([API REST §3.2](api-rest.md#32-persona-con-sus-teléfonos-hu-033)).
 - **Editar y eliminar:** piden primero la clave (en Estudios, la profesión y luego la persona). Al editar, muestra el registro actual antes de pedir los campos editables.
 - **Contar:** muestra `Total en <motor>: N`.
 - **Errores:** siguen el [formato común](validaciones-y-errores.md#22-formato-de-error--aprobado-hu-011) (`[ERR-xx] mensaje`). Una entrada no numérica se descarta y se vuelve a pedir, sin cerrar la sesión.
