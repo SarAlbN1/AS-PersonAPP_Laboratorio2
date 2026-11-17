@@ -1,0 +1,1751 @@
+ Container personapp-mariadb-1 Running 
+ Container personapp-mongo-1 Running 
+ Image personapp-cli:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 557B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.13kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:25-jre
+#3 DONE 0.2s
+
+#4 [internal] load metadata for docker.io/library/eclipse-temurin:25-jdk
+#4 DONE 0.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 171B done
+#5 DONE 0.0s
+
+#6 [build 1/4] FROM docker.io/library/eclipse-temurin:25-jdk@sha256:884a2f8692cc1e2c7e21f95914adf0ae0eafee9a7eb663a12169cc44468256ec
+#6 resolve docker.io/library/eclipse-temurin:25-jdk@sha256:884a2f8692cc1e2c7e21f95914adf0ae0eafee9a7eb663a12169cc44468256ec done
+#6 DONE 0.0s
+
+#7 [runtime 1/3] FROM docker.io/library/eclipse-temurin:25-jre@sha256:945247f9d092703e0c6be92243ef3c51640229e23ab34d353c8dcdc73e6cd4e6
+#7 resolve docker.io/library/eclipse-temurin:25-jre@sha256:945247f9d092703e0c6be92243ef3c51640229e23ab34d353c8dcdc73e6cd4e6 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 29.70kB 0.0s done
+#8 DONE 0.0s
+
+#9 [build 2/4] WORKDIR /src
+#9 CACHED
+
+#10 [build 3/4] COPY . .
+#10 DONE 0.0s
+
+#11 [build 4/4] RUN --mount=type=cache,target=/root/.m2     ./mvnw -B -ntp clean package
+#11 0.559 [INFO] Scanning for projects...
+#11 0.618 [INFO] Loaded 24526 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+#11 0.693 [INFO] ------------------------------------------------------------------------
+#11 0.693 [INFO] Reactor Build Order:
+#11 0.693 [INFO] 
+#11 0.693 [INFO] PersonAPP                                                          [pom]
+#11 0.693 [INFO] PersonAPP Common                                                   [jar]
+#11 0.693 [INFO] PersonAPP Domain                                                   [jar]
+#11 0.693 [INFO] PersonAPP Application                                              [jar]
+#11 0.693 [INFO] PersonAPP MariaDB Persistence Output Adapter                       [jar]
+#11 0.693 [INFO] PersonAPP MongoDB Persistence Output Adapter                       [jar]
+#11 0.693 [INFO] PersonAPP REST Input Adapter                                       [jar]
+#11 0.693 [INFO] PersonAPP CLI Input Adapter                                        [jar]
+#11 0.695 [INFO] 
+#11 0.695 [INFO] -----------< co.edu.javeriana.as:personapp-hexa-spring-boot >-----------
+#11 0.695 [INFO] Building PersonAPP 0.0.1-SNAPSHOT                                  [1/8]
+#11 0.695 [INFO]   from pom.xml
+#11 0.695 [INFO] --------------------------------[ pom ]---------------------------------
+#11 0.757 [INFO] 
+#11 0.757 [INFO] --- clean:3.5.0:clean (default-clean) @ personapp-hexa-spring-boot ---
+#11 0.781 [INFO] 
+#11 0.781 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ personapp-hexa-spring-boot ---
+#11 0.797 [INFO] Deleting /src/.flattened-pom.xml
+#11 0.798 [INFO] 
+#11 0.798 [INFO] --- flatten:1.9.0:flatten (flatten) @ personapp-hexa-spring-boot ---
+#11 0.801 [INFO] Generating flattened POM of project co.edu.javeriana.as:personapp-hexa-spring-boot:pom:0.0.1-SNAPSHOT...
+#11 0.839 [INFO] 
+#11 0.839 [INFO] ----------------< co.edu.javeriana.as.personapp:common >----------------
+#11 0.839 [INFO] Building PersonAPP Common 0.0.1-SNAPSHOT                           [2/8]
+#11 0.839 [INFO]   from common/pom.xml
+#11 0.839 [INFO] --------------------------------[ jar ]---------------------------------
+#11 0.874 [INFO] 
+#11 0.874 [INFO] --- clean:3.5.0:clean (default-clean) @ common ---
+#11 0.875 [INFO] 
+#11 0.875 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ common ---
+#11 0.875 [INFO] Deleting /src/common/.flattened-pom.xml
+#11 0.877 [INFO] 
+#11 0.877 [INFO] --- resources:3.5.0:resources (default-resources) @ common ---
+#11 0.905 [INFO] skip non existing resourceDirectory /src/common/src/main/resources
+#11 0.905 [INFO] 
+#11 0.905 [INFO] --- flatten:1.9.0:flatten (flatten) @ common ---
+#11 0.906 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:common:jar:0.0.1-SNAPSHOT...
+#11 0.928 [INFO] 
+#11 0.928 [INFO] --- compiler:3.16.0:compile (default-compile) @ common ---
+#11 0.938 [INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+#11 1.733 [INFO] Recompiling the module because of changed source code.
+#11 1.737 [INFO] Compiling 12 source files with javac [debug parameters release 25] to target/classes
+#11 1.915 WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+#11 1.915 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+#11 1.915 WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+#11 1.915 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+#11 2.020 [INFO] 
+#11 2.020 [INFO] --- resources:3.5.0:testResources (default-testResources) @ common ---
+#11 2.022 [INFO] skip non existing resourceDirectory /src/common/src/test/resources
+#11 2.022 [INFO] 
+#11 2.022 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ common ---
+#11 2.023 [INFO] No sources to compile
+#11 2.023 [INFO] 
+#11 2.023 [INFO] --- surefire:3.6.0:test (default-test) @ common ---
+#11 2.059 [INFO] No tests to run.
+#11 2.060 [INFO] 
+#11 2.060 [INFO] --- jar:3.5.1:jar (default-jar) @ common ---
+#11 2.129 [INFO] Building jar: /src/common/target/common-0.0.1-SNAPSHOT.jar
+#11 2.145 [INFO] 
+#11 2.145 [INFO] ----------------< co.edu.javeriana.as.personapp:domain >----------------
+#11 2.145 [INFO] Building PersonAPP Domain 0.0.1-SNAPSHOT                           [3/8]
+#11 2.145 [INFO]   from domain/pom.xml
+#11 2.145 [INFO] --------------------------------[ jar ]---------------------------------
+#11 2.150 [INFO] 
+#11 2.150 [INFO] --- clean:3.5.0:clean (default-clean) @ domain ---
+#11 2.150 [INFO] 
+#11 2.150 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ domain ---
+#11 2.151 [INFO] Deleting /src/domain/.flattened-pom.xml
+#11 2.152 [INFO] 
+#11 2.152 [INFO] --- resources:3.5.0:resources (default-resources) @ domain ---
+#11 2.152 [INFO] skip non existing resourceDirectory /src/domain/src/main/resources
+#11 2.152 [INFO] 
+#11 2.152 [INFO] --- flatten:1.9.0:flatten (flatten) @ domain ---
+#11 2.153 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:domain:jar:0.0.1-SNAPSHOT...
+#11 2.171 [INFO] 
+#11 2.171 [INFO] --- compiler:3.16.0:compile (default-compile) @ domain ---
+#11 2.173 [INFO] Recompiling the module because of changed source code.
+#11 2.174 [INFO] Compiling 5 source files with javac [debug parameters release 25] to target/classes
+#11 2.365 [INFO] 
+#11 2.365 [INFO] --- resources:3.5.0:testResources (default-testResources) @ domain ---
+#11 2.366 [INFO] skip non existing resourceDirectory /src/domain/src/test/resources
+#11 2.366 [INFO] 
+#11 2.366 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ domain ---
+#11 2.366 [INFO] No sources to compile
+#11 2.367 [INFO] 
+#11 2.367 [INFO] --- surefire:3.6.0:test (default-test) @ domain ---
+#11 2.368 [INFO] No tests to run.
+#11 2.368 [INFO] 
+#11 2.368 [INFO] --- jar:3.5.1:jar (default-jar) @ domain ---
+#11 2.369 [INFO] Building jar: /src/domain/target/domain-0.0.1-SNAPSHOT.jar
+#11 2.372 [INFO] 
+#11 2.372 [INFO] -------------< co.edu.javeriana.as.personapp:application >--------------
+#11 2.372 [INFO] Building PersonAPP Application 0.0.1-SNAPSHOT                      [4/8]
+#11 2.372 [INFO]   from application/pom.xml
+#11 2.372 [INFO] --------------------------------[ jar ]---------------------------------
+#11 2.382 [INFO] 
+#11 2.382 [INFO] --- clean:3.5.0:clean (default-clean) @ application ---
+#11 2.383 [INFO] 
+#11 2.383 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ application ---
+#11 2.383 [INFO] Deleting /src/application/.flattened-pom.xml
+#11 2.384 [INFO] 
+#11 2.384 [INFO] --- resources:3.5.0:resources (default-resources) @ application ---
+#11 2.385 [INFO] skip non existing resourceDirectory /src/application/src/main/resources
+#11 2.385 [INFO] 
+#11 2.385 [INFO] --- flatten:1.9.0:flatten (flatten) @ application ---
+#11 2.385 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:application:jar:0.0.1-SNAPSHOT...
+#11 2.401 [INFO] 
+#11 2.401 [INFO] --- compiler:3.16.0:compile (default-compile) @ application ---
+#11 2.403 [INFO] Recompiling the module because of changed dependency.
+#11 2.404 [INFO] Compiling 14 source files with javac [debug parameters release 25] to target/classes
+#11 2.562 [INFO] 
+#11 2.562 [INFO] --- resources:3.5.0:testResources (default-testResources) @ application ---
+#11 2.563 [INFO] skip non existing resourceDirectory /src/application/src/test/resources
+#11 2.563 [INFO] 
+#11 2.563 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ application ---
+#11 2.566 [INFO] Recompiling the module because of changed dependency.
+#11 2.566 [INFO] Compiling 5 source files with javac [debug parameters release 25] to target/test-classes
+#11 2.843 [INFO] 
+#11 2.843 [INFO] --- surefire:3.6.0:test (default-test) @ application ---
+#11 2.853 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#11 2.888 [INFO] 
+#11 2.888 [INFO] -------------------------------------------------------
+#11 2.888 [INFO]  T E S T S
+#11 2.888 [INFO] -------------------------------------------------------
+#11 3.314 [INFO] Running co.edu.javeriana.as.personapp.application.usecase.PhoneUseCaseTest
+#11 3.352 SLF4J(W): No SLF4J providers were found.
+#11 3.352 SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+#11 3.352 SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+#11 3.376 [INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in co.edu.javeriana.as.personapp.application.usecase.PhoneUseCaseTest
+#11 3.377 [INFO] Running co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCaseTest
+#11 3.397 [INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCaseTest
+#11 3.397 [INFO] Running co.edu.javeriana.as.personapp.application.usecase.StudyUseCaseTest
+#11 3.415 [INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in co.edu.javeriana.as.personapp.application.usecase.StudyUseCaseTest
+#11 3.415 [INFO] Running co.edu.javeriana.as.personapp.application.usecase.PersonUseCaseTest
+#11 3.427 [INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in co.edu.javeriana.as.personapp.application.usecase.PersonUseCaseTest
+#11 3.427 [INFO] Running co.edu.javeriana.as.personapp.application.usecase.PersonPhonesUseCaseTest
+#11 3.431 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in co.edu.javeriana.as.personapp.application.usecase.PersonPhonesUseCaseTest
+#11 3.437 [INFO] 
+#11 3.437 [INFO] Results:
+#11 3.437 [INFO] 
+#11 3.438 [INFO] Tests run: 65, Failures: 0, Errors: 0, Skipped: 0
+#11 3.438 [INFO] 
+#11 3.439 [INFO] 
+#11 3.439 [INFO] --- jar:3.5.1:jar (default-jar) @ application ---
+#11 3.446 [INFO] Building jar: /src/application/target/application-0.0.1-SNAPSHOT.jar
+#11 3.450 [INFO] 
+#11 3.450 [INFO] ---------< co.edu.javeriana.as.personapp:maria-output-adapter >---------
+#11 3.450 [INFO] Building PersonAPP MariaDB Persistence Output Adapter 0.0.1-SNAPSHOT [5/8]
+#11 3.450 [INFO]   from maria-output-adapter/pom.xml
+#11 3.450 [INFO] --------------------------------[ jar ]---------------------------------
+#11 3.493 [INFO] 
+#11 3.493 [INFO] --- clean:3.5.0:clean (default-clean) @ maria-output-adapter ---
+#11 3.494 [INFO] 
+#11 3.494 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ maria-output-adapter ---
+#11 3.495 [INFO] Deleting /src/maria-output-adapter/.flattened-pom.xml
+#11 3.496 [INFO] 
+#11 3.496 [INFO] --- resources:3.5.0:resources (default-resources) @ maria-output-adapter ---
+#11 3.498 [INFO] skip non existing resourceDirectory /src/maria-output-adapter/src/main/resources
+#11 3.498 [INFO] 
+#11 3.498 [INFO] --- flatten:1.9.0:flatten (flatten) @ maria-output-adapter ---
+#11 3.498 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:maria-output-adapter:jar:0.0.1-SNAPSHOT...
+#11 3.520 [INFO] 
+#11 3.520 [INFO] --- compiler:3.16.0:compile (default-compile) @ maria-output-adapter ---
+#11 3.524 [INFO] Recompiling the module because of changed dependency.
+#11 3.524 [INFO] Compiling 17 source files with javac [debug parameters release 25] to target/classes
+#11 3.754 [INFO] /src/maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/entity/EstudiosEntity.java: /src/maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/entity/EstudiosEntity.java uses or overrides a deprecated API.
+#11 3.754 [INFO] /src/maria-output-adapter/src/main/java/co/edu/javeriana/as/personapp/mariadb/entity/EstudiosEntity.java: Recompile with -Xlint:deprecation for details.
+#11 3.754 [INFO] 
+#11 3.754 [INFO] --- resources:3.5.0:testResources (default-testResources) @ maria-output-adapter ---
+#11 3.755 [INFO] skip non existing resourceDirectory /src/maria-output-adapter/src/test/resources
+#11 3.755 [INFO] 
+#11 3.755 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ maria-output-adapter ---
+#11 3.758 [INFO] Recompiling the module because of changed dependency.
+#11 3.758 [INFO] Compiling 7 source files with javac [debug parameters release 25] to target/test-classes
+#11 3.952 [INFO] 
+#11 3.952 [INFO] --- surefire:3.6.0:test (default-test) @ maria-output-adapter ---
+#11 3.954 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#11 3.958 [INFO] 
+#11 3.958 [INFO] -------------------------------------------------------
+#11 3.958 [INFO]  T E S T S
+#11 3.958 [INFO] -------------------------------------------------------
+#11 4.257 [INFO] Running co.edu.javeriana.as.personapp.mariadb.mapper.MapperRecursionMariaTest
+#11 4.304 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in co.edu.javeriana.as.personapp.mariadb.mapper.MapperRecursionMariaTest
+#11 4.306 [INFO] Running co.edu.javeriana.as.personapp.mariadb.adapter.StudyOutputAdapterMariaMotorTest
+#11 4.312 [WARNING] Tests run: 6, Failures: 0, Errors: 0, Skipped: 6, Time elapsed: 0.001 s -- in co.edu.javeriana.as.personapp.mariadb.adapter.StudyOutputAdapterMariaMotorTest
+#11 4.313 [INFO] Running co.edu.javeriana.as.personapp.mariadb.adapter.PersonOutputAdapterMariaMotorTest
+#11 4.314 [WARNING] Tests run: 7, Failures: 0, Errors: 0, Skipped: 7, Time elapsed: 0 s -- in co.edu.javeriana.as.personapp.mariadb.adapter.PersonOutputAdapterMariaMotorTest
+#11 4.316 [INFO] Running co.edu.javeriana.as.personapp.mariadb.adapter.PhoneOutputAdapterMariaMotorTest
+#11 4.317 [WARNING] Tests run: 9, Failures: 0, Errors: 0, Skipped: 9, Time elapsed: 0 s -- in co.edu.javeriana.as.personapp.mariadb.adapter.PhoneOutputAdapterMariaMotorTest
+#11 4.317 [INFO] Running co.edu.javeriana.as.personapp.mariadb.adapter.PersonPhonesMariaMotorTest
+#11 4.318 [WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0 s -- in co.edu.javeriana.as.personapp.mariadb.adapter.PersonPhonesMariaMotorTest
+#11 4.323 [INFO] Running co.edu.javeriana.as.personapp.mariadb.adapter.ProfessionOutputAdapterMariaTest
+#11 4.371 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+#11 4.512 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+#11 4.572 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.15/byte-buddy-agent-1.18.15.jar)
+#11 4.572 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+#11 4.572 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+#11 4.572 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+#11 4.734 [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.409 s -- in co.edu.javeriana.as.personapp.mariadb.adapter.ProfessionOutputAdapterMariaTest
+#11 4.738 [INFO] 
+#11 4.738 [INFO] Results:
+#11 4.738 [INFO] 
+#11 4.738 [INFO] Tests run: 41, Failures: 0, Errors: 0, Skipped: 24
+#11 4.738 [INFO] 
+#11 4.739 [INFO] 
+#11 4.739 [INFO] --- jar:3.5.1:jar (default-jar) @ maria-output-adapter ---
+#11 4.741 [INFO] Building jar: /src/maria-output-adapter/target/maria-output-adapter-0.0.1-SNAPSHOT.jar
+#11 4.744 [INFO] 
+#11 4.744 [INFO] ---------< co.edu.javeriana.as.personapp:mongo-output-adapter >---------
+#11 4.744 [INFO] Building PersonAPP MongoDB Persistence Output Adapter 0.0.1-SNAPSHOT [6/8]
+#11 4.744 [INFO]   from mongo-output-adapter/pom.xml
+#11 4.744 [INFO] --------------------------------[ jar ]---------------------------------
+#11 4.760 [INFO] 
+#11 4.760 [INFO] --- clean:3.5.0:clean (default-clean) @ mongo-output-adapter ---
+#11 4.761 [INFO] 
+#11 4.761 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ mongo-output-adapter ---
+#11 4.761 [INFO] Deleting /src/mongo-output-adapter/.flattened-pom.xml
+#11 4.762 [INFO] 
+#11 4.762 [INFO] --- resources:3.5.0:resources (default-resources) @ mongo-output-adapter ---
+#11 4.763 [INFO] skip non existing resourceDirectory /src/mongo-output-adapter/src/main/resources
+#11 4.763 [INFO] 
+#11 4.763 [INFO] --- flatten:1.9.0:flatten (flatten) @ mongo-output-adapter ---
+#11 4.763 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:mongo-output-adapter:jar:0.0.1-SNAPSHOT...
+#11 4.776 [INFO] 
+#11 4.776 [INFO] --- compiler:3.16.0:compile (default-compile) @ mongo-output-adapter ---
+#11 4.779 [INFO] Recompiling the module because of changed dependency.
+#11 4.779 [INFO] Compiling 17 source files with javac [debug parameters release 25] to target/classes
+#11 4.991 [INFO] 
+#11 4.991 [INFO] --- resources:3.5.0:testResources (default-testResources) @ mongo-output-adapter ---
+#11 4.992 [INFO] skip non existing resourceDirectory /src/mongo-output-adapter/src/test/resources
+#11 4.992 [INFO] 
+#11 4.992 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ mongo-output-adapter ---
+#11 4.995 [INFO] Recompiling the module because of changed dependency.
+#11 4.995 [INFO] Compiling 8 source files with javac [debug parameters release 25] to target/test-classes
+#11 5.182 [INFO] 
+#11 5.182 [INFO] --- surefire:3.6.0:test (default-test) @ mongo-output-adapter ---
+#11 5.184 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#11 5.188 [INFO] 
+#11 5.188 [INFO] -------------------------------------------------------
+#11 5.188 [INFO]  T E S T S
+#11 5.188 [INFO] -------------------------------------------------------
+#11 5.447 [INFO] Running co.edu.javeriana.as.personapp.mongo.config.MongoFechasConfigTest
+#11 5.632 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.183 s -- in co.edu.javeriana.as.personapp.mongo.config.MongoFechasConfigTest
+#11 5.632 [INFO] Running co.edu.javeriana.as.personapp.mongo.mapper.MapperRecursionMongoTest
+#11 5.639 [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in co.edu.javeriana.as.personapp.mongo.mapper.MapperRecursionMongoTest
+#11 5.641 [INFO] Running co.edu.javeriana.as.personapp.mongo.adapter.PersonPhonesMongoMotorTest
+#11 5.642 [WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0 s -- in co.edu.javeriana.as.personapp.mongo.adapter.PersonPhonesMongoMotorTest
+#11 5.642 [INFO] Running co.edu.javeriana.as.personapp.mongo.adapter.PersonOutputAdapterMongoMotorTest
+#11 5.643 [WARNING] Tests run: 7, Failures: 0, Errors: 0, Skipped: 7, Time elapsed: 0.001 s -- in co.edu.javeriana.as.personapp.mongo.adapter.PersonOutputAdapterMongoMotorTest
+#11 5.645 [INFO] Running co.edu.javeriana.as.personapp.mongo.adapter.StudyOutputAdapterMongoMotorTest
+#11 5.647 [WARNING] Tests run: 6, Failures: 0, Errors: 0, Skipped: 6, Time elapsed: 0.001 s -- in co.edu.javeriana.as.personapp.mongo.adapter.StudyOutputAdapterMongoMotorTest
+#11 5.649 [INFO] Running co.edu.javeriana.as.personapp.mongo.adapter.ProfessionOutputAdapterMongoTest
+#11 5.666 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+#11 5.825 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+#11 5.868 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.15/byte-buddy-agent-1.18.15.jar)
+#11 5.868 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+#11 5.868 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+#11 5.868 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+#11 6.307 [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s -- in co.edu.javeriana.as.personapp.mongo.adapter.ProfessionOutputAdapterMongoTest
+#11 6.307 [INFO] Running co.edu.javeriana.as.personapp.mongo.adapter.PhoneOutputAdapterMongoMotorTest
+#11 6.308 [WARNING] Tests run: 7, Failures: 0, Errors: 0, Skipped: 7, Time elapsed: 0 s -- in co.edu.javeriana.as.personapp.mongo.adapter.PhoneOutputAdapterMongoMotorTest
+#11 6.314 [INFO] 
+#11 6.314 [INFO] Results:
+#11 6.314 [INFO] 
+#11 6.314 [INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 22
+#11 6.314 [INFO] 
+#11 6.315 [INFO] 
+#11 6.315 [INFO] --- jar:3.5.1:jar (default-jar) @ mongo-output-adapter ---
+#11 6.319 [INFO] Building jar: /src/mongo-output-adapter/target/mongo-output-adapter-0.0.1-SNAPSHOT.jar
+#11 6.323 [INFO] 
+#11 6.323 [INFO] ----------< co.edu.javeriana.as.personapp:rest-input-adapter >----------
+#11 6.323 [INFO] Building PersonAPP REST Input Adapter 0.0.1-SNAPSHOT               [7/8]
+#11 6.323 [INFO]   from rest-input-adapter/pom.xml
+#11 6.323 [INFO] --------------------------------[ jar ]---------------------------------
+#11 6.364 [INFO] 
+#11 6.364 [INFO] --- clean:3.5.0:clean (default-clean) @ rest-input-adapter ---
+#11 6.364 [INFO] 
+#11 6.364 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ rest-input-adapter ---
+#11 6.364 [INFO] Deleting /src/rest-input-adapter/.flattened-pom.xml
+#11 6.366 [INFO] 
+#11 6.366 [INFO] --- resources:3.5.0:resources (default-resources) @ rest-input-adapter ---
+#11 6.368 [INFO] Copying 1 resource from src/main/resources to target/classes
+#11 6.369 [INFO] 
+#11 6.369 [INFO] --- flatten:1.9.0:flatten (flatten) @ rest-input-adapter ---
+#11 6.370 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:rest-input-adapter:jar:0.0.1-SNAPSHOT...
+#11 6.391 [INFO] 
+#11 6.391 [INFO] --- compiler:3.16.0:compile (default-compile) @ rest-input-adapter ---
+#11 6.395 [INFO] Recompiling the module because of changed dependency.
+#11 6.396 [INFO] Compiling 29 source files with javac [debug parameters release 25] to target/classes
+#11 6.776 [INFO] 
+#11 6.776 [INFO] --- resources:3.5.0:testResources (default-testResources) @ rest-input-adapter ---
+#11 6.778 [INFO] skip non existing resourceDirectory /src/rest-input-adapter/src/test/resources
+#11 6.779 [INFO] 
+#11 6.779 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ rest-input-adapter ---
+#11 6.785 [INFO] Recompiling the module because of changed dependency.
+#11 6.786 [INFO] Compiling 9 source files with javac [debug parameters release 25] to target/test-classes
+#11 7.014 [INFO] 
+#11 7.014 [INFO] --- surefire:3.6.0:test (default-test) @ rest-input-adapter ---
+#11 7.017 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#11 7.024 [INFO] 
+#11 7.024 [INFO] -------------------------------------------------------
+#11 7.024 [INFO]  T E S T S
+#11 7.024 [INFO] -------------------------------------------------------
+#11 7.367 [INFO] Running co.edu.javeriana.as.personapp.controller.RestExceptionHandlerTest
+#11 7.460 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+#11 7.584 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+#11 7.665 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.15/byte-buddy-agent-1.18.15.jar)
+#11 7.665 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+#11 7.665 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+#11 7.665 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+#11 7.753 18:53:40.063 [main] ERROR co.edu.javeriana.as.personapp.controller.RestExceptionHandler -- Error no clasificado en REST
+#11 7.753 java.lang.IllegalStateException: SQL interno
+#11 7.753 	at co.edu.javeriana.as.personapp.controller.RestExceptionHandlerTest.errorNoClasificadoEsErr10SinTraza(RestExceptionHandlerTest.java:89)
+#11 7.753 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+#11 7.753 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+#11 7.754 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:701)
+#11 7.754 	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:502)
+#11 7.754 	at org.junit.jupiter.engine.support.MethodReflectionUtils.invoke(MethodReflectionUtils.java:45)
+#11 7.754 	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:61)
+#11 7.754 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:124)
+#11 7.754 	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:163)
+#11 7.754 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:148)
+#11 7.754 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+#11 7.754 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:123)
+#11 7.754 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:105)
+#11 7.754 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:99)
+#11 7.754 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:66)
+#11 7.754 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:47)
+#11 7.754 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:39)
+#11 7.754 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:104)
+#11 7.754 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:98)
+#11 7.755 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invokeVoid(InterceptingExecutableInvoker.java:71)
+#11 7.755 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$0(TestMethodTestDescriptor.java:219)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:215)
+#11 7.755 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:157)
+#11 7.755 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116)
+#11 7.755 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116)
+#11 7.755 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166)
+#11 7.755 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52)
+#11 7.756 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157)
+#11 7.756 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65)
+#11 7.756 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125)
+#11 7.756 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+#11 7.757 	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58)
+#11 7.757 	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57)
+#11 7.757 	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25)
+#11 7.757 	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56)
+#11 7.757 	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58)
+#11 7.757 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+#11 7.757 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+#11 7.757 	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125)
+#11 7.757 	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68)
+#11 7.757 	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54)
+#11 7.757 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:283)
+#11 7.757 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:253)
+#11 7.757 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:221)
+#11 7.757 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:394)
+#11 7.757 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:181)
+#11 7.757 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:530)
+#11 7.757 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:518)
+#11 7.759 18:53:40.076 [main] ERROR co.edu.javeriana.as.personapp.controller.RestExceptionHandler -- Motor no disponible: DataAccessResourceFailureException
+#11 7.775 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.407 s -- in co.edu.javeriana.as.personapp.controller.RestExceptionHandlerTest
+#11 7.775 [INFO] Running co.edu.javeriana.as.personapp.mapper.TelefonoMapperRestTest
+#11 7.778 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in co.edu.javeriana.as.personapp.mapper.TelefonoMapperRestTest
+#11 7.778 [INFO] Running co.edu.javeriana.as.personapp.mapper.EstudioMapperRestTest
+#11 7.781 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in co.edu.javeriana.as.personapp.mapper.EstudioMapperRestTest
+#11 7.781 [INFO] Running co.edu.javeriana.as.personapp.mapper.PersonaTelefonosMapperRestTest
+#11 7.783 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in co.edu.javeriana.as.personapp.mapper.PersonaTelefonosMapperRestTest
+#11 7.783 [INFO] Running co.edu.javeriana.as.personapp.mapper.ProfesionMapperRestTest
+#11 7.789 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in co.edu.javeriana.as.personapp.mapper.ProfesionMapperRestTest
+#11 7.789 [INFO] Running co.edu.javeriana.as.personapp.mapper.PersonaMapperRestTest
+#11 7.797 [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in co.edu.javeriana.as.personapp.mapper.PersonaMapperRestTest
+#11 7.797 [INFO] Running co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaRestTest
+#11 7.815 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaRestTest
+#11 7.815 [INFO] Running co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaEstudioRestTest
+#11 7.831 [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaEstudioRestTest
+#11 7.831 [INFO] Running co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaProfesionTelefonoRestTest
+#11 7.896 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in co.edu.javeriana.as.personapp.adapter.SeleccionDinamicaProfesionTelefonoRestTest
+#11 7.903 [INFO] 
+#11 7.903 [INFO] Results:
+#11 7.903 [INFO] 
+#11 7.903 [INFO] Tests run: 46, Failures: 0, Errors: 0, Skipped: 0
+#11 7.903 [INFO] 
+#11 7.904 [INFO] 
+#11 7.904 [INFO] --- jar:3.5.1:jar (default-jar) @ rest-input-adapter ---
+#11 7.909 [INFO] Building jar: /src/rest-input-adapter/target/rest-input-adapter-0.0.1-SNAPSHOT.jar
+#11 7.914 [INFO] 
+#11 7.914 [INFO] --- spring-boot:4.1.2:repackage (repackage) @ rest-input-adapter ---
+#11 7.930 [INFO] Loaded 50 auto-discovered prefixes for remote repository ow2-snapshot (prefixes-ow2-snapshot.txt)
+#11 8.096 [INFO] Attaching repackaged archive /src/rest-input-adapter/target/rest-input-adapter-0.0.1-SNAPSHOT-exec.jar with classifier exec
+#11 8.098 [INFO] 
+#11 8.098 [INFO] ----------< co.edu.javeriana.as.personapp:cli-input-adapter >-----------
+#11 8.098 [INFO] Building PersonAPP CLI Input Adapter 0.0.1-SNAPSHOT                [8/8]
+#11 8.098 [INFO]   from cli-input-adapter/pom.xml
+#11 8.098 [INFO] --------------------------------[ jar ]---------------------------------
+#11 8.106 [INFO] 
+#11 8.106 [INFO] --- clean:3.5.0:clean (default-clean) @ cli-input-adapter ---
+#11 8.106 [INFO] 
+#11 8.106 [INFO] --- flatten:1.9.0:clean (flatten-clean) @ cli-input-adapter ---
+#11 8.107 [INFO] Deleting /src/cli-input-adapter/.flattened-pom.xml
+#11 8.110 [INFO] 
+#11 8.110 [INFO] --- resources:3.5.0:resources (default-resources) @ cli-input-adapter ---
+#11 8.111 [INFO] Copying 1 resource from src/main/resources to target/classes
+#11 8.112 [INFO] 
+#11 8.112 [INFO] --- flatten:1.9.0:flatten (flatten) @ cli-input-adapter ---
+#11 8.112 [INFO] Generating flattened POM of project co.edu.javeriana.as.personapp:cli-input-adapter:jar:0.0.1-SNAPSHOT...
+#11 8.125 [INFO] 
+#11 8.125 [INFO] --- compiler:3.16.0:compile (default-compile) @ cli-input-adapter ---
+#11 8.128 [INFO] Recompiling the module because of changed dependency.
+#11 8.128 [INFO] Compiling 20 source files with javac [debug parameters release 25] to target/classes
+#11 8.319 [INFO] 
+#11 8.319 [INFO] --- resources:3.5.0:testResources (default-testResources) @ cli-input-adapter ---
+#11 8.320 [INFO] skip non existing resourceDirectory /src/cli-input-adapter/src/test/resources
+#11 8.320 [INFO] 
+#11 8.320 [INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ cli-input-adapter ---
+#11 8.322 [INFO] Recompiling the module because of changed dependency.
+#11 8.322 [INFO] Compiling 4 source files with javac [debug parameters release 25] to target/test-classes
+#11 8.440 [INFO] 
+#11 8.440 [INFO] --- surefire:3.6.0:test (default-test) @ cli-input-adapter ---
+#11 8.442 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#11 8.451 [INFO] 
+#11 8.451 [INFO] -------------------------------------------------------
+#11 8.451 [INFO]  T E S T S
+#11 8.451 [INFO] -------------------------------------------------------
+#11 8.725 [INFO] Running co.edu.javeriana.as.personapp.terminal.menu.TelefonoMenuTest
+#11 8.755 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+#11 8.920 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+#11 8.961 WARNING: A Java agent has been loaded dynamically (/root/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.15/byte-buddy-agent-1.18.15.jar)
+#11 8.961 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+#11 8.961 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+#11 8.961 WARNING: Dynamic loading of agents will be disallowed by default in a future release
+#11 9.145 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.417 s -- in co.edu.javeriana.as.personapp.terminal.menu.TelefonoMenuTest
+#11 9.145 [INFO] Running co.edu.javeriana.as.personapp.terminal.menu.ProfesionMenuTest
+#11 9.169 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in co.edu.javeriana.as.personapp.terminal.menu.ProfesionMenuTest
+#11 9.169 [INFO] Running co.edu.javeriana.as.personapp.terminal.menu.EstudioMenuTest
+#11 9.198 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in co.edu.javeriana.as.personapp.terminal.menu.EstudioMenuTest
+#11 9.198 [INFO] Running co.edu.javeriana.as.personapp.terminal.menu.PersonaMenuTest
+#11 9.241 [INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in co.edu.javeriana.as.personapp.terminal.menu.PersonaMenuTest
+#11 9.254 [INFO] 
+#11 9.254 [INFO] Results:
+#11 9.254 [INFO] 
+#11 9.254 [INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0
+#11 9.254 [INFO] 
+#11 9.256 [INFO] 
+#11 9.256 [INFO] --- jar:3.5.1:jar (default-jar) @ cli-input-adapter ---
+#11 9.263 [INFO] Building jar: /src/cli-input-adapter/target/cli-input-adapter-0.0.1-SNAPSHOT.jar
+#11 9.291 [INFO] 
+#11 9.291 [INFO] --- spring-boot:4.1.2:repackage (repackage) @ cli-input-adapter ---
+#11 9.344 [INFO] Attaching repackaged archive /src/cli-input-adapter/target/cli-input-adapter-0.0.1-SNAPSHOT-exec.jar with classifier exec
+#11 9.344 [INFO] ------------------------------------------------------------------------
+#11 9.344 [INFO] Reactor Summary for PersonAPP 0.0.1-SNAPSHOT:
+#11 9.344 [INFO] 
+#11 9.345 [INFO] PersonAPP .......................................... SUCCESS [  0.145 s]
+#11 9.345 [INFO] PersonAPP Common ................................... SUCCESS [  1.306 s]
+#11 9.345 [INFO] PersonAPP Domain ................................... SUCCESS [  0.227 s]
+#11 9.345 [INFO] PersonAPP Application .............................. SUCCESS [  1.078 s]
+#11 9.345 [INFO] PersonAPP MariaDB Persistence Output Adapter ....... SUCCESS [  1.294 s]
+#11 9.345 [INFO] PersonAPP MongoDB Persistence Output Adapter ....... SUCCESS [  1.579 s]
+#11 9.345 [INFO] PersonAPP REST Input Adapter ....................... SUCCESS [  1.775 s]
+#11 9.345 [INFO] PersonAPP CLI Input Adapter ........................ SUCCESS [  1.246 s]
+#11 9.345 [INFO] ------------------------------------------------------------------------
+#11 9.345 [INFO] BUILD SUCCESS
+#11 9.345 [INFO] ------------------------------------------------------------------------
+#11 9.345 [INFO] Total time:  8.798 s
+#11 9.346 [INFO] Finished at: 2026-11-17T18:53:41Z
+#11 9.346 [INFO] ------------------------------------------------------------------------
+#11 DONE 9.4s
+
+#12 [runtime 2/3] RUN groupadd --system personapp     && useradd --system --gid personapp --home-dir /app personapp     && mkdir -p /app/logs     && chown -R personapp:personapp /app
+#12 CACHED
+
+#13 [runtime 3/3] WORKDIR /app
+#13 CACHED
+
+#14 [cli 1/1] COPY --from=build /src/cli-input-adapter/target/cli-input-adapter-*-exec.jar app.jar
+#14 DONE 0.0s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.8s done
+#15 exporting manifest sha256:82c782e63aba2f67e51795fa3ceb246569e0a07d34178dde764a4d7ca5a1eb14 done
+#15 exporting config sha256:33182e48e9b4c7c2197cf430cc08c5ef1357c28806f2a5203ef9c9ad4f689999 done
+#15 exporting attestation manifest sha256:76c9633356fd927de219e0d2f3258f5014908e1d3a25904e14d4b9e5b519ccfc done
+#15 exporting manifest list sha256:9da4158d538a1798e4db3e2f1ccfa3d08fd57db29d8784eb9cc2372fb179b0ff done
+#15 naming to docker.io/library/personapp-cli:local done
+#15 unpacking to docker.io/library/personapp-cli:local 0.1s done
+#15 DONE 1.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image personapp-cli:local Built 
+ Container personapp-mongo-1 Waiting 
+ Container personapp-mariadb-1 Waiting 
+ Container personapp-mongo-1 Healthy 
+ Container personapp-mariadb-1 Healthy 
+ Container personapp-cli-run-0c02d4019af3 Creating 
+ Container personapp-cli-run-0c02d4019af3 Created 
+Picked up JAVA_TOOL_OPTIONS: -Duser.timezone=America/Bogota
+13:53:43.756 [main] INFO co.edu.javeriana.as.personapp.PersonAppCli -- Starting PersonAppCli ...
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.2)
+
+2026-11-17T13:53:44.010-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : Starting PersonAppCli using Java 25.0.5 with PID 1 (/app/app.jar started by personapp in /app)
+2026-11-17T13:53:44.011-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : No active profile set, falling back to 1 default profile: "default"
+2026-11-17T13:53:44.211-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-11-17T13:53:44.212-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-17T13:53:44.235-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mongo.repository.EstudiosRepositoryMongo; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-11-17T13:53:44.236-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mongo.repository.PersonaRepositoryMongo; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-11-17T13:53:44.236-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mongo.repository.ProfesionRepositoryMongo; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-11-17T13:53:44.237-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mongo.repository.TelefonoRepositoryMongo; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-11-17T13:53:44.243-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 4 JPA repository interfaces.
+2026-11-17T13:53:44.254-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-11-17T13:53:44.255-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-11-17T13:53:44.258-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data MongoDB - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mariadb.repository.EstudiosRepositoryMaria; If you want this repository to be a MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.MongoRepository
+2026-11-17T13:53:44.258-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data MongoDB - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mariadb.repository.PersonaRepositoryMaria; If you want this repository to be a MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.MongoRepository
+2026-11-17T13:53:44.258-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data MongoDB - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mariadb.repository.ProfesionRepositoryMaria; If you want this repository to be a MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.MongoRepository
+2026-11-17T13:53:44.258-05:00  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data MongoDB - Could not safely identify store assignment for repository candidate interface co.edu.javeriana.as.personapp.mariadb.repository.TelefonoRepositoryMaria; If you want this repository to be a MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.MongoRepository
+2026-11-17T13:53:44.261-05:00  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 4 MongoDB repository interfaces.
+2026-11-17T13:53:44.414-05:00  INFO 1 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-17T13:53:44.445-05:00  INFO 1 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.13.Final
+2026-11-17T13:53:44.676-05:00  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-17T13:53:44.732-05:00  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-17T13:53:44.878-05:00  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@4466cf5d
+2026-11-17T13:53:44.887-05:00  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-17T13:53:44.943-05:00  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mariadb://mariadb/persona_db]
+	Database driver: MariaDB Connector/J
+	Database dialect: MariaDBDialect
+	Database version: 11.4.13
+	Default catalog/schema: persona_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-17T13:53:45.022-05:00  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000033: Encountered use of deprecated annotation [interface jakarta.persistence.Temporal] at co.edu.javeriana.as.personapp.mariadb.entity.EstudiosEntity.fecha.
+2026-11-17T13:53:45.290-05:00  INFO 1 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-17T13:53:45.383-05:00  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-17T13:53:45.419-05:00  INFO 1 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-17T13:53:45.626-05:00  INFO 1 --- [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|spring-boot|sync", "version": "5.8.1"}, "os": {"type": "Linux", "name": "Linux", "architecture": "aarch64", "version": "6.12.76-linuxkit"}, "platform": "Java/Eclipse Adoptium/25.0.5+8-LTS", "env": {"container": {"runtime": "docker"}}} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='persona_db', source='admin', password=<hidden>, mechanismProperties=<hidden>}, transportSettings=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@5d3c0735, com.mongodb.Jep395RecordCodecProvider@7a68818c, com.mongodb.KotlinCodecProvider@11034fdb, EnumCodecProvider{}]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[mongo:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-11-17T13:53:45.632-05:00  INFO 1 --- [057-mongo:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=mongo:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=17, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=6703667, minRoundTripTimeNanos=0}
+2026-11-17T13:53:45.761-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : Started PersonAppCli in 1.938 seconds (process running for 2.164)
+2026-11-17T13:53:45.762-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : EXECUTING : command line runner
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: [ERR-02] Opción de motor no válida; use 1 (MariaDB) o 2 (MongoDB)
+----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: 2026-11-17T13:53:45.763-05:00  INFO 1 --- [           main] c.e.j.a.p.terminal.menu.MenuPrincipal    : volvio
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 5
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): Creada: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 880000001 en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: 2026-11-17T13:53:45.891-05:00  INFO 1 --- [           main] c.e.j.a.p.a.usecase.PersonUseCase        : Output: class co.edu.javeriana.as.personapp.mariadb.adapter.PersonOutputAdapterMaria$$SpringCGLIB$$0
+Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+Persona [cc=321654987, nombre=Pepa, apellido=Juarez, género=FEMALE, edad=30]
+Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Persona [cc=963852741, nombre=Fede, apellido=Perez, género=MALE, edad=18]
+Persona [cc=987654321, nombre=Pepito, apellido=Perez, género=MALE, edad=sin dato]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+Persona [cc=321654987, nombre=Pepa, apellido=Juarez, género=FEMALE, edad=30]
+Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Persona [cc=963852741, nombre=Fede, apellido=Perez, género=MALE, edad=18]
+Persona [cc=987654321, nombre=Pepito, apellido=Perez, género=MALE, edad=sin dato]
+Página 0 · 6 registros
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Actual: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): Editada: Persona [cc=880000001, nombre=Editada, apellido=Hu026, género=FEMALE, edad=26]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Editada, apellido=Hu026, género=FEMALE, edad=26]
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 6
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+  Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+  Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfonos en MARIA: 2
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+(sin teléfonos)
+Teléfonos en MARIA: 0
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 999 en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): [ERR-04] Ya existe una persona con cc 880000001 en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-06] La persona con cc 123456789 tiene teléfonos o estudios asociados en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: [ERR-01] 'abc' no es un número entero
+Ingrese una opción: Total en MARIA: 6
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: 2026-11-17T13:53:45.953-05:00  INFO 1 --- [           main] c.e.j.a.p.terminal.menu.MenuPrincipal    : volvio
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 2
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Nombre: Descripción: Creada: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Profesión [id=1, nombre=Ingeniero de Sistemas, descripción=Diseño y construcción de software]
+Profesión [id=2, nombre=Medico, descripción=Atención en salud]
+Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Profesión [id=1, nombre=Ingeniero de Sistemas, descripción=Diseño y construcción de software]
+Profesión [id=2, nombre=Medico, descripción=Atención en salud]
+Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+Página 0 · 3 registros
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Actual: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+Nuevo nombre: Nueva descripción: Editada: Profesión [id=880, nombre=Verificacion editada, descripción=Editada por HU-026]
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Profesión [id=880, nombre=Verificacion editada, descripción=Editada por HU-026]
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 3
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Nombre: Descripción: [ERR-01] El nombre de la profesión debe tener entre 1 y 90 caracteres
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: [ERR-06] La profesión con id 1 tiene estudios asociados en MARIA
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 3
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: Creado: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfono [número=3209876543, operador=Tigo, dueño=321654987]
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+Página 0 · 2 registros
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfono [número=3209876543, operador=Tigo, dueño=321654987]
+Página 1 · 2 registros
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Actual: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Nuevo operador: Cédula del nuevo dueño: Editado: Teléfono [número=0088000001, operador=Tigo, dueño=123456789]
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Teléfono [número=0088000001, operador=Tigo, dueño=123456789]
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 4
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: [ERR-05] No existe una persona con cc 999 para ser dueña del teléfono en MARIA
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: [ERR-04] Ya existe un teléfono con número 0088000001 en MARIA
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 2
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): Creado: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Estudio [profesión=1, persona=123456789, fecha=2015-12-01, universidad=Pontificia Universidad Javeriana]
+Estudio [profesión=2, persona=321654987, fecha=2018-06-15, universidad=Universidad Nacional]
+Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Estudio [profesión=1, persona=123456789, fecha=2015-12-01, universidad=Pontificia Universidad Javeriana]
+Estudio [profesión=2, persona=321654987, fecha=2018-06-15, universidad=Universidad Nacional]
+Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+Página 0 · 3 registros
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Actual: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+Nueva fecha de grado (yyyy-MM-dd, Enter para dejarla vacía): [ERR-01] La fecha '2015-13-45' no es válida; use el formato yyyy-MM-dd
+Nueva fecha de grado (yyyy-MM-dd, Enter para dejarla vacía): Nueva universidad (Enter para dejarla vacía): Editado: Estudio [profesión=880, persona=880000001, fecha=2021-12-01, universidad=Nacional]
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Estudio [profesión=880, persona=880000001, fecha=2021-12-01, universidad=Nacional]
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 3
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): [ERR-05] No existe una profesión con id 99 en MARIA
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): [ERR-04] Ya existe un estudio de la profesión 880 para la persona 880000001 en MARIA
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Eliminado el estudio (880, 880000001) en MARIA
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: [ERR-03] No existe un estudio de la profesión 880 para la persona 880000001 en MARIA
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 2
+---------------------- Estudios · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Eliminado el teléfono 0088000001 en MARIA
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: [ERR-03] No existe un teléfono con número 0088000001 en MARIA
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 3
+---------------------- Teléfono · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Eliminada la profesión con id 880 en MARIA
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: [ERR-03] No existe una profesión con id 880 en MARIA
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 2
+---------------------- Profesión · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Eliminada la persona con cc 880000001 en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 880000001 en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MARIA: 5
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: 2026-11-17T13:53:46.039-05:00  INFO 1 --- [           main] c.e.j.a.p.terminal.menu.MenuPrincipal    : volvio
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 5
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): Creada: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 880000001 en MARIA
+---------------------- Persona · MARIA
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: 2026-11-17T13:53:46.100-05:00  INFO 1 --- [           main] c.e.j.a.p.a.usecase.PersonUseCase        : Output: class co.edu.javeriana.as.personapp.mongo.adapter.PersonOutputAdapterMongo
+Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+Persona [cc=321654987, nombre=Pepa, apellido=Juarez, género=FEMALE, edad=30]
+Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Persona [cc=963852741, nombre=Fede, apellido=Perez, género=MALE, edad=18]
+Persona [cc=987654321, nombre=Pepito, apellido=Perez, género=MALE, edad=sin dato]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+Persona [cc=321654987, nombre=Pepa, apellido=Juarez, género=FEMALE, edad=30]
+Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Persona [cc=963852741, nombre=Fede, apellido=Perez, género=MALE, edad=18]
+Persona [cc=987654321, nombre=Pepito, apellido=Perez, género=MALE, edad=sin dato]
+Página 0 · 6 registros
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Actual: Persona [cc=880000001, nombre=Verificada, apellido=Hu026, género=FEMALE, edad=25]
+Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): Editada: Persona [cc=880000001, nombre=Editada, apellido=Hu026, género=FEMALE, edad=26]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=880000001, nombre=Editada, apellido=Hu026, género=FEMALE, edad=26]
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 6
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=123456789, nombre=Pepe, apellido=Perez, género=MALE, edad=30]
+  Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+  Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfonos en MONGO: 2
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Persona [cc=147258369, nombre=Pepita, apellido=Juarez, género=FEMALE, edad=10]
+(sin teléfonos)
+Teléfonos en MONGO: 0
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 999 en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Nombre: Apellido: Género (M o F): Edad (vacío si no se conoce): [ERR-04] Ya existe una persona con cc 880000001 en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-06] La persona con cc 123456789 tiene teléfonos o estudios asociados en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: [ERR-01] 'abc' no es un número entero
+Ingrese una opción: Total en MONGO: 6
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: 2026-11-17T13:53:46.153-05:00  INFO 1 --- [           main] c.e.j.a.p.terminal.menu.MenuPrincipal    : volvio
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 2
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Nombre: Descripción: Creada: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Profesión [id=1, nombre=Ingeniero de Sistemas, descripción=Diseño y construcción de software]
+Profesión [id=2, nombre=Medico, descripción=Atención en salud]
+Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Profesión [id=1, nombre=Ingeniero de Sistemas, descripción=Diseño y construcción de software]
+Profesión [id=2, nombre=Medico, descripción=Atención en salud]
+Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+Página 0 · 3 registros
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Actual: Profesión [id=880, nombre=Verificacion, descripción=Creada por HU-026]
+Nuevo nombre: Nueva descripción: Editada: Profesión [id=880, nombre=Verificacion editada, descripción=Editada por HU-026]
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Profesión [id=880, nombre=Verificacion editada, descripción=Editada por HU-026]
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 3
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Nombre: Descripción: [ERR-01] El nombre de la profesión debe tener entre 1 y 90 caracteres
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: [ERR-06] La profesión con id 1 tiene estudios asociados en MONGO
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 3
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: Creado: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfono [número=3209876543, operador=Tigo, dueño=321654987]
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Teléfono [número=3001234567, operador=Claro, dueño=123456789]
+Página 0 · 2 registros
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Teléfono [número=3107654321, operador=Movistar, dueño=123456789]
+Teléfono [número=3209876543, operador=Tigo, dueño=321654987]
+Página 1 · 2 registros
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Actual: Teléfono [número=0088000001, operador=Claro, dueño=880000001]
+Nuevo operador: Cédula del nuevo dueño: Editado: Teléfono [número=0088000001, operador=Tigo, dueño=123456789]
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Teléfono [número=0088000001, operador=Tigo, dueño=123456789]
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 4
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: [ERR-05] No existe una persona con cc 999 para ser dueña del teléfono en MONGO
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Operador: Cédula del dueño: [ERR-04] Ya existe un teléfono con número 0088000001 en MONGO
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 2
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): Creado: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Estudio [profesión=1, persona=123456789, fecha=2015-12-01, universidad=Pontificia Universidad Javeriana]
+Estudio [profesión=2, persona=321654987, fecha=2018-06-15, universidad=Universidad Nacional]
+Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Página (desde 0): Tamaño (1 a 100): Estudio [profesión=1, persona=123456789, fecha=2015-12-01, universidad=Pontificia Universidad Javeriana]
+Estudio [profesión=2, persona=321654987, fecha=2018-06-15, universidad=Universidad Nacional]
+Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+Página 0 · 3 registros
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Actual: Estudio [profesión=880, persona=880000001, fecha=2020-06-15, universidad=Javeriana]
+Nueva fecha de grado (yyyy-MM-dd, Enter para dejarla vacía): [ERR-01] La fecha '2015-13-45' no es válida; use el formato yyyy-MM-dd
+Nueva fecha de grado (yyyy-MM-dd, Enter para dejarla vacía): Nueva universidad (Enter para dejarla vacía): Editado: Estudio [profesión=880, persona=880000001, fecha=2021-12-01, universidad=Nacional]
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Estudio [profesión=880, persona=880000001, fecha=2021-12-01, universidad=Nacional]
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 3
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): [ERR-05] No existe una profesión con id 99 en MONGO
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Fecha de grado (yyyy-MM-dd, Enter para omitir): Universidad (Enter para omitir): [ERR-04] Ya existe un estudio de la profesión 880 para la persona 880000001 en MONGO
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: Eliminado el estudio (880, 880000001) en MONGO
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id de la profesión: Cédula de la persona: [ERR-03] No existe un estudio de la profesión 880 para la persona 880000001 en MONGO
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 2
+---------------------- Estudios · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: Eliminado el teléfono 0088000001 en MONGO
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Número: [ERR-03] No existe un teléfono con número 0088000001 en MONGO
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 3
+---------------------- Teléfono · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: Eliminada la profesión con id 880 en MONGO
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Id: [ERR-03] No existe una profesión con id 880 en MONGO
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 2
+---------------------- Profesión · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: ---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: Eliminada la persona con cc 880000001 en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Cédula: [ERR-03] No existe una persona con cc 880000001 en MONGO
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: Total en MONGO: 5
+---------------------- Persona · MONGO
+1 Consultar por identificador · 2 Listar todos · 3 Contar
+4 Crear · 5 Editar · 6 Eliminar
+7 Listar parcial · 8 Consultar con sus teléfonos
+0 Regresar al menú de motor
+Ingrese una opción: ----------------------
+1 para MariaDB
+2 para MongoDB
+0 para regresar
+Ingrese una opción: 2026-11-17T13:53:46.258-05:00  INFO 1 --- [           main] c.e.j.a.p.terminal.menu.MenuPrincipal    : volvio
+----------------------
+1 para trabajar con el Modulo de Personas
+2 para trabajar con el Modulo de Profesiones
+3 para trabajar con el Modulo de Telefonos
+4 para trabajar con el Modulo de Estudios
+0 para Salir
+Ingrese una opción: 2026-11-17T13:53:46.258-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : FINISHED : command line runner
+2026-11-17T13:53:46.258-05:00  INFO 1 --- [           main] c.e.javeriana.as.personapp.PersonAppCli  : Started PersonAppCli OK
+2026-11-17T13:53:46.262-05:00  INFO 1 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-11-17T13:53:46.263-05:00  INFO 1 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-11-17T13:53:46.264-05:00  INFO 1 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
