@@ -116,6 +116,8 @@ Prueba, commit, PR:
 
 **Profesión (HU-018).** Implementa el menú común completo para Profesión, con los textos de §3: `Total en <motor>: N`, `Página N · M registros` y `[ERR-xx] mensaje`. Una entrada no numérica se vuelve a pedir sin cerrar la sesión.
 
+**Teléfono (HU-021).** La opción 3 del menú principal abre el menú común completo para Teléfono, con los mismos textos que Profesión. El número se lee como texto para conservar los ceros iniciales; la cédula del dueño se lee como entero y se vuelve a pedir si no es numérica. Un dueño inexistente en el motor elegido muestra `[ERR-05] No existe una persona con cc N para ser dueña del teléfono en <motor>` y no guarda nada. Editar muestra el teléfono actual y pide el nuevo operador y el nuevo dueño.
+
 **Pendientes de confirmar:** árbol exacto de `PersonaMenu`, DTO y Mapper CLI reales, política de errores, navegación de vuelta y comportamiento de cierre. Cerrar estas decisiones antes de declarar el contrato final.
 
 ## 8. Árbol real por inspección
