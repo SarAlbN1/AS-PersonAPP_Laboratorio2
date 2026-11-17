@@ -307,13 +307,13 @@ Un **milestone** agrupa historias por resultado verificable. Una **épica** agru
 
 #### HU-030 · Consolidar informe académico y evidencias del procedimiento
 
-**Estado:** En revisión: el informe está completo en `main` (PR #79 y #82) y falta registrar el commit y la URL del tag de entrega (HU-032). **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
+**Estado:** Cerrada (#26, PR #89). El informe registra el tag `v1.0.0` sobre `632fe23`. **Dependencias:** HU-026, HU-027, HU-028. **Trazabilidad:** RE-03. **Milestone:** M3. **Épica:** EP-05. **Prioridad:** P0.
 
 - [x] Informe incluye portada, marco conceptual, diseño, procedimiento, conclusiones, lecciones y referencias.
 - [x] Evidencias distinguen línea base JDK 11, versiones finales actualizadas y funcionalidades finales.
 - [x] Se comprueba coherencia entre SRS, SAD, SDD, código y resultados.
 - [x] El informe identifica JDK 11 como línea base, registra las versiones finales validadas y enumera las seis operaciones, la paginación adicional y la consulta Persona–Teléfonos.
-- [ ] Se actualizan rutas, opciones CLI, resultados y referencias al commit según lo efectivamente entregado.
+- [x] Se actualizan rutas, opciones CLI, resultados y referencias al commit según lo efectivamente entregado.
 
 #### HU-031 · Preparar demostración de REST/CLI y dos motores
 
