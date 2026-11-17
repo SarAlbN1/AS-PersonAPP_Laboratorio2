@@ -236,6 +236,12 @@ class PhoneUseCaseTest {
 		}
 
 		@Override
+		public List<Phone> findByOwner(Integer identification) {
+			return data.values().stream().filter(p -> p.getOwner().getIdentification().equals(identification))
+					.collect(Collectors.toList());
+		}
+
+		@Override
 		public Integer count() {
 			return data.size();
 		}
