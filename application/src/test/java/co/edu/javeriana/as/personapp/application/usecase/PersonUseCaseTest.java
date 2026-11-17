@@ -202,11 +202,17 @@ class PersonUseCaseTest {
 	}
 
 	@Test
-	void cambiarDePersistenciaUsaElNuevoPuerto() throws Exception {
+	void cadaCasoDeUsoQuedaAtadoASuPuerto() throws Exception {
+		// HU-027: sin setPersintence, el motor se fija al crear el caso de uso y otro
+		// caso con otro puerto no lo cambia (C-09).
+		puerto.guardar(persona(1, "Ana"));
 		PuertoDePrueba otro = new PuertoDePrueba();
 		otro.guardar(persona(7, "Otra"));
-		caso.setPersintence(otro);
+		otro.guardar(persona(8, "Otra mas"));
+		PersonUseCase otroCaso = new PersonUseCase(otro);
+		assertEquals(2, otroCaso.count());
 		assertEquals(1, caso.count());
+		assertEquals("Ana", caso.findOne(1).getFirstName());
 	}
 
 	/** Puerto de salida en memoria: ordena por clave y pagina como exige el contrato. */
