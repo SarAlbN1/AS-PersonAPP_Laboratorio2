@@ -372,7 +372,40 @@ Comprobaciones puntuales del documento generado:
 - **`PersonaRequest`**: obligatorios `dni`, `firstName`, `lastName` y `sex`; `age` opcional; ejemplos en los cinco campos; género con los valores admitidos `M`, `F`, `MALE` y `FEMALE`; y el campo `database` del cuerpo marcado como obsoleto, porque desde D-04 el motor va en el parámetro de consulta.
 - Swagger UI responde `200`.
 
-**Pendiente.** Profesión, Teléfono y Estudios se documentan igual cuando entren HU-018, HU-021 y HU-024: el patrón de anotaciones de `PersonaControllerV1` sirve tal cual.
+### Resultados de Teléfono y Estudios
+
+`TelefonoControllerV1` y `EstudioControllerV1` siguen el patrón de `PersonaControllerV1`. `TelefonoRequest`, `TelefonoResponse`, `EstudioRequest` y `EstudioResponse` llevan `@Schema` con descripción y ejemplo en cada campo. El 17 de noviembre de 2026, con REST en Docker Compose y volúmenes nuevos, `/api-docs` publicó:
+
+| Ruta | Método | Códigos documentados |
+|---|---|---|
+| `/api/v1/telefono` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono` | POST | `201`, `400`, `409`, `422`, `503` |
+| `/api/v1/telefono/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/telefono/{num}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/telefono/{num}` | PUT | `200`, `400`, `404`, `422`, `503` |
+| `/api/v1/telefono/{num}` | DELETE | `204`, `400`, `404`, `503` |
+| `/api/v1/estudio` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio` | POST | `201`, `400`, `409`, `422`, `503` |
+| `/api/v1/estudio/conteo` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio/pagina` | GET | `200`, `400`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | GET | `200`, `400`, `404`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | PUT | `200`, `400`, `404`, `503` |
+| `/api/v1/estudio/{idProfesion}/{ccPersona}` | DELETE | `204`, `400`, `404`, `503` |
+
+Todos los códigos de error referencian `ErrorResponse`. Comprobaciones puntuales:
+
+- **`422` ERR-05** aparece donde se comprueban referencias: en Teléfono, al crear y al editar (el dueño); en Estudios, solo al crear, porque al editar la clave no cambia.
+- **Conteo:** `{"type": "integer", "format": "int32"}`, con ejemplo `3` en Teléfono y `2` en Estudios, que son los totales del DML.
+- **`{num}`:** el esquema es `string` con el ejemplo `"3001234567"` como texto. Con `@Parameter(example = …)` springdoc lo publicaba como número, y un número pierde los ceros iniciales. Por eso el ejemplo va dentro de `@Schema(type = "string")`.
+- **`TelefonoRequest`:** obligatorios `number`, `company` y `ownerId`.
+- **`EstudioRequest`:** obligatorios `professionId` y `personId`; `graduationDate` con `format: date` y ejemplo `2020-11-30`; `universityName` opcional.
+- **Listado parcial:** `page` con valor por defecto `0` y `size` con `10`, igual que Persona.
+- Los ejemplos de las rutas existen en el DML (`3001234567`, y el par `1` y `123456789`), así que «Try it out» en Swagger UI responde `200`.
+
+Las anotaciones no cambian el comportamiento: los guiones REST de HU-021 y HU-024 dieron los mismos códigos que en sus PR, en MARIA y en MONGO.
+
+**Pendiente.** Profesión y la consulta de persona con sus teléfonos (HU-033), que documenta Sara con el mismo patrón.
 
 ## Selección dinámica del motor (HU-025, Persona)
 
