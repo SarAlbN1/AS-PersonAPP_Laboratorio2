@@ -2,11 +2,8 @@ package co.edu.javeriana.as.personapp.application.usecase;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
-import co.edu.javeriana.as.personapp.common.annotations.UseCase;
 import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
@@ -18,8 +15,15 @@ import co.edu.javeriana.as.personapp.domain.Phone;
 import co.edu.javeriana.as.personapp.domain.Study;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Casos de uso de Persona. Igual que los de Profesión, Teléfono y Estudios, no es un
+ * bean de Spring ni se ata a un motor: el adaptador de entrada lo crea en cada
+ * operación con el puerto del motor pedido (ADR-002, C-09). HU-027 le quitó el
+ * {@code @UseCase} y el {@code @Qualifier("personOutputAdapterMaria")} de la plantilla,
+ * que dejaban a {@code application} importando Spring y nombrando un adaptador concreto,
+ * y el {@code setPersintence}, que permitía cambiar el motor de un caso ya creado.
+ */
 @Slf4j
-@UseCase
 public class PersonUseCase implements PersonInputPort {
 
 	
@@ -29,15 +33,10 @@ public class PersonUseCase implements PersonInputPort {
 	private static final int TAMANIO_MINIMO = 1;
 	private static final int TAMANIO_MAXIMO = 100;
 
-	private PersonOutputPort personPersintence;
-	
-	public PersonUseCase(@Qualifier("personOutputAdapterMaria") PersonOutputPort personPersintence) {
-		this.personPersintence=personPersintence;
-	}
-	
-	@Override
-	public void setPersintence(PersonOutputPort personPersintence) {
-		this.personPersintence=personPersintence;
+	private final PersonOutputPort personPersintence;
+
+	public PersonUseCase(PersonOutputPort personPersintence) {
+		this.personPersintence = personPersintence;
 	}
 
 	@Override
