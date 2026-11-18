@@ -896,16 +896,17 @@ final entregado.
 README reproducible&\texttt{README.md} trae las versiones reales y la ejecución con y sin Docker. También documenta Swagger, las comprobaciones y las pruebas. Los tres integrantes lo siguieron desde un clon limpio (HU-029, PR \#74).\\
 Scripts DDL/DML&\path{scripts/} contiene \path{persona_ddl_maria.sql}, \path{persona_dml_maria.sql}, \path{persona_ddl_mongo.js} y \path{persona_dml_mongo.js}. HU-004 unificó MongoDB en \texttt{persona\_db}. Desde el PR \#48 los DML cargan cinco personas, dos profesiones, tres teléfonos y dos estudios en cada motor.\\
 Código fuente&Siete módulos Maven, los mismos de la plantilla. Los cuatro recursos tienen las seis operaciones y el listado parcial por REST y CLI en los dos motores, más la consulta de persona con teléfonos.\\
-URL del tag&Se publica al cerrar la entrega (HU-032), sobre el mismo commit que valida esta sección.\\
+URL del tag&\texttt{v1.0.0} sobre el commit \texttt{632fe23}: \url{https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2/releases/tag/v1.0.0}. Sobre ese commit se repitió el build con MariaDB y MongoDB reales: 223 pruebas, 0 fallos, 0 errores y 0 omitidas (HU-032).\\
 \bottomrule
 \end{tabularx}
 \caption{Cobertura de los entregables técnicos.}
 \end{table}
 
 El repositorio del equipo es
-\url{https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2}. El tag de entrega y
-su commit se registran en HU-032, después de repetir la verificación sobre ese
-commit.
+\url{https://github.com/SarAlbN1/AS-PersonAPP_Laboratorio2}. La versión entregada es el tag
+\texttt{v1.0.0}, sobre el commit \texttt{632fe23}. Si el ensayo de la demostración
+revela un defecto, la corrección se publica como \texttt{v1.0.1} y \texttt{v1.0.0} no se
+mueve.
 
 \section{Conclusiones y lecciones aprendidas}
 

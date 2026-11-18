@@ -7,7 +7,7 @@
 | Estado | ID | Criterio verificable | Historias asociadas | Requisitos |
 |---|---|---|---|---|
 | ☐ | CE-01 | Ejecutar la plantilla original con REST y CLI en JDK 11 | HU-001–HU-005 | RT-01 |
-| ☐ | CE-02 | Reproducir y corregir el Mapper con prueba de regresión | HU-006 | RF-08 |
+| ☑ | CE-02 | Reproducir y corregir el Mapper con prueba de regresión | HU-006 | RF-08 |
 | ☐ | CE-04 | CRUD de Persona con REST/CLI en MariaDB/MongoDB | HU-012–HU-015; HU-026 | RF-01 a RF-04 |
 | ☐ | CE-05 | CRUD de Profesión con REST/CLI en MariaDB/MongoDB | HU-016–HU-018; HU-026 | RF-01 a RF-04 |
 | ☐ | CE-06 | CRUD de Teléfono y vínculo a persona con ambos clientes/motores | HU-019–HU-021; HU-026 | RF-01, RF-04, RF-06 |
