@@ -20,7 +20,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{url}
-\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,shapes.multipart,backgrounds}
 
 \geometry{left=2.6cm,right=2.6cm,top=2.6cm,bottom=2.5cm}
 \setlength{\parindent}{0pt}
@@ -362,88 +362,161 @@ independientes de esos detalles externos. Las dos clases de arranque de
 Spring se ubican en los adaptadores de entrada.
 
 \subsection{Modelo C4 de la arquitectura}
-El modelo C4 describe un sistema en niveles de detalle creciente: contexto,
-contenedores, componentes y código. Las figuras siguientes recorren los tres
-primeros niveles sobre el código entregado. El cuarto nivel corresponde a las
-clases de cada módulo (Tabla~\ref{tab:modulos} y sección de las seis
-operaciones). Se usa la notación habitual de C4: personas en azul oscuro, el
-sistema en azul, los contenedores en azul medio, los componentes en azul claro
-y los límites con línea discontinua. Cada flecha indica quién usa a quién y,
-entre corchetes, la tecnología.
+El modelo C4 describe la arquitectura con cuatro diagramas estructurales de detalle
+creciente (contexto, contenedores, componentes y código) y tres diagramas de apoyo
+(panorama del sistema, dinámico y despliegue). Esta sección presenta los siete sobre el
+código entregado en el tag \texttt{v1.0.0}. Se siguen las reglas de notación de C4: cada
+figura indica en su título el tipo de diagrama y su alcance, y trae su leyenda. Cada
+elemento declara su tipo, una descripción breve y, si es contenedor o componente, su
+tecnología. Cada relación va en un solo sentido, tiene una etiqueta que dice qué hace y,
+entre contenedores, el protocolo. Los colores se mantienen en todas las figuras.
 
 \definecolor{c4per}{HTML}{08427B}
 \definecolor{c4sys}{HTML}{1168BD}
 \definecolor{c4cont}{HTML}{438DD5}
 \definecolor{c4comp}{HTML}{85BBF0}
+\definecolor{c4ext}{HTML}{8C8C8C}
 \tikzset{
  c4base/.style={rounded corners=4pt,align=center,font=\scriptsize,inner sep=5pt},
  c4per/.style={c4base,draw=c4per!80!black,fill=c4per,text=white,text width=#1},
  c4sys/.style={c4base,draw=c4sys!80!black,fill=c4sys,text=white,text width=#1},
+ c4ext/.style={c4base,draw=c4ext!80!black,fill=c4ext,text=white,text width=#1},
  c4cont/.style={c4base,draw=c4cont!80!black,fill=c4cont,text=white,text width=#1},
  c4comp/.style={c4base,draw=c4comp!70!black,fill=c4comp,text=black,text width=#1},
  c4db/.style={cylinder,shape border rotate=90,aspect=0.18,draw=c4cont!80!black,fill=c4cont,
    text=white,align=center,font=\scriptsize,inner sep=3pt,text width=#1},
+ c4nodo/.style={draw=black!70,fill=none,rounded corners=3pt,inner sep=7pt},
+ c4nodotit/.style={font=\tiny,align=left,anchor=north west,text=black!85},
  c4rel/.style={-{Latex[length=2mm]},draw=black!65,line width=.6pt},
+ c4build/.style={c4rel,dashed},
  c4lbl/.style={font=\tiny,align=center,fill=white,inner sep=1.5pt,text=black!80},
  c4lim/.style={draw=black!55,dashed,rounded corners=6pt,inner sep=10pt},
- c4limlbl/.style={font=\scriptsize,anchor=south west,align=left,text=black!75}
+ c4limlbl/.style={font=\scriptsize,anchor=south west,align=left,text=black!75},
+ umlc/.style={rectangle split,rectangle split parts=3,draw=black!75,fill=white,
+   font=\tiny\ttfamily,align=left,text width=#1,inner sep=2.5pt,
+   rectangle split part align={center,left,left}},
+ umlf/.style={draw=black!60,fill=black!8,font=\tiny\ttfamily,align=center,text width=#1,inner sep=3pt},
+ umlrea/.style={-{Triangle[open,length=2.4mm,width=2.4mm]},dashed,draw=black!75},
+ umldep/.style={-{Stealth[length=2mm]},dashed,draw=black!75},
+ umlaso/.style={-{Stealth[length=2mm]},draw=black!75},
+ seqmsg/.style={-{Latex[length=1.8mm]},draw=black!75,line width=.5pt},
+ seqret/.style={-{Stealth[length=1.6mm]},dashed,draw=black!60},
+ seqlbl/.style={font=\tiny,fill=white,inner sep=1pt,text=black!85,align=left}
 }
 \newcommand{\cuatroCabeza}[1]{\fill[fill=c4per] ($(#1.north)+(0,0.32)$) circle (0.3);}
+\newcommand{\cuatroMuestra}[2]{\tikz[baseline=-0.6ex]\node[minimum width=5mm,minimum height=2.6mm,inner sep=0pt,#1]{};\,#2}
+\newcommand{\cuatroFlecha}[2]{\tikz[baseline=-0.6ex]\draw[#1](0,0)--(6mm,0);\,#2}
+\newcommand{\leyPersona}{\cuatroMuestra{fill=c4per,rounded corners=1pt}{Persona}}
+\newcommand{\leySistema}{\cuatroMuestra{fill=c4sys,rounded corners=1pt}{Sistema de software}}
+\newcommand{\leyExterno}{\cuatroMuestra{fill=c4ext,rounded corners=1pt}{Sistema externo}}
+\newcommand{\leyContenedor}{\cuatroMuestra{fill=c4cont,rounded corners=1pt}{Contenedor}}
+\newcommand{\leyBase}{\tikz[baseline=-0.6ex]\node[cylinder,shape border rotate=90,aspect=.25,fill=c4cont,minimum width=3.4mm,minimum height=3.6mm,inner sep=0pt]{};\,Contenedor de datos}
+\newcommand{\leyComponente}{\cuatroMuestra{fill=c4comp,draw=c4comp!70!black,rounded corners=1pt}{Componente}}
+\newcommand{\leyLimite}{\cuatroMuestra{draw=black!55,dashed,rounded corners=1pt}{Límite}}
+\newcommand{\leyNodo}{\cuatroMuestra{draw=black!70,fill=white,rounded corners=1pt}{Nodo de despliegue}}
+\newcommand{\leyRelacion}{\cuatroFlecha{c4rel}{Relación (sentido de la dependencia, [tecnología])}}
+\newcommand{\leyConstruye}{\cuatroFlecha{c4build}{Relación solo al construir}}
+\newcommand{\cuatroLeyenda}[1]{\par\smallskip{\scriptsize\textbf{Leyenda:}\quad #1}\par}
 
+%--------------------------------------------------------------- panorama
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-\node[c4per=4.2cm] (cons) at (-4,2.4) {\textbf{Consumidor de la API}\\[1pt][Persona]\\[2pt]
+\node[c4per=2.7cm] (cons) at (-6.0,3.4) {\textbf{Consumidor de la API}\\[1pt][Persona]\\[2pt]
+  Cliente HTTP o Swagger UI.};
+\node[c4per=2.7cm] (op) at (-2.3,3.4) {\textbf{Operador de consola}\\[1pt][Persona]\\[2pt]
+  Usa los menús de la terminal.};
+\node[c4per=2.7cm] (eq) at (1.6,3.4) {\textbf{Equipo de desarrollo}\\[1pt][Persona]\\[2pt]
+  Tres estudiantes que construyen y despliegan.};
+\node[c4per=2.7cm] (prof) at (5.6,3.4) {\textbf{Profesor}\\[1pt][Persona]\\[2pt]
+  Evalúa la entrega.};
+\foreach \n in {cons,op,eq,prof} {\cuatroCabeza{\n}}
+\node[c4sys=3.6cm] (app) at (-4.2,-0.4) {\textbf{PersonAPP}\\[1pt][Sistema de software]\\[2pt]
+  Gestiona personas, profesiones, teléfonos y estudios sobre MariaDB o MongoDB.};
+\node[c4ext=3.6cm] (gh) at (4.0,-0.4) {\textbf{GitHub}\\[1pt][Sistema externo]\\[2pt]
+  Repositorio, PR, tablero de Projects y tag \texttt{v1.0.0}.};
+\node[c4ext=2.9cm] (dh) at (-6.0,-4.0) {\textbf{Docker Hub}\\[1pt][Sistema externo]\\[2pt]
+  Imágenes \texttt{mariadb}, \texttt{mongo} y \texttt{eclipse-temurin}.};
+\node[c4ext=2.9cm] (mc) at (-2.6,-4.0) {\textbf{Maven Central}\\[1pt][Sistema externo]\\[2pt]
+  Dependencias de Spring Boot, springdoc y los controladores.};
+\draw[c4rel] (cons.south) -- node[c4lbl,pos=.45]{Gestiona los\\cuatro recursos\\{[HTTP/JSON]}} (cons.south |- app.north);
+\draw[c4rel] (op.south) -- node[c4lbl,pos=.45]{Gestiona los\\cuatro recursos\\{[terminal]}} (op.south |- app.north);
+\draw[c4rel] ($(eq.south)+(-0.6,0)$) |- node[c4lbl,pos=.75]{Construye y despliega\\{[Docker Compose]}} (app.east);
+\path (eq.south) ++(0.8,0) coordinate (eqg);
+\draw[c4rel] (eqg) -- node[c4lbl,pos=.45]{Publica código,\\PR y tag\\{[git, HTTPS]}} (eqg |- gh.north);
+\draw[c4rel] (prof.south) -- node[c4lbl,pos=.45]{Revisa el tag\\y el informe {[HTTPS]}} (prof.south |- gh.north);
+\draw[c4build] (app.south -| dh.north) -- node[c4lbl]{Descarga las\\imágenes base\\{[HTTPS]}} (dh.north);
+\draw[c4build] (app.south -| mc.north) -- node[c4lbl]{Descarga las\\dependencias\\{[HTTPS]}} (mc.north);
+\end{tikzpicture}
+\cuatroLeyenda{\leyPersona\quad\leySistema\quad\leyExterno\quad\leyRelacion\quad\leyConstruye}
+\caption{Diagrama de panorama del sistema (\emph{system landscape}) del Laboratorio 2: personas y
+sistemas que intervienen en el desarrollo, la entrega y el uso de PersonAPP, sin entrar en ninguno.}
+\label{fig:c4-panorama}
+\end{figure}
+
+%--------------------------------------------------------------- nivel 1
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=4.0cm] (cons) at (-4.2,2.6) {\textbf{Consumidor de la API}\\[1pt][Persona]\\[2pt]
   Cliente HTTP o Swagger UI que consulta y modifica personas, profesiones,
   teléfonos y estudios.};
-\node[c4per=4.2cm] (op) at (4,2.4) {\textbf{Operador de consola}\\[1pt][Persona]\\[2pt]
+\node[c4per=4.0cm] (op) at (4.2,2.6) {\textbf{Operador de consola}\\[1pt][Persona]\\[2pt]
   Usa los menús de la terminal para las mismas operaciones.};
 \cuatroCabeza{cons}\cuatroCabeza{op}
-\node[c4sys=7.4cm] (sys) at (0,-1.3) {\textbf{PersonAPP}\\[1pt][Sistema de software]\\[2pt]
+\node[c4sys=6.6cm] (sys) at (0,-0.9) {\textbf{PersonAPP}\\[1pt][Sistema de software]\\[2pt]
   Gestiona personas, profesiones, teléfonos y estudios con las seis operaciones,
   el listado parcial y la consulta de persona con teléfonos. Cada operación se
   guarda en MariaDB o en MongoDB, según el motor que se pida.};
-\draw[c4rel] (cons.south) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (sys.north -| cons.south);
-\draw[c4rel] (op.south) -- node[c4lbl]{Usa\\{[terminal]}} (sys.north -| op.south);
+\node[c4ext=3.0cm] (dh) at (-3.6,-4.4) {\textbf{Docker Hub}\\[1pt][Sistema externo]\\[2pt]
+  Imágenes base.};
+\node[c4ext=3.0cm] (mc) at (3.6,-4.4) {\textbf{Maven Central}\\[1pt][Sistema externo]\\[2pt]
+  Dependencias Java.};
+\draw[c4rel] (cons.south) -- node[c4lbl]{Gestiona los cuatro recursos\\{[HTTP/JSON]}} (sys.north -| cons.south);
+\draw[c4rel] (op.south) -- node[c4lbl]{Gestiona los cuatro recursos\\{[terminal]}} (sys.north -| op.south);
+\draw[c4build] (sys.south -| dh.north) -- node[c4lbl]{Descarga las imágenes\\{[HTTPS]}} (dh.north);
+\draw[c4build] (sys.south -| mc.north) -- node[c4lbl]{Descarga las dependencias\\{[HTTPS]}} (mc.north);
 \end{tikzpicture}
-\caption{C4, nivel 1: contexto. PersonAPP no depende de sistemas externos. Las dos
-bases se despliegan con la aplicación, por eso aparecen dentro del sistema en el nivel 2.}
+\cuatroLeyenda{\leyPersona\quad\leySistema\quad\leyExterno\quad\leyRelacion\quad\leyConstruye}
+\caption{Diagrama de contexto del sistema PersonAPP (nivel 1). En ejecución no depende de
+sistemas externos: las dos bases se despliegan con la aplicación y aparecen en el nivel 2.
+Docker Hub y Maven Central solo se usan al construir.}
 \label{fig:c4-contexto}
 \end{figure}
 
+%--------------------------------------------------------------- nivel 2
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-\node[c4per=3.6cm] (cons) at (-4,5.3) {\textbf{Consumidor de la API}\\[1pt][Persona]};
-\node[c4per=3.6cm] (op) at (4,5.3) {\textbf{Operador de consola}\\[1pt][Persona]};
+\node[c4per=3.2cm] (cons) at (-5.2,5.3) {\textbf{Consumidor de la API}\\[1pt][Persona]};
+\node[c4per=3.2cm] (op) at (5.2,5.3) {\textbf{Operador de consola}\\[1pt][Persona]};
 \cuatroCabeza{cons}\cuatroCabeza{op}
-\node[c4cont=4.6cm] (rest) at (-4,1.6) {\textbf{API REST}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]\\[2pt]
+\node[c4cont=3.4cm] (rest) at (-5.2,0) {\textbf{API REST}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2, Spring MVC]\\[2pt]
   Rutas \texttt{/api/v1} y Swagger UI en el puerto 3000. El motor llega en el
-  parámetro \texttt{database} de cada petición.};
-\node[c4cont=4.6cm] (cli) at (4,1.6) {\textbf{Aplicación CLI}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]\\[2pt]
-  Menús de terminal. El motor se elige en el menú de cada recurso, sin
-  reiniciar.};
-\node[c4db=4.0cm] (maria) at (-4,-2.3) {\textbf{MariaDB}\\[1pt][Contenedor: MariaDB 11.4]\\[2pt]
-  Base \texttt{persona\_db}: tablas persona, profesion, telefono y estudios.};
-\node[c4db=4.0cm] (mongo) at (4,-2.3) {\textbf{MongoDB}\\[1pt][Contenedor: MongoDB 6.0]\\[2pt]
-  Base \texttt{persona\_db}: colecciones persona, profesion, telefono y estudios.};
-\draw[c4rel] (cons) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (rest);
-\draw[c4rel] (op) -- node[c4lbl]{Usa\\{[terminal, stdin/stdout]}} (cli);
-\draw[c4rel] (rest) -- node[c4lbl,pos=.4]{Lee y escribe\\{[JDBC, Spring Data JPA]}} (maria);
-\draw[c4rel] (cli) -- node[c4lbl,pos=.4]{Lee y escribe\\{[Spring Data MongoDB]}} (mongo);
-\draw[c4rel] (rest.south east) -- (mongo.north west);
-\draw[c4rel] (cli.south west) -- (maria.north east);
+  parámetro \texttt{database}.};
+\node[c4cont=3.4cm] (cli) at (5.2,0) {\textbf{Aplicación CLI}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]\\[2pt]
+  Menús de terminal. El motor se elige en el menú de cada recurso, sin reiniciar.};
+\node[c4db=3.0cm] (maria) at (0,2.5) {\textbf{MariaDB}\\[1pt][Contenedor: MariaDB 11.4]\\[2pt]
+  \texttt{persona\_db}: tablas persona, profesion, telefono y estudios.};
+\node[c4db=3.0cm] (mongo) at (0,-2.5) {\textbf{MongoDB}\\[1pt][Contenedor: MongoDB 6.0]\\[2pt]
+  \texttt{persona\_db}: colecciones persona, profesion, telefono y estudios.};
+\draw[c4rel] (cons.south) -- node[c4lbl]{Gestiona los cuatro recursos\\{[HTTP/JSON]}} (rest.north -| cons.south);
+\draw[c4rel] (op.south) -- node[c4lbl]{Gestiona los cuatro recursos\\{[terminal]}} (cli.north -| op.south);
+\draw[c4rel] ($(rest.north)+(1.2,0)$) |- node[c4lbl,pos=.75]{Lee y escribe\\{[JDBC, JPA]}} (maria.west);
+\draw[c4rel] ($(rest.south)+(1.2,0)$) |- node[c4lbl,pos=.75]{Lee y escribe\\{[Spring Data Mongo]}} (mongo.west);
+\draw[c4rel] ($(cli.north)+(-1.2,0)$) |- node[c4lbl,pos=.75]{Lee y escribe\\{[JDBC, JPA]}} (maria.east);
+\draw[c4rel] ($(cli.south)+(-1.2,0)$) |- node[c4lbl,pos=.75]{Lee y escribe\\{[Spring Data Mongo]}} (mongo.east);
 \node[c4lim,fit=(rest)(cli)(maria)(mongo)] (lim) {};
-\node[c4limlbl] at (lim.south west) {\textbf{PersonAPP} [Sistema de software, Docker Compose]};
+\node[c4limlbl] at (lim.south west) {\textbf{PersonAPP} [Sistema de software]};
 \end{tikzpicture}
-\caption{C4, nivel 2: contenedores. \texttt{compose.yaml} levanta los cuatro. REST y CLI
-salen del mismo \texttt{Dockerfile} multietapa (destinos \texttt{rest} y \texttt{cli}) y las
-dos usan las dos bases. La tecnología depende de la base: JDBC con Spring Data JPA para
-MariaDB y Spring Data MongoDB para MongoDB. Los scripts DDL/DML inicializan cada base
-cuando su volumen está vacío.}
+\cuatroLeyenda{\leyPersona\quad\leyContenedor\quad\leyBase\quad\leyLimite\quad\leyRelacion}
+\caption{Diagrama de contenedores del sistema PersonAPP (nivel 2). REST y CLI salen del mismo
+\texttt{Dockerfile} multietapa y comparten las dos bases. El detalle de despliegue está en la
+Figura~\ref{fig:c4-despliegue}.}
 \label{fig:c4-contenedores}
 \end{figure}
 
+%--------------------------------------------------------------- nivel 3 REST
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
@@ -462,45 +535,48 @@ cuando su volumen está vacío.}
   con el puerto de salida pedido en cada operación (ADR-002).};
 \node[c4comp=3.6cm] (map) at (3.6,0.9) {\textbf{Mappers REST}\\[1pt][Componente: \texttt{@Mapper}]\\[2pt]
   \texttt{*MapperRest}: DTO de petición y respuesta $\leftrightarrow$ dominio.};
-\node[c4comp=6.4cm] (uc) at (0,-2.5) {\textbf{Casos de uso}\\[1pt][Componente: módulo \texttt{application}]\\[2pt]
+\node[c4comp=6.4cm] (uc) at (0,-2.5) {\textbf{Casos de uso}\\[1pt][Componente: módulo \texttt{application}, Java]\\[2pt]
   \texttt{PersonUseCase}, \texttt{ProfessionUseCase}, \texttt{PhoneUseCase},
   \texttt{StudyUseCase} y \texttt{PersonPhonesUseCase}. Implementan los
   \texttt{InputPort} y aplican las reglas de negocio sobre \texttt{domain}.};
-\node[c4comp=4.6cm] (oma) at (-3.6,-5.6) {\textbf{Adaptadores MariaDB}\\[1pt][Componente: \texttt{maria-output-adapter}, JPA]\\[2pt]
+\node[c4comp=4.6cm] (oma) at (-3.6,-5.6) {\textbf{Adaptadores MariaDB}\\[1pt][Componente: \texttt{maria-output-adapter}, Spring Data JPA]\\[2pt]
   \texttt{*OutputAdapterMaria}, entidades, mappers y repositorios.};
-\node[c4comp=4.6cm] (omo) at (3.6,-5.6) {\textbf{Adaptadores MongoDB}\\[1pt][Componente: \texttt{mongo-output-adapter}]\\[2pt]
+\node[c4comp=4.6cm] (omo) at (3.6,-5.6) {\textbf{Adaptadores MongoDB}\\[1pt][Componente: \texttt{mongo-output-adapter}, Spring Data MongoDB]\\[2pt]
   \texttt{*OutputAdapterMongo}, documentos, mappers y repositorios.};
 \node[c4lim,fit=(ctrl)(err)(oapi)(inad)(map)(uc)(oma)(omo)] (lim) {};
 \node[c4limlbl] at (lim.south west) {\textbf{API REST} [Contenedor]};
-\node[c4db=3.0cm] (maria) at (-3.6,-9.1) {\textbf{MariaDB}\\[1pt][Contenedor]};
-\node[c4db=3.0cm] (mongo) at (3.6,-9.1) {\textbf{MongoDB}\\[1pt][Contenedor]};
-\draw[c4rel] (cons) -- node[c4lbl]{Usa\\{[HTTP/JSON]}} (ctrl);
+\node[c4db=3.0cm] (maria) at (-3.6,-9.1) {\textbf{MariaDB}\\[1pt][Contenedor: MariaDB 11.4]};
+\node[c4db=3.0cm] (mongo) at (3.6,-9.1) {\textbf{MongoDB}\\[1pt][Contenedor: MongoDB 6.0]};
+\draw[c4rel] (cons) -- node[c4lbl]{Envía las peticiones\\{[HTTP/JSON]}} (ctrl);
 \draw[c4rel] (cons.east) -- node[c4lbl]{Consulta Swagger UI\\{[HTTP]}} (oapi.west);
-\draw[c4rel,dashed] (ctrl.east |- err.west) -- node[c4lbl]{Excepciones} (err.west);
-\draw[c4rel] (ctrl) -- node[c4lbl]{Invoca} (inad);
-\draw[c4rel] (inad) -- node[c4lbl]{Convierte} (map);
-\draw[c4rel] (inad.south) -- node[c4lbl]{Llama\\{[InputPort]}} (uc.north -| inad.south);
-\draw[c4rel] (uc.south -| oma.north) -- node[c4lbl]{{[OutputPort]}} (oma.north);
-\draw[c4rel] (uc.south -| omo.north) -- node[c4lbl]{{[OutputPort]}} (omo.north);
+\draw[c4rel,dashed] (ctrl.east |- err.west) -- node[c4lbl]{Propaga las\\excepciones} (err.west);
+\draw[c4rel] (ctrl) -- node[c4lbl]{Delega la operación} (inad);
+\draw[c4rel] (inad) -- node[c4lbl]{Convierte DTO\\y dominio} (map);
+\draw[c4rel] (inad.south) -- node[c4lbl]{Ejecuta la operación\\{[InputPort]}} (uc.north -| inad.south);
+\draw[c4rel] (uc.south -| oma.north) -- node[c4lbl]{Persiste si el motor es MARIA\\{[OutputPort]}} (oma.north);
+\draw[c4rel] (uc.south -| omo.north) -- node[c4lbl]{Persiste si el motor es MONGO\\{[OutputPort]}} (omo.north);
 \draw[c4rel] (oma) -- node[c4lbl]{Lee y escribe\\{[JDBC]}} (maria);
-\draw[c4rel] (omo) -- node[c4lbl]{Lee y escribe\\{[Mongo]}} (mongo);
+\draw[c4rel] (omo) -- node[c4lbl]{Lee y escribe\\{[MongoDB wire protocol]}} (mongo);
 \end{tikzpicture}
-\caption{C4, nivel 3: componentes de la API REST. Los casos de uso y los adaptadores de
-salida pertenecen a otros módulos Maven y llegan como dependencias. El adaptador de
-entrada recibe los dos puertos de salida y le pasa al caso de uso solo el del motor pedido.}
+\cuatroLeyenda{\leyPersona\quad\leyComponente\quad\leyBase\quad\leyLimite\quad\leyRelacion}
+\caption{Diagrama de componentes del contenedor API REST (nivel 3). Los casos de uso y los
+adaptadores de salida pertenecen a otros módulos Maven y llegan como dependencias. El
+adaptador de entrada recibe los dos puertos de salida y le pasa al caso de uso solo el del
+motor pedido.}
 \label{fig:c4-rest}
 \end{figure}
 
+%--------------------------------------------------------------- nivel 3 CLI
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
 \node[c4per=3.6cm] (op) at (0,6.9) {\textbf{Operador de consola}\\[1pt][Persona]};
 \cuatroCabeza{op}
-\node[c4comp=3.3cm] (main) at (-4.8,3.4) {\textbf{PersonAppCli}\\[1pt][Componente: \texttt{CommandLineRunner}]\\[2pt]
+\node[c4comp=3.3cm] (main) at (-4.8,3.4) {\textbf{PersonAppCli}\\[1pt][Componente: Spring Boot, \texttt{CommandLineRunner}]\\[2pt]
   Arranca Spring sin servidor web y abre el menú principal.};
-\node[c4comp=3.3cm] (menu) at (0,3.4) {\textbf{MenuPrincipal}\\[1pt][Componente: menú]\\[2pt]
+\node[c4comp=3.3cm] (menu) at (0,3.4) {\textbf{MenuPrincipal}\\[1pt][Componente: Java, \texttt{Scanner}]\\[2pt]
   Opciones 1 a 4 para cada recurso y 0 para salir.};
-\node[c4comp=3.6cm] (menus) at (4.8,3.4) {\textbf{Menús por recurso}\\[1pt][Componente: menú]\\[2pt]
+\node[c4comp=3.6cm] (menus) at (4.8,3.4) {\textbf{Menús por recurso}\\[1pt][Componente: Java]\\[2pt]
   \texttt{PersonaMenu}, \texttt{ProfesionMenu}, \texttt{TelefonoMenu} y
   \texttt{EstudioMenu}. Piden el motor y la operación; \texttt{ErroresCli}
   muestra el error y vuelve al menú.};
@@ -513,17 +589,149 @@ entrada recibe los dos puertos de salida y le pasa al caso de uso solo el del mo
 \node[c4limlbl] at (lim.south west) {\textbf{Aplicación CLI} [Contenedor]};
 \node[c4db=2.6cm] (maria) at (-5.4,-4.3) {\textbf{MariaDB}\\[1pt][Contenedor]};
 \node[c4db=2.6cm] (mongo) at (-2.4,-4.3) {\textbf{MongoDB}\\[1pt][Contenedor]};
-\draw[c4rel] (op) -- node[c4lbl]{Usa\\{[terminal]}} (menu);
-\draw[c4rel] (main) -- node[c4lbl]{Inicia} (menu);
-\draw[c4rel] (menu) -- node[c4lbl]{Abre} (menus);
-\draw[c4rel] (menus) -- node[c4lbl]{Invoca} (inad);
-\draw[c4rel] (inad) -- node[c4lbl]{Llama\\{[InputPort]}} (core);
+\draw[c4rel] (op) -- node[c4lbl]{Elige recurso, motor\\y operación {[terminal]}} (menu);
+\draw[c4rel] (main) -- node[c4lbl]{Abre al\\arrancar} (menu);
+\draw[c4rel] (menu) -- node[c4lbl]{Abre el\\recurso} (menus);
+\draw[c4rel] (menus) -- node[c4lbl]{Ejecuta la operación\\con el motor elegido} (inad);
+\draw[c4rel] (inad) -- node[c4lbl]{Ejecuta el caso de uso\\{[InputPort]}} (core);
 \draw[c4rel] (core.south -| maria.north) -- node[c4lbl,pos=.75]{{[JDBC]}} (maria.north);
-\draw[c4rel] (core.south -| mongo.north) -- node[c4lbl,pos=.75]{{[Mongo]}} (mongo.north);
+\draw[c4rel] (core.south -| mongo.north) -- node[c4lbl,pos=.75]{{[MongoDB]}} (mongo.north);
 \end{tikzpicture}
-\caption{C4, nivel 3: componentes de la aplicación CLI. Cambia la entrada respecto a REST;
-el núcleo y la persistencia son los mismos.}
+\cuatroLeyenda{\leyPersona\quad\leyComponente\quad\leyBase\quad\leyLimite\quad\leyRelacion}
+\caption{Diagrama de componentes del contenedor Aplicación CLI (nivel 3). Cambia la entrada
+respecto a REST; el núcleo y la persistencia son los mismos.}
 \label{fig:c4-cli}
+\end{figure}
+
+%--------------------------------------------------------------- nivel 4
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[umlf=3.6cm] (inrest) at (-4.6,5.0) {PersonaInputAdapterRest\\[1pt]{\rmfamily (adaptador de entrada)}};
+\node[umlc=4.6cm] (pin) at (1.6,5.0) {\guillemotleft interface\guillemotright\\\textbf{PersonInputPort}
+ \nodepart{two} {\rmfamily(sin atributos)}
+ \nodepart{three}+ create(Person) : Person\\+ edit(Integer, Person) : Person\\+ drop(Integer) : Boolean\\+ findAll() : List<Person>\\+ findAll(Integer, Integer) : List<Person>\\+ findOne(Integer) : Person\\+ count() : Integer\\+ getPhones(Integer) : List<Phone>\\+ getStudies(Integer) : List<Study>};
+\node[umlc=4.6cm] (uc) at (1.6,0.6) {\textbf{PersonUseCase}
+ \nodepart{two}- personPersintence : PersonOutputPort\\+ MAX\_NAME\_LENGTH : int = 45
+ \nodepart{three}+ PersonUseCase(PersonOutputPort)\\+ create(Person) : Person\\{\rmfamily\ldots{} y el resto de \texttt{PersonInputPort}}\\- validate(Person) : void\\- validName(String, String) : String};
+\node[umlc=3.4cm] (per) at (-4.6,0.6) {\textbf{Person}
+ \nodepart{two}- identification : Integer\\- firstName : String\\- lastName : String\\- gender : Gender\\- age : Integer\\- phoneNumbers : List<Phone>\\- studies : List<Study>
+ \nodepart{three}+ isValidAge() : Boolean};
+\node[umlc=2.4cm] (gen) at (-4.6,-3.4) {\guillemotleft enumeration\guillemotright\\\textbf{Gender}
+ \nodepart{two}MALE\\FEMALE\\OTHER
+ \nodepart{three}};
+\node[umlc=4.6cm] (pout) at (1.6,-3.6) {\guillemotleft interface\guillemotright\\\textbf{PersonOutputPort}
+ \nodepart{two} {\rmfamily(sin atributos)}
+ \nodepart{three}+ save(Person) : Person\\+ delete(Integer) : Boolean\\+ find() : List<Person>\\+ find(Integer, Integer) : List<Person>\\+ findById(Integer) : Person\\+ count() : Integer\\+ hasPhones(Integer) : Boolean\\+ hasStudies(Integer) : Boolean};
+\node[umlf=3.2cm] (oma) at (-0.6,-7.6) {PersonOutputAdapterMaria\\[1pt]{\rmfamily (adaptador de salida)}};
+\node[umlf=3.2cm] (omo) at (3.8,-7.6) {PersonOutputAdapterMongo\\[1pt]{\rmfamily (adaptador de salida)}};
+\draw[umldep] (inrest) -- node[c4lbl]{usa} (pin);
+\draw[umldep] ($(inrest.south east)+(-0.3,0)$) -- node[c4lbl,pos=.45]{\guillemotleft create\guillemotright{}\\por operación} (uc.north west);
+\draw[umlrea] (uc) -- (pin);
+\draw[umlaso] (uc) -- node[c4lbl]{personPersintence} (pout);
+\draw[umldep] (uc.west |- per.east) -- node[c4lbl]{valida y devuelve} (per.east);
+\draw[umlaso] (per) -- node[c4lbl]{gender} (gen);
+\draw[umlrea] (oma.north) -- (oma.north |- pout.south);
+\draw[umlrea] (omo.north) -- (omo.north |- pout.south);
+\end{tikzpicture}
+\cuatroLeyenda{\cuatroMuestra{draw=black!75,fill=white}{Clase o interfaz (UML)}\quad
+ \cuatroMuestra{draw=black!60,fill=black!8}{Clase de otro componente}\quad
+ \cuatroFlecha{umlrea}{Implementa}\quad\cuatroFlecha{umldep}{Depende de / crea}\quad
+ \cuatroFlecha{umlaso}{Atributo}}
+\caption{Diagrama de código del componente Casos de uso, recurso Persona (nivel 4), en notación
+de clases UML. Solo muestra los miembros que explican el diseño. Los otros tres recursos
+siguen la misma forma.}
+\label{fig:c4-codigo}
+\end{figure}
+
+%--------------------------------------------------------------- dinámico
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\def\yb{-12.6}
+\node[c4per=1.5cm,font=\tiny,inner sep=3pt] (s1) at (-6.6,0.9) {\textbf{Consumidor}\\{}[Persona]};
+\node[c4comp=1.85cm,font=\tiny,inner sep=2pt] (s2) at (-4.4,0.9) {\texttt{PersonaController}\\\texttt{V1}};
+\node[c4comp=1.85cm,font=\tiny,inner sep=2pt] (s3) at (-2.2,0.9) {\texttt{PersonaInput}\\\texttt{AdapterRest}};
+\node[c4comp=1.85cm,font=\tiny,inner sep=2pt] (s4) at (0,0.9) {\texttt{PersonaMapper}\\\texttt{Rest}};
+\node[c4comp=1.85cm,font=\tiny,inner sep=2pt] (s5) at (2.2,0.9) {\texttt{PersonUseCase}\\{}};
+\node[c4comp=1.85cm,font=\tiny,inner sep=2pt] (s6) at (4.4,0.9) {\texttt{PersonOutput}\\\texttt{AdapterMongo}};
+\node[c4db=1.5cm,font=\tiny] (s7) at (6.6,0.9) {\textbf{MongoDB}\\{}[Contenedor]};
+\foreach \x in {-6.6,-4.4,-2.2,0,2.2,4.4,6.6} {\draw[dashed,black!35] (\x,0.2) -- (\x,\yb);}
+\newcommand{\msgD}[4]{\draw[seqmsg] (#1,#3) -- (#2,#3); \node[seqlbl,anchor=south west] at (#1+0.05,#3) {#4};}
+\newcommand{\msgI}[4]{\draw[seqmsg] (#1,#3) -- (#2,#3); \node[seqlbl,anchor=south east] at (#1-0.05,#3) {#4};}
+\newcommand{\retI}[4]{\draw[seqret] (#1,#3) -- (#2,#3); \node[seqlbl,anchor=south east] at (#1-0.05,#3) {#4};}
+\msgD{-6.6}{-4.4}{-0.2}{1. POST /api/v1/persona?database=MONGO con PersonaRequest [HTTP/JSON]}
+\msgD{-4.4}{-2.2}{-0.9}{2. crear(database, request)}
+\draw[seqmsg,dashed] (-2.2,-1.6) -- (2.2,-1.6); \node[seqlbl,anchor=south west] at (-2.15,-1.6) {3. useCase(database): \texttt{new PersonUseCase(personOutputPortMongo)}\\(ERR-02 si el motor no es válido)};
+\msgD{-2.2}{0}{-2.3}{4. fromAdapterToDomain(request)}
+\retI{0}{-2.2}{-2.8}{Person}
+\msgD{-2.2}{2.2}{-3.5}{5. create(person)}
+\draw[seqmsg] (2.2,-4.2) -- ++(0.45,0) -- ++(0,-0.35) -- (2.2,-4.55); \node[seqlbl,anchor=west] at (2.7,-4.35) {6. validate(person)\\(ERR-01 si no es válida)};
+\msgD{2.2}{4.4}{-5.3}{7. findById(cc)}
+\msgD{4.4}{6.6}{-6.0}{8. findById(cc)\\{}[Spring Data\\MongoDB]}
+\retI{6.6}{4.4}{-6.5}{sin documento}
+\retI{4.4}{2.2}{-7.0}{null (si existe: ERR-04, 409)}
+\msgD{2.2}{4.4}{-7.7}{9. save(person)}
+\msgD{4.4}{6.6}{-8.4}{10. insert en\\persona [Spring\\Data MongoDB]}
+\retI{6.6}{4.4}{-8.9}{PersonaDocument}
+\retI{4.4}{2.2}{-9.4}{Person}
+\retI{2.2}{-2.2}{-9.9}{Person}
+\msgD{-2.2}{0}{-10.6}{11. fromDomainToAdapterRest(person, "MONGO")}
+\retI{0}{-2.2}{-11.1}{PersonaResponse}
+\retI{-2.2}{-4.4}{-11.6}{PersonaResponse}
+\draw[seqret] (-4.4,-12.3) -- (-6.6,-12.3); \node[seqlbl,anchor=south west] at (-6.55,-12.3) {12. 201 Created, Location: /api/v1/persona/\{cc\}?database=MONGO};
+\end{tikzpicture}
+\cuatroLeyenda{\leyPersona\quad\leyComponente\quad\leyBase\quad
+ \cuatroFlecha{seqmsg}{Llamada numerada}\quad\cuatroFlecha{seqret}{Respuesta}\quad
+ \cuatroFlecha{seqmsg,dashed}{Creación}}
+\caption{Diagrama dinámico de la API REST: crear una persona en MongoDB, en estilo de secuencia.
+Los pasos 9 y 10 pasan por \texttt{PersonaMapperMongo} y \texttt{PersonaRepositoryMongo} dentro del
+adaptador de salida. Con \texttt{database=MARIA} el recorrido es el mismo con
+\texttt{PersonOutputAdapterMaria}.}
+\label{fig:c4-dinamico}
+\end{figure}
+
+%--------------------------------------------------------------- despliegue
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[c4per=3.0cm] (cons) at (-5.0,7.6) {\textbf{Consumidor de la API}\\[1pt][Persona]};
+\node[c4per=3.0cm] (op) at (5.0,7.6) {\textbf{Operador de consola}\\[1pt][Persona]};
+\cuatroCabeza{cons}\cuatroCabeza{op}
+% instancias de contenedor
+\node[c4cont=2.8cm] (rest) at (-5.0,0) {\textbf{API REST}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]};
+\node[c4cont=2.8cm] (cli) at (5.0,0) {\textbf{Aplicación CLI}\\[1pt][Contenedor: Java 25, Spring Boot 4.1.2]};
+\node[c4db=2.5cm] (maria) at (0,2.9) {\textbf{MariaDB}\\[1pt][Contenedor: MariaDB 11.4]};
+\node[c4db=2.5cm] (mongo) at (0,-2.6) {\textbf{MongoDB}\\[1pt][Contenedor: MongoDB 6.0]};
+% títulos de los nodos
+\node[c4nodotit] (trest) at ($(rest.north west)+(-0.15,0.95)$) {\textbf{Contenedor Docker \texttt{rest}}\\{}[Nodo: \texttt{personapp-rest:local},\\ \texttt{eclipse-temurin:25-jre}]};
+\node[c4nodotit] (tcli) at ($(cli.north west)+(-0.15,0.95)$) {\textbf{Contenedor Docker \texttt{cli}}\\{}[Nodo: \texttt{personapp-cli:local},\\ \texttt{eclipse-temurin:25-jre}]};
+\node[c4nodotit] (tmar) at ($(maria.north west)+(-0.15,0.95)$) {\textbf{Contenedor Docker \texttt{mariadb}}\\{}[Nodo: \texttt{mariadb:11.4},\\ volumen \texttt{mariadb-data}]};
+\node[c4nodotit] (tmon) at ($(mongo.north west)+(-0.15,0.95)$) {\textbf{Contenedor Docker \texttt{mongo}}\\{}[Nodo: \texttt{mongo:6.0},\\ volumen \texttt{mongo-data}]};
+\begin{scope}[on background layer]
+\node[c4nodo,fit=(rest)(trest)] (nrest) {};
+\node[c4nodo,fit=(cli)(tcli)] (ncli) {};
+\node[c4nodo,fit=(maria)(tmar)] (nmar) {};
+\node[c4nodo,fit=(mongo)(tmon)] (nmon) {};
+\node[c4nodo,fit=(nrest)(ncli)(nmar)(nmon),inner sep=9pt,yshift=4pt,inner ysep=14pt] (neng) {};
+\node[c4nodo,fit=(neng),inner sep=6pt,yshift=4pt,inner ysep=11pt] (npc) {};
+\end{scope}
+\node[c4nodotit,anchor=north west] at (neng.north west) {\textbf{Docker Engine}\ [Nodo: Docker Engine o Docker Desktop, proyecto Compose \texttt{personapp}, red interna con nombres de servicio]};
+\node[c4nodotit,anchor=north west] at (npc.north west) {\textbf{Computador del equipo}\ [Nodo: Windows, macOS o Linux]};
+\draw[c4rel] (cons.south) -- node[c4lbl,pos=.1]{Gestiona los recursos\\{[HTTP/JSON, localhost:3000]}} (nrest.north -| cons.south);
+\draw[c4rel] (op.south) -- node[c4lbl,pos=.1]{Usa los menús\\{[docker compose run --rm cli]}} (ncli.north -| op.south);
+\draw[c4rel] ($(rest.north)+(1.0,0)$) |- node[c4lbl,pos=.78]{{[JDBC, mariadb:3306]}} (maria.west);
+\draw[c4rel] ($(rest.south)+(1.0,0)$) |- node[c4lbl,pos=.78]{{[mongo:27017]}} (mongo.west);
+\draw[c4rel] ($(cli.north)+(-1.0,0)$) |- node[c4lbl,pos=.78]{{[JDBC, mariadb:3306]}} (maria.east);
+\draw[c4rel] ($(cli.south)+(-1.0,0)$) |- node[c4lbl,pos=.78]{{[mongo:27017]}} (mongo.east);
+\end{tikzpicture}
+\cuatroLeyenda{\leyPersona\quad\leyNodo\quad\leyContenedor\quad\leyBase\quad\leyRelacion}
+\caption{Diagrama de despliegue de PersonAPP en el entorno de entrega: un computador con Docker
+Compose (\texttt{compose.yaml}). Solo el puerto 3000 de REST se publica en el anfitrión. REST y CLI
+arrancan cuando las dos bases pasan su \emph{healthcheck}. Los scripts DDL/DML se ejecutan solo
+con el volumen vacío. La ejecución sin Docker del README usa los mismos cuatro contenedores
+como procesos locales.}
+\label{fig:c4-despliegue}
 \end{figure}
 
 \subsection{Flujo de una petición y selección de persistencia}
