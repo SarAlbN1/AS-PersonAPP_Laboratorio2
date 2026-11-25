@@ -48,8 +48,9 @@ public class EstudiosMapperMongo {
 		return graduationDate != null ? graduationDate : null;
 	}
 
+	/** univer es opcional: la ausencia no se guarda como texto vacío (HU-023). */
 	private String validateUniver(String universityName) {
-		return universityName != null ? universityName : "";
+		return universityName;
 	}
 
 	public Study fromAdapterToDomain(EstudiosDocument estudiosDocument) {
@@ -66,6 +67,6 @@ public class EstudiosMapperMongo {
 	}
 
 	private String validateUniversityName(String univer) {
-		return univer != null ? univer : "";
+		return univer;
 	}
 }

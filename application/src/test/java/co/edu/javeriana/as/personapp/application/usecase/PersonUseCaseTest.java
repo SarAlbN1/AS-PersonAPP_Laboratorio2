@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
+import co.edu.javeriana.as.personapp.common.exceptions.DependentRecordsException;
 import co.edu.javeriana.as.personapp.common.exceptions.DuplicateException;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidDataException;
 import co.edu.javeriana.as.personapp.common.exceptions.KeyMismatchException;
@@ -183,6 +184,19 @@ class PersonUseCaseTest {
 	}
 
 	@Test
+	void eliminarEsRestrictivoConTelefonosOEstudios() throws Exception {
+		puerto.guardar(persona(1, "Con telefonos"));
+		puerto.guardar(persona(2, "Con estudios"));
+		puerto.conTelefonos.add(1);
+		puerto.conEstudios.add(2);
+		assertThrows(DependentRecordsException.class, () -> caso.drop(1));
+		assertThrows(DependentRecordsException.class, () -> caso.drop(2));
+		// C-05: se revisó antes de llamar a delete, así que ningún registro se perdió.
+		assertEquals(2, caso.count());
+		assertTrue(puerto.llamadas.stream().noneMatch("delete"::equals));
+	}
+
+	@Test
 	void eliminarUnIdentificadorAusenteInformaQueNoExiste() {
 		assertThrows(NoExistException.class, () -> caso.drop(99));
 	}
@@ -228,6 +242,21 @@ class PersonUseCaseTest {
 		public Person findById(Integer identification) {
 			llamadas.add("findById");
 			return almacen.get(identification);
+		}
+
+		private final java.util.Set<Integer> conTelefonos = new java.util.HashSet<>();
+		private final java.util.Set<Integer> conEstudios = new java.util.HashSet<>();
+
+		@Override
+		public Boolean hasPhones(Integer identification) {
+			llamadas.add("hasPhones");
+			return conTelefonos.contains(identification);
+		}
+
+		@Override
+		public Boolean hasStudies(Integer identification) {
+			llamadas.add("hasStudies");
+			return conEstudios.contains(identification);
 		}
 
 		@Override
